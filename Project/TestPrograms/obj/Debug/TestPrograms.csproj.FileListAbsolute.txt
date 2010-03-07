@@ -1,0 +1,11 @@
+C:\Users\et\Desktop\popolo\Project\TestPrograms\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\et\Desktop\popolo\Project\TestPrograms\obj\Debug\TestPrograms.csproj.ResolveComReference.cache
+C:\Users\et\Desktop\popolo\Project\TestPrograms\obj\Debug\TestProgram.exe
+C:\Users\et\Desktop\popolo\Project\TestPrograms\obj\Debug\TestProgram.pdb
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\TestProgram.exe
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\TestProgram.pdb
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\Popolo.dll
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\GSLNET.pdb
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\GSLNET.xml
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\Popolo.pdb
+C:\Users\et\Desktop\popolo\Project\TestPrograms\bin\Debug\Popolo.xml

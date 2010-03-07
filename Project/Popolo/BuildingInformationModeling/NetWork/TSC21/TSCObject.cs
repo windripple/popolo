@@ -4,7 +4,7 @@ using System.Text;
 
 using System.Text.RegularExpressions;
 
-namespace Popolo.Utility.TSC21
+namespace Popolo.BuildingInformationModeling.NetWork.TSC21
 {
     /// <summary>TSC21オブジェクト</summary>
     public class TSCObject : ImmutableTSCObject

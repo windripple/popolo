@@ -27,7 +27,7 @@ using System.Windows.Forms;
 
 using System.IO;
 
-namespace Popolo.Utility.Property.Controls
+namespace Popolo.ThermophysicalProperty
 {
     /// <summary>湿り空気状態表示テーブル</summary>
     public partial class MoistAirTable : UserControl
