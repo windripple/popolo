@@ -1,0 +1,16 @@
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Schedule.Control.DaysEditor.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Schedule.Control.SchedulerEditor.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Schedule.Control.SeasonsEditor.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Schedule.Control.TimePeriodsEditor.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Property.Controls.MoistAirTable.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Utility.Property.Controls.MoistAirTable.ja-JP.resources
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Controls.csproj.GenerateResource.Cache
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Controls.Properties.Resources.resources
+C:\Users\et\Desktop\popolo\dll\Popolo.Controls.dll
+C:\Users\et\Desktop\popolo\dll\Popolo.Controls.pdb
+C:\Users\et\Desktop\popolo\dll\Popolo.Controls.XML
+C:\Users\et\Desktop\popolo\dll\ja-JP\Popolo.Controls.resources.dll
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\ja-JP\Popolo.Controls.resources.dll
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Controls.dll
+C:\Users\et\Desktop\popolo\Popolo.Controls\obj\Debug\Popolo.Controls.pdb
