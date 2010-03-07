@@ -1,4 +1,4 @@
-﻿namespace Popolo.Utility.Schedule.Control
+﻿namespace Popolo.Schedule
 {
     partial class SeasonsEditor
     {

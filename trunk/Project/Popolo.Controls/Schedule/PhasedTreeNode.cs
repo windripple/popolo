@@ -17,11 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Popolo.Utility.Schedule.Control
+namespace Popolo.Schedule
 {
     /// <summary>子ノードの追加履歴を保存するプロパティを持つ段階的ツリーノード</summary>
     public class PhasedTreeNode : System.Windows.Forms.TreeNode

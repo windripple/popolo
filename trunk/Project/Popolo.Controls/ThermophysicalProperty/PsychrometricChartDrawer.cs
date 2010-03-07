@@ -23,7 +23,7 @@ using System.Text;
 
 using System.Drawing;
 
-namespace Popolo.Utility.Property
+namespace Popolo.ThermophysicalProperty
 {
     /// <summary>‹ó‹Cü}•`‰æƒNƒ‰ƒX</summary>
     public static class PsychrometricChartDrawer

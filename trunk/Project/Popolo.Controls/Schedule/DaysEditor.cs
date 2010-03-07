@@ -25,7 +25,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Popolo.Utility.Schedule.Control
+namespace Popolo.Schedule
 {
     /// <summary>曜日定義編集コントロール</summary>
     public partial class DaysEditor : UserControl

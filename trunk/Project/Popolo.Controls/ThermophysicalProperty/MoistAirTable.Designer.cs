@@ -1,4 +1,4 @@
-﻿namespace Popolo.Utility.Property.Controls
+﻿namespace Popolo.ThermophysicalProperty
 {
     partial class MoistAirTable
     {
