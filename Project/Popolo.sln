@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popolo.Controls", "Popolo.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPrograms", "TestPrograms\TestPrograms.csproj", "{BA468A25-F393-4211-B445-F262987F30CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplePrograms", "SamplePrograms\SamplePrograms.csproj", "{9043799A-FB58-4249-9477-B6FE5CC8A325}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{BA468A25-F393-4211-B445-F262987F30CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA468A25-F393-4211-B445-F262987F30CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA468A25-F393-4211-B445-F262987F30CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9043799A-FB58-4249-9477-B6FE5CC8A325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9043799A-FB58-4249-9477-B6FE5CC8A325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9043799A-FB58-4249-9477-B6FE5CC8A325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9043799A-FB58-4249-9477-B6FE5CC8A325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
