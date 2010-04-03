@@ -8,7 +8,7 @@ using Popolo.Weather;
 using Popolo.Weather.Converter;
 using Popolo.ThermalLoad;
 using Popolo.ThermophysicalProperty;
-using Popolo.FluidNetwork;
+using Popolo.CircuitNetwork;
 using Popolo.BuildingInformationModeling.NetWork.TSC21;
 using Popolo.ThermalComfort;
 
