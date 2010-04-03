@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Popolo.FluidNetwork;
+using Popolo.CircuitNetwork;
 
 namespace Popolo
 {

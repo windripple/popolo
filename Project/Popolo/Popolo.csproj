@@ -41,11 +41,11 @@
   <ItemGroup>
     <Compile Include="BuildingInformationModeling\NetWork\TSC21\TSCNamingCode.cs" />
     <Compile Include="BuildingInformationModeling\NetWork\TSC21\TSCObject.cs" />
-    <Compile Include="FluidNetwork\Channel.cs" />
-    <Compile Include="FluidNetwork\Circuit.cs" />
-    <Compile Include="FluidNetwork\Circuit.Events.cs" />
-    <Compile Include="FluidNetwork\CircuitSolver.cs" />
-    <Compile Include="FluidNetwork\Node.cs" />
+    <Compile Include="CircuitNetwork\Channel.cs" />
+    <Compile Include="CircuitNetwork\Circuit.cs" />
+    <Compile Include="CircuitNetwork\Circuit.Events.cs" />
+    <Compile Include="CircuitNetwork\CircuitSolver.cs" />
+    <Compile Include="CircuitNetwork\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schedule\Days.cs" />
     <Compile Include="Schedule\ITermStructure.cs" />
