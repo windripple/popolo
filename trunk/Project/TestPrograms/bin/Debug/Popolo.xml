@@ -1119,6 +1119,46 @@
         <member name="P:Popolo.ThermophysicalProperty.MoistAir.InputValueOutOfRangeException.CurrentValue">
             <summary>変数の現在値</summary>
         </member>
+        <member name="T:Popolo.CircuitNetwork.NodeConnectionEventArgs">
+            <summary>節点接続イベント情報格納クラス</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.node1">
+            <summary>節点1</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.node2">
+            <summary>節点2</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.channel">
+            <summary>流路</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.NodeConnectionEventArgs.#ctor(Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>コンストラクタ</summary>
+            <param name="node1">節点1</param>
+            <param name="node2">節点2</param>
+            <param name="channel">流路</param>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Node1">
+            <summary>節点1を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Node2">
+            <summary>節点2を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Connector">
+            <summary>流路を取得する</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.NodeEventArgs">
+            <summary>節点関連のイベント情報格納クラス</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.NodeEventArgs.node">
+            <summary>節点1</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.NodeEventArgs.#ctor(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>コンストラクタ</summary>
+            <param name="node">節点</param>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.NodeEventArgs.Node">
+            <summary>節点を取得する</summary>
+        </member>
         <member name="T:Popolo.ThermalLoad.SunShade">
             <summary>日除けクラス</summary>
         </member>
@@ -1347,6 +1387,63 @@
         </member>
         <member name="F:Popolo.ThermalLoad.SunShade.Shape.Grid">
             <summary>ルーバー</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.CircuitSolver">
+            <summary>回路網ソルバ</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.timeStep">
+            <summary>計算時間間隔[sec]</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.circuit">
+            <summary>計算対象の回路網</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.mRoot">
+            <summary>多次元関数求根クラス</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.odes">
+            <summary>常微分方程式ソルバ</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.staticPotentials">
+            <summary>静的エネルギーリスト</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.staticIndices">
+            <summary>静的状態変数対応リスト</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.dynamicPotentials">
+            <summary>動的エネルギーリスト</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.CircuitSolver.dynamicIndices">
+            <summary>動的状態変数対応リスト</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.#ctor(Popolo.CircuitNetwork.Circuit)">
+            <summary>コンストラクタ</summary>
+            <param name="circuit">計算対象の回路網</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.initialize">
+            <summary>初期化処理</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.Solve">
+            <summary>回路網を解いて状態を更新する</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.resFunction1(System.Double,System.Double[],System.Double[]@)">
+            <summary>微分方程式用 誤差評価関数</summary>
+            <param name="time">時刻</param>
+            <param name="variables">状態変数（節点のエネルギーベクトル）</param>
+            <param name="variablesDT">状態変数変化量</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.resFunction2(System.Double[],System.Double[]@)">
+            <summary>非線形連立代数方程式用 誤差評価関数</summary>
+            <param name="variables">状態変数（節点のエネルギーベクトル）</param>
+            <param name="errors">誤差</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.CircuitSolver.Dispose">
+            <summary>終了処理</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.CircuitSolver.TimeStep">
+            <summary>計算時間間隔[sec]を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.CircuitSolver.TargetCircuit">
+            <summary>計算対象の回路網を取得する</summary>
         </member>
         <member name="T:Popolo.Weather.Sun">
             <summary>太陽クラス</summary>
@@ -3409,6 +3506,193 @@
         <member name="F:Popolo.Weather.WeatherRecord.RecordType.NocturnalRadiation">
             <summary>夜間放射量[W/m2]</summary>
         </member>
+        <member name="T:Popolo.CircuitNetwork.Circuit">
+            <summary>回路網クラス</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.ImmutableCircuit">
+            <summary>読み取り専用回路網</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetChannel(System.Int32)">
+            <summary>流路を取得する</summary>
+            <param name="channelIndex">流路番号</param>
+            <returns>流路</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetChannels">
+            <summary>流路リストを取得する</summary>
+            <returns>流路リスト</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetNode(System.Int32)">
+            <summary>節点を取得する</summary>
+            <param name="nodeIndex">節点番号</param>
+            <returns>節点</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetNodes">
+            <summary>節点リストを取得する</summary>
+            <returns>節点リスト</returns>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.ID">
+            <summary>IDを取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.ChannelsNumber">
+            <summary>流路の数を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.NodesNumber">
+            <summary>節点の数を取得する</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Circuit.S_VERSION">
+            <summary>シリアライズ用バージョン情報</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Circuit.channels">
+            <summary>流路リスト</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Circuit.nodes">
+            <summary>節点リスト</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor(System.String)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.GetChannel(System.Int32)">
+            <summary>流路を取得する</summary>
+            <param name="channelIndex">流路番号</param>
+            <returns>流路</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.GetChannels">
+            <summary>流路リストを取得する</summary>
+            <returns>流路リスト</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.getChannel(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>流路を返す</summary>
+            <param name="channel">読み取り専用流路</param>
+            <returns>流路</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.GetNode(System.Int32)">
+            <summary>節点を取得する</summary>
+            <param name="nodeIndex">節点番号</param>
+            <returns>節点</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.GetNodes">
+            <summary>節点リストを取得する</summary>
+            <returns>節点リスト</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.AddNode(Popolo.CircuitNetwork.Node)">
+            <summary>節点を追加する</summary>
+            <param name="node">追加する節点</param>
+            <returns>追加した節点（Clone処理を行うため<paramref name="node"/>とは異なる）</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.RemoveNode(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>節点を削除する</summary>
+            <param name="node">節点</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.getNode(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>節点を返す</summary>
+            <param name="node">読み取り専用節点</param>
+            <returns>節点</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetPotential(System.Double,Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>節点にエネルギーを設定する</summary>
+            <param name="potential">エネルギー</param>
+            <param name="node">節点</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetPotential(System.Double,System.Int32)">
+            <summary>節点にエネルギーを設定する</summary>
+            <param name="potential">エネルギー</param>
+            <param name="nodeIndex">節点番号</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetExternalFlow(System.Double,Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>外部の系への流出流量を節点に設定する</summary>
+            <param name="externalFlow">外部の系への流出流量</param>
+            <param name="node">節点</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetExternalFlow(System.Double,System.Int32)">
+            <summary>外部の系への流出流量を節点に設定する</summary>
+            <param name="externalFlow">外部の系への流出流量</param>
+            <param name="nodeIndex">節点番号</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetBoundaryNode(System.Boolean,Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>境界条件ノードか否かを設定する</summary>
+            <param name="isBoundaryNode">境界条件ノードか否か</param>
+            <param name="node">節点</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.SetBoundaryNode(System.Boolean,System.Int32)">
+            <summary>境界条件ノードか否かを設定する</summary>
+            <param name="isBoundaryNode">境界条件ノードか否か</param>
+            <param name="nodeIndex">節点番号</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.getNodeIndex(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>節点の番号を返す</summary>
+            <param name="node">節点オブジェクト</param>
+            <returns>節点の番号</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.ConnectNodes(Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.Channel)">
+            <summary>節点を接続する</summary>
+            <param name="node1">節点1</param>
+            <param name="node2">節点2</param>
+            <param name="channel">接続に使用する流路</param>
+            <returns>接続した流路（Clone処理を行うため<paramref name="channel"/>とは異なる）</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.DisconnectNodes(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>節点を切断する</summary>
+            <param name="channel">接点を接続している流路</param>
+            <returns>切断成功の真偽</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>デシリアライズ用コンストラクタ</summary>
+            <param name="sInfo"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Circuit.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>シリアル化処理</summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="E:Popolo.CircuitNetwork.Circuit.NodeConnectEvent">
+            <summary>節点接続イベント</summary>
+        </member>
+        <member name="E:Popolo.CircuitNetwork.Circuit.NodeDisConnectEvent">
+            <summary>節点切断イベント</summary>
+        </member>
+        <member name="E:Popolo.CircuitNetwork.Circuit.NodeAddEvent">
+            <summary>節点追加イベント</summary>
+        </member>
+        <member name="E:Popolo.CircuitNetwork.Circuit.NodeRemoveEvent">
+            <summary>節点削除イベント</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Circuit.ID">
+            <summary>IDを設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Circuit.Name">
+            <summary>名称を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Circuit.ChannelsNumber">
+            <summary>流路の数を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Circuit.NodesNumber">
+            <summary>節点の数を取得する</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Circuit.NodeConnectEventHandler">
+            <summary>節点接続イベントハンドラ</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Circuit.NodeDisConnectEventHandler">
+            <summary>節点切断イベントハンドラ</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Circuit.NodeAddEventHandler">
+            <summary>節点追加イベントハンドラ</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Circuit.NodeRemoveEventHandler">
+            <summary>節点削除イベントハンドラ</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
         <member name="T:Popolo.Weather.LocationInformation">
             <summary>気象地点情報</summary>
         </member>
@@ -4840,6 +5124,128 @@
         <member name="F:Popolo.ThermalComfort.BodyPart.Segments.AVA">
             <summary>AVA</summary>
         </member>
+        <member name="T:Popolo.CircuitNetwork.Channel">
+            <summary>流路クラス</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.ImmutableChannel">
+            <summary>読み取り専用流路</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableChannel.GetFlow">
+            <summary>Node1からNode2への流量を取得する</summary>
+            <returns>Node1からNode2への流量</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableChannel.GetFlow(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>接点への流量を取得する</summary>
+            <param name="node">接点</param>
+            <returns>接点への流量</returns>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.ID">
+            <summary>IDを取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Node1">
+            <summary>節点1を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Node2">
+            <summary>節点2を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Resistance">
+            <summary>抵抗値を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Eta">
+            <summary>抵抗指数を取得する</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.S_VERSION">
+            <summary>シリアライズ用バージョン情報</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.node1">
+            <summary>節点1</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.node2">
+            <summary>節点2</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.hasChanged">
+            <summary>変更フラグ</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.resistance">
+            <summary>抵抗値</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.eta">
+            <summary>抵抗指数</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Channel.flow">
+            <summary>Node1からNode2への流量</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.#ctor">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.String)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.String,System.Double,System.Double)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+            <param name="resistance">抵抗値</param>
+            <param name="eta">抵抗指数</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.Connect(Popolo.CircuitNetwork.Node,Popolo.CircuitNetwork.Node)">
+            <summary>接点を接続する</summary>
+            <param name="node1">接点1</param>
+            <param name="node2">接点2</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.Disconnect">
+            <summary>切断する</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.nodeFnc(System.Object,System.EventArgs)">
+            <summary>接点エネルギー変更イベントに対する処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.GetFlow">
+            <summary>Node1からNode2への流量を取得する</summary>
+            <returns>Node1からNode2への流量</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.GetFlow(Popolo.CircuitNetwork.ImmutableNode)">
+            <summary>接点への流量を取得する</summary>
+            <param name="node">接点</param>
+            <returns>接点への流量</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.calculateFlow">
+            <summary>Node1からNode2への流量を計算する</summary>
+            <returns>流量</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>デシリアライズ用コンストラクタ</summary>
+            <param name="sInfo"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>シリアル化処理</summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Channel.Clone">
+            <summary>複製を返す</summary>
+            <returns>複製</returns>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.ID">
+            <summary>IDを設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.Name">
+            <summary>名称を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.Node1">
+            <summary>節点1を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.Node2">
+            <summary>節点2を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.Resistance">
+            <summary>抵抗値を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Channel.Eta">
+            <summary>抵抗指数を設定・取得する</summary>
+        </member>
         <member name="T:Popolo.Weather.WeatherDataTable">
             <summary>気象データテーブル（気象レコードの集合体）</summary>
         </member>
@@ -6179,6 +6585,138 @@
         </member>
         <member name="P:Popolo.ThermalLoad.Outdoor.NocturnalRadiation">
             <summary>夜間放射[W/m2]を設定・取得する</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Node">
+            <summary>節点クラス</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.ImmutableNode">
+            <summary>読み取り専用接点</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableNode.ContainsChannel(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>指定した流路を含むか否かを返す</summary>
+            <param name="channel">流路</param>
+            <returns>指定した流路を含む場合は真</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.ImmutableNode.GetTotalFlow">
+            <summary>接点に流れ込む流量合算値を計算する</summary>
+            <returns>接点に流れ込む流量合算値</returns>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ID">
+            <summary>IDを取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Name">
+            <summary>名称を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Potential">
+            <summary>エネルギーを取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Capacity">
+            <summary>容量を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ChannelNumber">
+            <summary>接続されている流路の数を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ExternalFlow">
+            <summary>外部の系への流出流量を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.ImmutableNode.IsBoundaryNode">
+            <summary>境界条件節点か否かの情報を取得する</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Node.S_VERSION">
+            <summary>シリアライズ用バージョン情報</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Node.capacity">
+            <summary>容量</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Node.potential">
+            <summary>エネルギー</summary>
+        </member>
+        <member name="F:Popolo.CircuitNetwork.Node.channels">
+            <summary>節点に接続されている流路リスト</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.#ctor">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String,System.Double)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+            <param name="capacity">容量</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String,System.Double,System.Double)">
+            <summary>コンストラクタ</summary>
+            <param name="name">名称</param>
+            <param name="capacity">容量</param>
+            <param name="initialPotential">エネルギー初期値</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.AddChannel(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>流路を追加する</summary>
+            <param name="channel">流路</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.RemoveChannel(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>流路を削除する</summary>
+            <param name="channel">流路</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.ContainsChannel(Popolo.CircuitNetwork.ImmutableChannel)">
+            <summary>指定した流路を含むか否かを返す</summary>
+            <param name="channel">流路</param>
+            <returns>指定した流路を含む場合は真</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.GetChannels">
+            <summary>接続されている流路リストを取得する</summary>
+            <returns>接続されている流路リスト</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.SetPotential(System.Double)">
+            <summary>エネルギーを設定する</summary>
+            <param name="potential">エネルギー</param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.GetTotalFlow">
+            <summary>接点に流れ込む流量合算値を計算する</summary>
+            <returns>接点に流れ込む流量合算値</returns>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>デシリアライズ用コンストラクタ</summary>
+            <param name="sInfo"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>シリアル化処理</summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Popolo.CircuitNetwork.Node.Clone">
+            <summary>複製を返す</summary>
+            <returns>複製</returns>
+        </member>
+        <member name="E:Popolo.CircuitNetwork.Node.PotentialChangeEvent">
+            <summary>エネルギー変更イベント</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.ID">
+            <summary>IDを設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.Name">
+            <summary>名称を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.ExternalFlow">
+            <summary>外部の系への流出流量を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.IsBoundaryNode">
+            <summary>境界条件節点か否かの情報を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.Potential">
+            <summary>エネルギーを取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.ChannelNumber">
+            <summary>接続されている流路の数を取得する</summary>
+        </member>
+        <member name="P:Popolo.CircuitNetwork.Node.Capacity">
+            <summary>容量を設定・取得する</summary>
+        </member>
+        <member name="T:Popolo.CircuitNetwork.Node.PotentialChangeEventHandler">
+            <summary>エネルギー変更イベントハンドラ</summary>
         </member>
         <member name="T:Popolo.Weather.Converter.HASConverter">
             <summary>EESLISM用気象データを変換する</summary>
@@ -7870,544 +8408,6 @@
         </member>
         <member name="P:Popolo.Schedule.DaysEventArgs.GroupName">
             <summary>グループ名称を取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.NodeConnectionEventArgs">
-            <summary>節点接続イベント情報格納クラス</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.node1">
-            <summary>節点1</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.node2">
-            <summary>節点2</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.NodeConnectionEventArgs.channel">
-            <summary>流路</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.NodeConnectionEventArgs.#ctor(Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>コンストラクタ</summary>
-            <param name="node1">節点1</param>
-            <param name="node2">節点2</param>
-            <param name="channel">流路</param>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Node1">
-            <summary>節点1を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Node2">
-            <summary>節点2を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.NodeConnectionEventArgs.Connector">
-            <summary>流路を取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.NodeEventArgs">
-            <summary>節点関連のイベント情報格納クラス</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.NodeEventArgs.node">
-            <summary>節点1</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.NodeEventArgs.#ctor(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>コンストラクタ</summary>
-            <param name="node">節点</param>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.NodeEventArgs.Node">
-            <summary>節点を取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.CircuitSolver">
-            <summary>回路網ソルバ</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.timeStep">
-            <summary>計算時間間隔[sec]</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.circuit">
-            <summary>計算対象の回路網</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.mRoot">
-            <summary>多次元関数求根クラス</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.odes">
-            <summary>常微分方程式ソルバ</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.staticPotentials">
-            <summary>静的エネルギーリスト</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.staticIndices">
-            <summary>静的状態変数対応リスト</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.dynamicPotentials">
-            <summary>動的エネルギーリスト</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.CircuitSolver.dynamicIndices">
-            <summary>動的状態変数対応リスト</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.#ctor(Popolo.CircuitNetwork.Circuit)">
-            <summary>コンストラクタ</summary>
-            <param name="circuit">計算対象の回路網</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.initialize">
-            <summary>初期化処理</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.Solve">
-            <summary>回路網を解いて状態を更新する</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.resFunction1(System.Double,System.Double[],System.Double[]@)">
-            <summary>微分方程式用 誤差評価関数</summary>
-            <param name="time">時刻</param>
-            <param name="variables">状態変数（節点のエネルギーベクトル）</param>
-            <param name="variablesDT">状態変数変化量</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.resFunction2(System.Double[],System.Double[]@)">
-            <summary>非線形連立代数方程式用 誤差評価関数</summary>
-            <param name="variables">状態変数（節点のエネルギーベクトル）</param>
-            <param name="errors">誤差</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.CircuitSolver.Dispose">
-            <summary>終了処理</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.CircuitSolver.TimeStep">
-            <summary>計算時間間隔[sec]を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.CircuitSolver.TargetCircuit">
-            <summary>計算対象の回路網を取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Circuit">
-            <summary>回路網クラス</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.ImmutableCircuit">
-            <summary>読み取り専用回路網</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetChannel(System.Int32)">
-            <summary>流路を取得する</summary>
-            <param name="channelIndex">流路番号</param>
-            <returns>流路</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetChannels">
-            <summary>流路リストを取得する</summary>
-            <returns>流路リスト</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetNode(System.Int32)">
-            <summary>節点を取得する</summary>
-            <param name="nodeIndex">節点番号</param>
-            <returns>節点</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableCircuit.GetNodes">
-            <summary>節点リストを取得する</summary>
-            <returns>節点リスト</returns>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.ID">
-            <summary>IDを取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.ChannelsNumber">
-            <summary>流路の数を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableCircuit.NodesNumber">
-            <summary>節点の数を取得する</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Circuit.S_VERSION">
-            <summary>シリアライズ用バージョン情報</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Circuit.channels">
-            <summary>流路リスト</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Circuit.nodes">
-            <summary>節点リスト</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor(System.String)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.GetChannel(System.Int32)">
-            <summary>流路を取得する</summary>
-            <param name="channelIndex">流路番号</param>
-            <returns>流路</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.GetChannels">
-            <summary>流路リストを取得する</summary>
-            <returns>流路リスト</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.getChannel(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>流路を返す</summary>
-            <param name="channel">読み取り専用流路</param>
-            <returns>流路</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.GetNode(System.Int32)">
-            <summary>節点を取得する</summary>
-            <param name="nodeIndex">節点番号</param>
-            <returns>節点</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.GetNodes">
-            <summary>節点リストを取得する</summary>
-            <returns>節点リスト</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.AddNode(Popolo.CircuitNetwork.Node)">
-            <summary>節点を追加する</summary>
-            <param name="node">追加する節点</param>
-            <returns>追加した節点（Clone処理を行うため<paramref name="node"/>とは異なる）</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.RemoveNode(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>節点を削除する</summary>
-            <param name="node">節点</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.getNode(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>節点を返す</summary>
-            <param name="node">読み取り専用節点</param>
-            <returns>節点</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetPotential(System.Double,Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>節点にエネルギーを設定する</summary>
-            <param name="potential">エネルギー</param>
-            <param name="node">節点</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetPotential(System.Double,System.Int32)">
-            <summary>節点にエネルギーを設定する</summary>
-            <param name="potential">エネルギー</param>
-            <param name="nodeIndex">節点番号</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetExternalFlow(System.Double,Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>外部の系への流出流量を節点に設定する</summary>
-            <param name="externalFlow">外部の系への流出流量</param>
-            <param name="node">節点</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetExternalFlow(System.Double,System.Int32)">
-            <summary>外部の系への流出流量を節点に設定する</summary>
-            <param name="externalFlow">外部の系への流出流量</param>
-            <param name="nodeIndex">節点番号</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetBoundaryNode(System.Boolean,Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>境界条件ノードか否かを設定する</summary>
-            <param name="isBoundaryNode">境界条件ノードか否か</param>
-            <param name="node">節点</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.SetBoundaryNode(System.Boolean,System.Int32)">
-            <summary>境界条件ノードか否かを設定する</summary>
-            <param name="isBoundaryNode">境界条件ノードか否か</param>
-            <param name="nodeIndex">節点番号</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.getNodeIndex(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>節点の番号を返す</summary>
-            <param name="node">節点オブジェクト</param>
-            <returns>節点の番号</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.ConnectNodes(Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.ImmutableNode,Popolo.CircuitNetwork.Channel)">
-            <summary>節点を接続する</summary>
-            <param name="node1">節点1</param>
-            <param name="node2">節点2</param>
-            <param name="channel">接続に使用する流路</param>
-            <returns>接続した流路（Clone処理を行うため<paramref name="channel"/>とは異なる）</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.DissconnectNodes(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>節点を切断する</summary>
-            <param name="channel">接点を接続している流路</param>
-            <returns>切断成功の真偽</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>デシリアライズ用コンストラクタ</summary>
-            <param name="sInfo"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Circuit.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>シリアル化処理</summary>
-            <param name="info"></param>
-            <param name="context"></param>
-        </member>
-        <member name="E:Popolo.CircuitNetwork.Circuit.NodeConnectEvent">
-            <summary>節点接続イベント</summary>
-        </member>
-        <member name="E:Popolo.CircuitNetwork.Circuit.NodeDisConnectEvent">
-            <summary>節点切断イベント</summary>
-        </member>
-        <member name="E:Popolo.CircuitNetwork.Circuit.NodeAddEvent">
-            <summary>節点追加イベント</summary>
-        </member>
-        <member name="E:Popolo.CircuitNetwork.Circuit.NodeRemoveEvent">
-            <summary>節点削除イベント</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Circuit.ID">
-            <summary>IDを設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Circuit.Name">
-            <summary>名称を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Circuit.ChannelsNumber">
-            <summary>流路の数を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Circuit.NodesNumber">
-            <summary>節点の数を取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Circuit.NodeConnectEventHandler">
-            <summary>節点接続イベントハンドラ</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Circuit.NodeDisConnectEventHandler">
-            <summary>節点切断イベントハンドラ</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Circuit.NodeAddEventHandler">
-            <summary>節点追加イベントハンドラ</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Circuit.NodeRemoveEventHandler">
-            <summary>節点削除イベントハンドラ</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Channel">
-            <summary>流路クラス</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.ImmutableChannel">
-            <summary>読み取り専用流路</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableChannel.GetFlow">
-            <summary>Node1からNode2への流量を取得する</summary>
-            <returns>Node1からNode2への流量</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableChannel.GetFlow(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>接点への流量を取得する</summary>
-            <param name="node">接点</param>
-            <returns>接点への流量</returns>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.ID">
-            <summary>IDを取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Node1">
-            <summary>節点1を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Node2">
-            <summary>節点2を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Resistance">
-            <summary>抵抗値を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableChannel.Eta">
-            <summary>抵抗指数を取得する</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.S_VERSION">
-            <summary>シリアライズ用バージョン情報</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.node1">
-            <summary>節点1</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.node2">
-            <summary>節点2</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.hasChanged">
-            <summary>変更フラグ</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.resistance">
-            <summary>抵抗値</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.eta">
-            <summary>抵抗指数</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Channel.flow">
-            <summary>Node1からNode2への流量</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.#ctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.String)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.String,System.Double,System.Double)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-            <param name="resistance">抵抗値</param>
-            <param name="eta">抵抗指数</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.Connect(Popolo.CircuitNetwork.Node,Popolo.CircuitNetwork.Node)">
-            <summary>接点を接続する</summary>
-            <param name="node1">接点1</param>
-            <param name="node2">接点2</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.Disconnect">
-            <summary>切断する</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.nodeFnc(System.Object,System.EventArgs)">
-            <summary>接点エネルギー変更イベントに対する処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.GetFlow">
-            <summary>Node1からNode2への流量を取得する</summary>
-            <returns>Node1からNode2への流量</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.GetFlow(Popolo.CircuitNetwork.ImmutableNode)">
-            <summary>接点への流量を取得する</summary>
-            <param name="node">接点</param>
-            <returns>接点への流量</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.calculateFlow">
-            <summary>Node1からNode2への流量を計算する</summary>
-            <returns>流量</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>デシリアライズ用コンストラクタ</summary>
-            <param name="sInfo"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>シリアル化処理</summary>
-            <param name="info"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Channel.Clone">
-            <summary>複製を返す</summary>
-            <returns>複製</returns>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.ID">
-            <summary>IDを設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.Name">
-            <summary>名称を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.Node1">
-            <summary>節点1を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.Node2">
-            <summary>節点2を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.Resistance">
-            <summary>抵抗値を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Channel.Eta">
-            <summary>抵抗指数を設定・取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Node">
-            <summary>節点クラス</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.ImmutableNode">
-            <summary>読み取り専用接点</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableNode.ContainsChannel(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>指定した流路を含むか否かを返す</summary>
-            <param name="channel">流路</param>
-            <returns>指定した流路を含む場合は真</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.ImmutableNode.GetTotalFlow">
-            <summary>接点に流れ込む流量合算値を計算する</summary>
-            <returns>接点に流れ込む流量合算値</returns>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ID">
-            <summary>IDを取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Name">
-            <summary>名称を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Potential">
-            <summary>エネルギーを取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.Capacity">
-            <summary>容量を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ChannelNumber">
-            <summary>接続されている流路の数を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.ExternalFlow">
-            <summary>外部の系への流出流量を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.ImmutableNode.IsBoundaryNode">
-            <summary>境界条件節点か否かの情報を取得する</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Node.S_VERSION">
-            <summary>シリアライズ用バージョン情報</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Node.capacity">
-            <summary>容量</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Node.potential">
-            <summary>エネルギー</summary>
-        </member>
-        <member name="F:Popolo.CircuitNetwork.Node.channels">
-            <summary>節点に接続されている流路リスト</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.#ctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String,System.Double)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-            <param name="capacity">容量</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.String,System.Double,System.Double)">
-            <summary>コンストラクタ</summary>
-            <param name="name">名称</param>
-            <param name="capacity">容量</param>
-            <param name="initialPotential">エネルギー初期値</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.AddChannel(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>流路を追加する</summary>
-            <param name="channel">流路</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.RemoveChannel(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>流路を削除する</summary>
-            <param name="channel">流路</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.ContainsChannel(Popolo.CircuitNetwork.ImmutableChannel)">
-            <summary>指定した流路を含むか否かを返す</summary>
-            <param name="channel">流路</param>
-            <returns>指定した流路を含む場合は真</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.GetChannels">
-            <summary>接続されている流路リストを取得する</summary>
-            <returns>接続されている流路リスト</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.SetPotential(System.Double)">
-            <summary>エネルギーを設定する</summary>
-            <param name="potential">エネルギー</param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.GetTotalFlow">
-            <summary>接点に流れ込む流量合算値を計算する</summary>
-            <returns>接点に流れ込む流量合算値</returns>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>デシリアライズ用コンストラクタ</summary>
-            <param name="sInfo"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>シリアル化処理</summary>
-            <param name="info"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:Popolo.CircuitNetwork.Node.Clone">
-            <summary>複製を返す</summary>
-            <returns>複製</returns>
-        </member>
-        <member name="E:Popolo.CircuitNetwork.Node.PotentialChangeEvent">
-            <summary>エネルギー変更イベント</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.ID">
-            <summary>IDを設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.Name">
-            <summary>名称を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.ExternalFlow">
-            <summary>外部の系への流出流量を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.IsBoundaryNode">
-            <summary>境界条件節点か否かの情報を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.Potential">
-            <summary>エネルギーを取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.ChannelNumber">
-            <summary>接続されている流路の数を取得する</summary>
-        </member>
-        <member name="P:Popolo.CircuitNetwork.Node.Capacity">
-            <summary>容量を設定・取得する</summary>
-        </member>
-        <member name="T:Popolo.CircuitNetwork.Node.PotentialChangeEventHandler">
-            <summary>エネルギー変更イベントハンドラ</summary>
         </member>
     </members>
 </doc>
