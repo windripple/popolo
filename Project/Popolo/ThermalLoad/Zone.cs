@@ -805,7 +805,7 @@ namespace Popolo.ThermalLoad
             double cpAir = MoistAir.GetSpecificHeat(absoluteHumidity) * 1000;
 
             //室の熱容量[J/K]を更新
-            double airSV = MoistAir.GetAirStateFromDBAH(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
+            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
             double rSH = volume / airSV * cpAir + sensibleHeatCapacity;
 
             //熱取得[W]を積算
@@ -855,9 +855,9 @@ namespace Popolo.ThermalLoad
             double le = integrateLatentHeatGain();
 
             double vVol = ventilationVolume / ventilationAirState.SpecificVolume / 3600;
-            double br = (volume / MoistAir.GetAirStateFromDBAH(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume) + latentHeatCapacity) / timeStep;
+            double br = (volume / MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume) + latentHeatCapacity) / timeStep;
             brmx = br + vVol;
-            brcx = br * absoluteHumidity + vVol * ventilationAirState.AbsoluteHumidity + le / (MoistAir.LatentHeatOfVaporization * 1000);
+            brcx = br * absoluteHumidity + vVol * ventilationAirState.HumidityRatio + le / (MoistAir.LatentHeatOfVaporization * 1000);
         }
 
         #endregion
@@ -913,7 +913,7 @@ namespace Popolo.ThermalLoad
         {
             //室の熱容量[kJ/K]を計算
             double cpAir = MoistAir.GetSpecificHeat(absoluteHumidity);            
-            double airSV = MoistAir.GetAirStateFromDBAH(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
+            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
             double rSH = volume / airSV * cpAir +sensibleHeatCapacity / 1000d;
 
             //温度差[K]と熱容量[kJ/K]から蓄熱量[kJ]を計算

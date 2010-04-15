@@ -369,7 +369,7 @@ namespace Popolo.Weather.Converter
                 //絶対湿度[kg/kg(DA)]
                 if (dbtSource != WeatherData.DataSource.MissingValue && rhdSource != WeatherData.DataSource.MissingValue)
                 {
-                    wd.Value = MoistAir.GetAirStateFromDBRH(dbt, rhd, MoistAir.Property.AbsoluteHumidity, atm);
+                    wd.Value = MoistAir.GetAirStateFromDBRH(dbt, rhd, MoistAir.Property.HumidityRatio, atm);
                     wd.Source = WeatherData.DataSource.CalculatedValue;
                     wr.SetData(WeatherRecord.RecordType.AbsoluteHumidity, wd);
                 }

@@ -45,7 +45,7 @@ namespace Popolo.ThermophysicalProperty
         }
 
         /// <summary>â‘Î¼“x[kg/kg(DA)]‚ğæ“¾‚·‚é</summary>
-        double AbsoluteHumidity
+        double HumidityRatio
         {
             get;
         }

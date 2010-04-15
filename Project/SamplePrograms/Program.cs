@@ -36,7 +36,7 @@ namespace SamplePrograms
 
             //Set values to property
             mAir.DryBulbTemperature = 25.6;
-            mAir.AbsoluteHumidity = 0.018;
+            mAir.HumidityRatio = 0.018;
             mAir.RelativeHumidity = 50.0;
             mAir.WetBulbTemperature = 22;
             mAir.SpecificVolume = 0.86;
@@ -45,7 +45,7 @@ namespace SamplePrograms
 
             //Output values of properties
             Console.WriteLine("Drybulb Temperature:" + mAir.DryBulbTemperature);
-            Console.WriteLine("Absolute Humidity:" + mAir.AbsoluteHumidity);
+            Console.WriteLine("Absolute Humidity:" + mAir.HumidityRatio);
             Console.WriteLine("Relative Humidity:" + mAir.RelativeHumidity);
             Console.WriteLine("Wetbulb Temperature:" + mAir.WetBulbTemperature);
             Console.WriteLine("Specific Volume:" + mAir.SpecificVolume);
@@ -61,11 +61,11 @@ namespace SamplePrograms
             MoistAir mAir;
 
             //Calculate state of the moist air from given two properties (DB 25 °C, AH 0.012 kg/kg)
-            mAir = MoistAir.GetAirStateFromDBAH(25, 0.012);
+            mAir = MoistAir.GetAirStateFromDBHR(25, 0.012);
 
             //Write value of the moist air to standard output stream.
             Console.WriteLine("Dry bulb temperature:" + mAir.DryBulbTemperature.ToString("F1"));
-            Console.WriteLine("Absolute humidity:" + mAir.AbsoluteHumidity.ToString("F3"));
+            Console.WriteLine("Absolute humidity:" + mAir.HumidityRatio.ToString("F3"));
             Console.WriteLine("Relative humidity:" + mAir.RelativeHumidity.ToString("F1"));
             Console.WriteLine("Wet bulb temperature:" + mAir.WetBulbTemperature.ToString("F1"));
             Console.WriteLine("Specific volume:" + mAir.SpecificVolume.ToString("F3"));

@@ -138,13 +138,13 @@ namespace Popolo.Weather.Converter
                     wRecord.SetData(WeatherRecord.RecordType.DewPointTemperature, wData);
 
                     //その他の空気状態
-                    double ahd = MoistAir.GetSaturatedAbsoluteHumidity(dpt, MoistAir.Property.DryBulbTemperature, atm);
-                    MoistAir mAir = MoistAir.GetAirStateFromDBAH(dbt, ahd, atm);
+                    double ahd = MoistAir.GetSaturatedHumidityRatio(dpt, MoistAir.Property.DryBulbTemperature, atm);
+                    MoistAir mAir = MoistAir.GetAirStateFromDBHR(dbt, ahd, atm);
 
                     //相対湿度[%]
                     wRecord.SetData(WeatherRecord.RecordType.RelativeHumidity, new WeatherData(mAir.RelativeHumidity, WeatherData.DataSource.CalculatedValue, -1));
                     //絶対湿度[kg/kg(DA)]
-                    wRecord.SetData(WeatherRecord.RecordType.AbsoluteHumidity, new WeatherData(mAir.AbsoluteHumidity, WeatherData.DataSource.CalculatedValue, -1));
+                    wRecord.SetData(WeatherRecord.RecordType.AbsoluteHumidity, new WeatherData(mAir.HumidityRatio, WeatherData.DataSource.CalculatedValue, -1));
 
                     //風向
                     wData = new WeatherData(double.Parse(str.Substring(111, 3)), WeatherData.DataSource.MeasuredValue, -1);

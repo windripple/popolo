@@ -67,7 +67,7 @@ namespace Popolo.ThermophysicalProperty
             /// <summary>湿球温度[CWB]</summary>
             WetBulbTemperature = 1,
             /// <summary>絶対湿度[kg/kg]</summary>
-            AbsoluteHumidity = 2,
+            HumidityRatio = 2,
             /// <summary>相対湿度[%]</summary>
             RelativeHumidity = 3,
             /// <summary>エンタルピー[kJ/kg]</summary>
@@ -91,7 +91,7 @@ namespace Popolo.ThermophysicalProperty
         private double wetBulbTemp;
 
         /// <summary>絶対湿度[kg/kg]</summary>
-        private double absoluteHumid;
+        private double humidityRatio;
 
         /// <summary>相対湿度[%]</summary>
         private double relativeHumid;
@@ -168,17 +168,17 @@ namespace Popolo.ThermophysicalProperty
         }
 
         /// <summary>絶対湿度[kg/kg(DA)]を設定・取得する</summary>
-        public double AbsoluteHumidity
+        public double HumidityRatio
         {
             get
             {
-                return absoluteHumid;
+                return humidityRatio;
             }
             set
             {
-                if (absoluteHumid != value)
+                if (humidityRatio != value)
                 {
-                    absoluteHumid = value;
+                    humidityRatio = value;
                     revision++;
                 }
             }
@@ -272,10 +272,10 @@ namespace Popolo.ThermophysicalProperty
             standardAir.AtmosphericPressure = ATM;
             standardAir.dryBulbTemp = 26;
             standardAir.relativeHumid = 60;
-            standardAir.absoluteHumid = fwphi(standardAir.dryBulbTemp, standardAir.relativeHumid, ATM);
-            standardAir.wetBulbTemp = ftwb(standardAir.dryBulbTemp, standardAir.absoluteHumid, ATM);
-            standardAir.enthalpy = fhair(standardAir.dryBulbTemp, standardAir.absoluteHumid);
-            standardAir.specificVolume = getSpecificVolumeFromDBAH(standardAir.dryBulbTemp, standardAir.absoluteHumid, ATM);
+            standardAir.humidityRatio = fwphi(standardAir.dryBulbTemp, standardAir.relativeHumid, ATM);
+            standardAir.wetBulbTemp = ftwb(standardAir.dryBulbTemp, standardAir.humidityRatio, ATM);
+            standardAir.enthalpy = fhair(standardAir.dryBulbTemp, standardAir.humidityRatio);
+            standardAir.specificVolume = getSpecificVolumeFromDBHR(standardAir.dryBulbTemp, standardAir.humidityRatio, ATM);
         }
 
         /// <summary>コンストラクタ</summary>
@@ -287,16 +287,16 @@ namespace Popolo.ThermophysicalProperty
 
         /// <summary>コンストラクタ</summary>
         /// <param name="dryBulbTemp">乾球温度[K]</param>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg]</param>
-        public MoistAir(double dryBulbTemp, double absoluteHumidity)
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
+        public MoistAir(double dryBulbTemp, double humidityRatio)
         {
             this.AtmosphericPressure = ATM;
             this.dryBulbTemp = dryBulbTemp;
-            this.absoluteHumid = absoluteHumidity;
-            this.relativeHumid = fphi(dryBulbTemp, absoluteHumid, ATM);
-            this.enthalpy = fhair(dryBulbTemp, absoluteHumid);
-            this.wetBulbTemp = ftwb(dryBulbTemp, absoluteHumid, ATM);
-            this.specificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, absoluteHumid, ATM);
+            this.humidityRatio = humidityRatio;
+            this.relativeHumid = fphi(dryBulbTemp, humidityRatio, ATM);
+            this.enthalpy = fhair(dryBulbTemp, humidityRatio);
+            this.wetBulbTemp = ftwb(dryBulbTemp, humidityRatio, ATM);
+            this.specificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, humidityRatio, ATM);
         }
 
         /// <summary>コピーコンストラクタ</summary>
@@ -305,7 +305,7 @@ namespace Popolo.ThermophysicalProperty
         {
             this.AtmosphericPressure = moistAir.AtmosphericPressure;
             this.dryBulbTemp = moistAir.DryBulbTemperature;
-            this.absoluteHumid = moistAir.AbsoluteHumidity;
+            this.humidityRatio = moistAir.HumidityRatio;
             this.relativeHumid = moistAir.RelativeHumidity;
             this.enthalpy = moistAir.Enthalpy;
             this.wetBulbTemp = moistAir.WetBulbTemperature;
@@ -334,7 +334,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return ftdew(val, atm);
                 case Property.Enthalpy:
                     return ftsat(val, atm);
@@ -353,9 +353,9 @@ namespace Popolo.ThermophysicalProperty
         /// <param name="val">基準となる物性値</param>
         /// <param name="airProperty">基準となる物性種類</param>
         /// <returns>飽和絶対湿度[kg/kg(DA)]</returns>
-        public static double GetSaturatedAbsoluteHumidity(double val, Property airProperty)
+        public static double GetSaturatedHumidityRatio(double val, Property airProperty)
         {
-            return GetSaturatedAbsoluteHumidity(val, airProperty, ATM);
+            return GetSaturatedHumidityRatio(val, airProperty, ATM);
         }
 
         /// <summary>飽和絶対湿度[kg/kg(DA)]を求める</summary>
@@ -363,7 +363,7 @@ namespace Popolo.ThermophysicalProperty
         /// <param name="airProperty">基準となる物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>飽和絶対湿度[kg/kg(DA)]</returns>
-        public static double GetSaturatedAbsoluteHumidity(double val, Property airProperty, double atm)
+        public static double GetSaturatedHumidityRatio(double val, Property airProperty, double atm)
         {
             switch (airProperty)
             {
@@ -402,7 +402,7 @@ namespace Popolo.ThermophysicalProperty
                 case Property.WetBulbTemperature:
                 case Property.DryBulbTemperature:
                     return fhsat(val, atm);
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     double dbt = ftdew(val, atm);
                     return fhsat(dbt, atm);
                 default:
@@ -445,8 +445,8 @@ namespace Popolo.ThermophysicalProperty
                             throw new Exception("物性指定エラー");
                         case Property.WetBulbTemperature:
                             return GetAirStateFromDBWB(valueA, valueB, atm);
-                        case Property.AbsoluteHumidity:
-                            return GetAirStateFromDBAH(valueA, valueB, atm);
+                        case Property.HumidityRatio:
+                            return GetAirStateFromDBHR(valueA, valueB, atm);
                         case Property.RelativeHumidity:
                             return GetAirStateFromDBRH(valueA, valueB, atm);
                         case Property.Enthalpy:
@@ -461,8 +461,8 @@ namespace Popolo.ThermophysicalProperty
                             return GetAirStateFromDBWB(valueB, valueA, atm);
                         case Property.WetBulbTemperature:
                             throw new Exception("物性指定エラー");
-                        case Property.AbsoluteHumidity:
-                            return GetAirStateFromWBAH(valueA, valueB, atm);
+                        case Property.HumidityRatio:
+                            return GetAirStateFromWBHR(valueA, valueB, atm);
                         case Property.RelativeHumidity:
                             return GetAirStateFromWBRH(valueA, valueB, atm);
                         case Property.Enthalpy:
@@ -470,19 +470,19 @@ namespace Popolo.ThermophysicalProperty
                         default:
                             throw new Exception("物性指定エラー");
                     }
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     switch (propertyB)
                     {
                         case Property.DryBulbTemperature:
-                            return GetAirStateFromDBAH(valueB, valueA, atm);
+                            return GetAirStateFromDBHR(valueB, valueA, atm);
                         case Property.WetBulbTemperature:
-                            return GetAirStateFromWBAH(valueB, valueA, atm);
-                        case Property.AbsoluteHumidity:
+                            return GetAirStateFromWBHR(valueB, valueA, atm);
+                        case Property.HumidityRatio:
                             throw new Exception("物性指定エラー");
                         case Property.RelativeHumidity:
-                            return GetAirStateFromAHRH(valueA, valueB, atm);
+                            return GetAirStateFromHRRH(valueA, valueB, atm);
                         case Property.Enthalpy:
-                            return GetAirStateFromAHEN(valueA, valueB, atm);
+                            return GetAirStateFromHREN(valueA, valueB, atm);
                         default:
                             throw new Exception("物性指定エラー");
                     }
@@ -493,8 +493,8 @@ namespace Popolo.ThermophysicalProperty
                             return GetAirStateFromDBRH(valueB, valueA, atm);
                         case Property.WetBulbTemperature:
                             return GetAirStateFromWBRH(valueB, valueA, atm);
-                        case Property.AbsoluteHumidity:
-                            return GetAirStateFromAHRH(valueB, valueA, atm);
+                        case Property.HumidityRatio:
+                            return GetAirStateFromHRRH(valueB, valueA, atm);
                         case Property.RelativeHumidity:
                             throw new Exception("物性指定エラー");
                         case Property.Enthalpy:
@@ -509,8 +509,8 @@ namespace Popolo.ThermophysicalProperty
                             return GetAirStateFromDBEN(valueB, valueA, atm);
                         case Property.WetBulbTemperature:
                             return GetAirStateFromWBEN(valueB, valueA, atm);
-                        case Property.AbsoluteHumidity:
-                            return GetAirStateFromAHEN(valueB, valueA, atm);
+                        case Property.HumidityRatio:
+                            return GetAirStateFromHREN(valueB, valueA, atm);
                         case Property.RelativeHumidity:
                             return GetAirStateFromRHEN(valueB, valueA, atm);
                         case Property.Enthalpy:
@@ -547,10 +547,10 @@ namespace Popolo.ThermophysicalProperty
             mAir.AtmosphericPressure = atm;
             mAir.DryBulbTemperature = dryBulbTemp;
             mAir.WetBulbTemperature = wetBulbTemp;
-            mAir.AbsoluteHumidity = fwtwb(dryBulbTemp, wetBulbTemp, atm);
-            mAir.Enthalpy = fhair(dryBulbTemp, mAir.AbsoluteHumidity);
-            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwtwb(dryBulbTemp, wetBulbTemp, atm);
+            mAir.Enthalpy = fhair(dryBulbTemp, mAir.HumidityRatio);
+            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -574,7 +574,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwtwb(dryBulbTemp, wetBulbTemp, atm);
                 case Property.Enthalpy:
                     return fhair(dryBulbTemp, fwtwb(dryBulbTemp, wetBulbTemp, atm));
@@ -586,7 +586,7 @@ namespace Popolo.ThermophysicalProperty
                     return fphi(dryBulbTemp, fwtwb(dryBulbTemp, wetBulbTemp, atm), atm);
                 case Property.SpecificVolume:
                     double aHumid = fwtwb(dryBulbTemp, wetBulbTemp, atm);
-                    return getSpecificVolumeFromDBAH(dryBulbTemp, aHumid, atm);
+                    return getSpecificVolumeFromDBHR(dryBulbTemp, aHumid, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -594,63 +594,63 @@ namespace Popolo.ThermophysicalProperty
 
         /// <summary>乾球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="dryBulbTemp">乾球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromDBAH(double dryBulbTemp, double absoluteHumid)
+        public static MoistAir GetAirStateFromDBHR(double dryBulbTemp, double humidityRatio)
         {
-            return GetAirStateFromDBAH(dryBulbTemp, absoluteHumid, ATM);
+            return GetAirStateFromDBHR(dryBulbTemp, humidityRatio, ATM);
         }
 
         /// <summary>乾球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="dryBulbTemp">乾球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromDBAH(double dryBulbTemp, double absoluteHumid, double atm)
+        public static MoistAir GetAirStateFromDBHR(double dryBulbTemp, double humidityRatio, double atm)
         {
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
             mAir.DryBulbTemperature = dryBulbTemp;
-            mAir.AbsoluteHumidity = absoluteHumid;
-            mAir.WetBulbTemperature = ftwb(dryBulbTemp, absoluteHumid, atm);
-            mAir.Enthalpy = fhair(dryBulbTemp, absoluteHumid);
-            mAir.RelativeHumidity = fphi(dryBulbTemp, absoluteHumid, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, absoluteHumid, atm);
+            mAir.HumidityRatio = humidityRatio;
+            mAir.WetBulbTemperature = ftwb(dryBulbTemp, humidityRatio, atm);
+            mAir.Enthalpy = fhair(dryBulbTemp, humidityRatio);
+            mAir.RelativeHumidity = fphi(dryBulbTemp, humidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, humidityRatio, atm);
             return mAir;
         }
 
         /// <summary>乾球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="dryBulbTemp">乾球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromDBAH(double dryBulbTemp, double absoluteHumid, Property airProperty)
+        public static double GetAirStateFromDBHR(double dryBulbTemp, double humidityRatio, Property airProperty)
         {
-            return GetAirStateFromDBAH(dryBulbTemp, absoluteHumid, airProperty, ATM);
+            return GetAirStateFromDBHR(dryBulbTemp, humidityRatio, airProperty, ATM);
         }
 
         /// <summary>乾球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="dryBulbTemp">乾球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromDBAH(double dryBulbTemp, double absoluteHumid, Property airProperty, double atm)
+        public static double GetAirStateFromDBHR(double dryBulbTemp, double humidityRatio, Property airProperty, double atm)
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return absoluteHumid;
+                case Property.HumidityRatio:
+                    return humidityRatio;
                 case Property.Enthalpy:
-                    return fhair(dryBulbTemp, absoluteHumid);
+                    return fhair(dryBulbTemp, humidityRatio);
                 case Property.WetBulbTemperature:
-                    return ftwb(dryBulbTemp, absoluteHumid, atm);
+                    return ftwb(dryBulbTemp, humidityRatio, atm);
                 case Property.DryBulbTemperature:
                     return dryBulbTemp;
                 case Property.RelativeHumidity:
-                    return fphi(dryBulbTemp, absoluteHumid, atm);
+                    return fphi(dryBulbTemp, humidityRatio, atm);
                 case Property.SpecificVolume:
-                    return getSpecificVolumeFromDBAH(dryBulbTemp, absoluteHumid, atm);
+                    return getSpecificVolumeFromDBHR(dryBulbTemp, humidityRatio, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -676,10 +676,10 @@ namespace Popolo.ThermophysicalProperty
             mAir.AtmosphericPressure = atm;
             mAir.DryBulbTemperature = dryBulbTemp;
             mAir.RelativeHumidity = relativeHumid;
-            mAir.AbsoluteHumidity = fwphi(dryBulbTemp, relativeHumid, atm);
-            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.Enthalpy = fhair(dryBulbTemp, mAir.AbsoluteHumidity);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwphi(dryBulbTemp, relativeHumid, atm);
+            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.Enthalpy = fhair(dryBulbTemp, mAir.HumidityRatio);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -703,7 +703,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwphi(dryBulbTemp, relativeHumid, atm);
                 case Property.Enthalpy:
                     return fhair(dryBulbTemp, fwphi(dryBulbTemp, relativeHumid, atm));
@@ -715,7 +715,7 @@ namespace Popolo.ThermophysicalProperty
                     return relativeHumid;
                 case Property.SpecificVolume:
                     double aHumid = fwphi(dryBulbTemp, relativeHumid, atm);
-                    return getSpecificVolumeFromDBAH(dryBulbTemp, aHumid, atm);
+                    return getSpecificVolumeFromDBHR(dryBulbTemp, aHumid, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -741,10 +741,10 @@ namespace Popolo.ThermophysicalProperty
             mAir.AtmosphericPressure = atm;
             mAir.DryBulbTemperature = dryBulbTemp;
             mAir.Enthalpy = enthalpy;
-            mAir.AbsoluteHumidity = fwha(dryBulbTemp, enthalpy);
-            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwha(dryBulbTemp, enthalpy);
+            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -768,7 +768,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwha(dryBulbTemp, enthalpy);
                 case Property.Enthalpy:
                     return enthalpy;
@@ -780,7 +780,7 @@ namespace Popolo.ThermophysicalProperty
                     return fphi(dryBulbTemp, fwha(dryBulbTemp, enthalpy), atm);
                 case Property.SpecificVolume:
                     double aHumid = fwha(dryBulbTemp, enthalpy);
-                    return getSpecificVolumeFromDBAH(dryBulbTemp, aHumid, atm);
+                    return getSpecificVolumeFromDBHR(dryBulbTemp, aHumid, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -805,11 +805,11 @@ namespace Popolo.ThermophysicalProperty
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
             mAir.DryBulbTemperature = dryBulbTemp;
-            mAir.AbsoluteHumidity = getAbsoluteHumidityFromDBSV(dryBulbTemp, specificVolume, atm);
-            mAir.Enthalpy = fhair(dryBulbTemp, mAir.AbsoluteHumidity);
-            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(dryBulbTemp, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = getHumidityRatioFromDBSV(dryBulbTemp, specificVolume, atm);
+            mAir.Enthalpy = fhair(dryBulbTemp, mAir.HumidityRatio);
+            mAir.WetBulbTemperature = ftwb(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.RelativeHumidity = fphi(dryBulbTemp, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(dryBulbTemp, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -834,18 +834,18 @@ namespace Popolo.ThermophysicalProperty
             double ahmd;
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return getAbsoluteHumidityFromDBSV(dryBulbTemp, specificVolume, atm);
+                case Property.HumidityRatio:
+                    return getHumidityRatioFromDBSV(dryBulbTemp, specificVolume, atm);
                 case Property.Enthalpy:
-                    ahmd = getAbsoluteHumidityFromDBSV(dryBulbTemp, specificVolume, atm);
+                    ahmd = getHumidityRatioFromDBSV(dryBulbTemp, specificVolume, atm);
                     return fhair(dryBulbTemp, ahmd);
                 case Property.WetBulbTemperature:
-                    ahmd = getAbsoluteHumidityFromDBSV(dryBulbTemp, specificVolume, atm);
+                    ahmd = getHumidityRatioFromDBSV(dryBulbTemp, specificVolume, atm);
                     return ftwb(dryBulbTemp, ahmd, atm);
                 case Property.DryBulbTemperature:
                     return dryBulbTemp;
                 case Property.RelativeHumidity:
-                    ahmd = getAbsoluteHumidityFromDBSV(dryBulbTemp, specificVolume, atm);
+                    ahmd = getHumidityRatioFromDBSV(dryBulbTemp, specificVolume, atm);
                     return fphi(dryBulbTemp, ahmd, atm);
                 case Property.SpecificVolume:
                     return specificVolume;
@@ -860,64 +860,64 @@ namespace Popolo.ThermophysicalProperty
 
         /// <summary>湿球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="wetBulbTemp">湿球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromWBAH(double wetBulbTemp, double absoluteHumid)
+        public static MoistAir GetAirStateFromWBHR(double wetBulbTemp, double humidityRatio)
         {
-            return GetAirStateFromWBAH(wetBulbTemp, absoluteHumid, ATM);
+            return GetAirStateFromWBHR(wetBulbTemp, humidityRatio, ATM);
         }
 
         /// <summary>湿球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="wetBulbTemp">湿球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromWBAH(double wetBulbTemp, double absoluteHumid, double atm)
+        public static MoistAir GetAirStateFromWBHR(double wetBulbTemp, double humidityRatio, double atm)
         {
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
-            mAir.AbsoluteHumidity = absoluteHumid;
+            mAir.HumidityRatio = humidityRatio;
             mAir.WetBulbTemperature = wetBulbTemp;
-            mAir.DryBulbTemperature = fwwbdb(absoluteHumid, wetBulbTemp, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, absoluteHumid);
-            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.DryBulbTemperature = fwwbdb(humidityRatio, wetBulbTemp, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, humidityRatio);
+            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
         /// <summary>湿球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="wetBulbTemp">湿球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromWBAH(double wetBulbTemp, double absoluteHumid, Property airProperty)
+        public static double GetAirStateFromWBHR(double wetBulbTemp, double humidityRatio, Property airProperty)
         {
-            return GetAirStateFromWBAH(wetBulbTemp, absoluteHumid, airProperty, ATM);
+            return GetAirStateFromWBHR(wetBulbTemp, humidityRatio, airProperty, ATM);
         }
 
         /// <summary>湿球温度[C]および絶対湿度[kg/kg]から空気状態を計算する</summary>
         /// <param name="wetBulbTemp">湿球温度[C]</param>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromWBAH(double wetBulbTemp, double absoluteHumid, Property airProperty, double atm)
+        public static double GetAirStateFromWBHR(double wetBulbTemp, double humidityRatio, Property airProperty, double atm)
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return absoluteHumid;
+                case Property.HumidityRatio:
+                    return humidityRatio;
                 case Property.Enthalpy:
-                    return fhair(fwwbdb(absoluteHumid, wetBulbTemp, atm), absoluteHumid);
+                    return fhair(fwwbdb(humidityRatio, wetBulbTemp, atm), humidityRatio);
                 case Property.WetBulbTemperature:
                     return wetBulbTemp;
                 case Property.DryBulbTemperature:
-                    return fwwbdb(absoluteHumid, wetBulbTemp, atm);
+                    return fwwbdb(humidityRatio, wetBulbTemp, atm);
                 case Property.RelativeHumidity:
-                    return fphi(fwwbdb(absoluteHumid, wetBulbTemp, atm), absoluteHumid, atm);
+                    return fphi(fwwbdb(humidityRatio, wetBulbTemp, atm), humidityRatio, atm);
                 case Property.SpecificVolume:
-                    double dbTemp = fwwbdb(absoluteHumid, wetBulbTemp, atm);
-                    return getSpecificVolumeFromDBAH(dbTemp, absoluteHumid, atm);
+                    double dbTemp = fwwbdb(humidityRatio, wetBulbTemp, atm);
+                    return getSpecificVolumeFromDBHR(dbTemp, humidityRatio, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -944,9 +944,9 @@ namespace Popolo.ThermophysicalProperty
             mAir.WetBulbTemperature = wetBulbTemp;
             mAir.RelativeHumidity = relativeHumid;
             mAir.DryBulbTemperature = fndbrw(relativeHumid, wetBulbTemp, atm);
-            mAir.AbsoluteHumidity = fwphi(mAir.DryBulbTemperature, relativeHumid, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.AbsoluteHumidity);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwphi(mAir.DryBulbTemperature, relativeHumid, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.HumidityRatio);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -970,7 +970,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwphi(fndbrw(relativeHumid, wetBulbTemp, atm), relativeHumid, atm);
                 case Property.Enthalpy:
                     double dbt = fndbrw(relativeHumid, wetBulbTemp, atm);
@@ -984,7 +984,7 @@ namespace Popolo.ThermophysicalProperty
                 case Property.SpecificVolume:
                     double dbTemp = fndbrw(relativeHumid, wetBulbTemp, atm);
                     double ahd = fwphi(dbTemp, relativeHumid, atm);
-                    return getSpecificVolumeFromDBAH(dbTemp, ahd, atm);
+                    return getSpecificVolumeFromDBHR(dbTemp, ahd, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -1011,9 +1011,9 @@ namespace Popolo.ThermophysicalProperty
             mAir.WetBulbTemperature = wetBulbTemp;
             mAir.Enthalpy = enthalpy;
             mAir.DryBulbTemperature = fndbhw(enthalpy, wetBulbTemp, atm);
-            mAir.AbsoluteHumidity = fwha(mAir.DryBulbTemperature, enthalpy);
-            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwha(mAir.DryBulbTemperature, enthalpy);
+            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -1037,7 +1037,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwha(fndbhw(enthalpy, wetBulbTemp, atm), enthalpy);
                 case Property.Enthalpy:
                     return enthalpy;
@@ -1051,7 +1051,7 @@ namespace Popolo.ThermophysicalProperty
                 case Property.SpecificVolume:
                     double dbTemp = fndbhw(enthalpy, wetBulbTemp, atm);
                     double aHumid = fwha(dbTemp, enthalpy);
-                    return getSpecificVolumeFromDBAH(dbTemp, aHumid, atm);
+                    return getSpecificVolumeFromDBHR(dbTemp, aHumid, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -1077,10 +1077,10 @@ namespace Popolo.ThermophysicalProperty
             mAir.AtmosphericPressure = atm;
             mAir.WetBulbTemperature = wetBulbTemp;
             mAir.DryBulbTemperature = getDryBulbTemperatureFromWBSV(wetBulbTemp, specificVolume, atm);
-            mAir.AbsoluteHumidity = fwtwb(mAir.DryBulbTemperature, wetBulbTemp, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.AbsoluteHumidity);
-            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwtwb(mAir.DryBulbTemperature, wetBulbTemp, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.HumidityRatio);
+            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -1105,7 +1105,7 @@ namespace Popolo.ThermophysicalProperty
             double dbTemp;
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     dbTemp = getDryBulbTemperatureFromWBSV(wetBulbTemp, specificVolume, atm);
                     return fwtwb(dbTemp, wetBulbTemp, atm);
                 case Property.Enthalpy:
@@ -1130,20 +1130,20 @@ namespace Popolo.ThermophysicalProperty
         #region 絶対湿度に基づく計算
 
         /// <summary>絶対湿度[kg/kg]および相対湿度[%]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="relativeHumid">相対湿度[%]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHRH(double absoluteHumid, double relativeHumid)
+        public static MoistAir GetAirStateFromHRRH(double humidityRatio, double relativeHumid)
         {
-            return GetAirStateFromAHRH(absoluteHumid, relativeHumid, ATM);
+            return GetAirStateFromHRRH(humidityRatio, relativeHumid, ATM);
         }
 
         /// <summary>絶対湿度[kg/kg]および相対湿度[%]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="relativeHumid">相対湿度[%]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHRH(double absoluteHumid, double relativeHumid, double atm)
+        public static MoistAir GetAirStateFromHRRH(double humidityRatio, double relativeHumid, double atm)
         {
             if (relativeHumid == 0.0)
             {
@@ -1155,33 +1155,33 @@ namespace Popolo.ThermophysicalProperty
                 
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
-            mAir.AbsoluteHumidity = absoluteHumid;
+            mAir.HumidityRatio = humidityRatio;
             mAir.RelativeHumidity = relativeHumid;
-            double ps = fpww(absoluteHumid, atm) / relativeHumid * 100;
+            double ps = fpww(humidityRatio, atm) / relativeHumid * 100;
             mAir.DryBulbTemperature = ftpws(ps);
-            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, absoluteHumid);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, humidityRatio);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
         /// <summary>絶対湿度[kg/kg]および相対湿度[%]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="relativeHumid">相対湿度[%]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHRH(double absoluteHumid, double relativeHumid, Property airProperty)
+        public static double GetAirStateFromHRRH(double humidityRatio, double relativeHumid, Property airProperty)
         {
-            return GetAirStateFromAHRH(absoluteHumid, relativeHumid, airProperty, ATM);
+            return GetAirStateFromHRRH(humidityRatio, relativeHumid, airProperty, ATM);
         }
 
         /// <summary>絶対湿度[kg/kg]および相対湿度[%]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="relativeHumid">相対湿度[%]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHRH(double absoluteHumid, double relativeHumid, Property airProperty, double atm)
+        public static double GetAirStateFromHRRH(double humidityRatio, double relativeHumid, Property airProperty, double atm)
         {
             double ps;
             if (relativeHumid == 0.0)
@@ -1193,153 +1193,153 @@ namespace Popolo.ThermophysicalProperty
             }
                 switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return absoluteHumid;
+                case Property.HumidityRatio:
+                    return humidityRatio;
                 case Property.Enthalpy:
-                    ps = fpww(absoluteHumid, atm) / relativeHumid * 100;
-                    return fhair(ftpws(ps), absoluteHumid);
+                    ps = fpww(humidityRatio, atm) / relativeHumid * 100;
+                    return fhair(ftpws(ps), humidityRatio);
                 case Property.WetBulbTemperature:
-                    ps = fpww(absoluteHumid, atm) / relativeHumid * 100;
-                    return ftwb(ftpws(ps), absoluteHumid, atm);
+                    ps = fpww(humidityRatio, atm) / relativeHumid * 100;
+                    return ftwb(ftpws(ps), humidityRatio, atm);
                 case Property.DryBulbTemperature:
-                    ps = fpww(absoluteHumid, atm) / relativeHumid * 100;
+                    ps = fpww(humidityRatio, atm) / relativeHumid * 100;
                     return ftpws(ps);
                 case Property.RelativeHumidity:
                     return relativeHumid;
                 case Property.SpecificVolume:
-                    ps = fpww(absoluteHumid, atm) / relativeHumid * 100;
-                    return getSpecificVolumeFromDBAH(ftpws(ps), absoluteHumid, atm);
+                    ps = fpww(humidityRatio, atm) / relativeHumid * 100;
+                    return getSpecificVolumeFromDBHR(ftpws(ps), humidityRatio, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
         }
 
         /// <summary>絶対湿度[kg/kg]およびエンタルピー[kJ/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="enthalpy">エンタルピー[kJ/kg]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHEN(double absoluteHumid, double enthalpy)
+        public static MoistAir GetAirStateFromHREN(double humidityRatio, double enthalpy)
         {
-            return GetAirStateFromAHEN(absoluteHumid, enthalpy, ATM);
+            return GetAirStateFromHREN(humidityRatio, enthalpy, ATM);
         }
 
         /// <summary>絶対湿度[kg/kg]およびエンタルピー[kJ/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="enthalpy">エンタルピー[kJ/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHEN(double absoluteHumid, double enthalpy, double atm)
+        public static MoistAir GetAirStateFromHREN(double humidityRatio, double enthalpy, double atm)
         {
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
-            mAir.AbsoluteHumidity = absoluteHumid;
+            mAir.HumidityRatio = humidityRatio;
             mAir.Enthalpy = enthalpy;
-            mAir.DryBulbTemperature = ftdb(absoluteHumid, enthalpy);
-            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.DryBulbTemperature = ftdb(humidityRatio, enthalpy);
+            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
         /// <summary>絶対湿度[kg/kg]およびエンタルピー[kJ/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="enthalpy">エンタルピー[kJ/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHEN(double absoluteHumid, double enthalpy, Property airProperty)
+        public static double GetAirStateFromHREN(double humidityRatio, double enthalpy, Property airProperty)
         {
-            return GetAirStateFromAHEN(absoluteHumid, enthalpy, airProperty, ATM);
+            return GetAirStateFromHREN(humidityRatio, enthalpy, airProperty, ATM);
         }
 
         /// <summary>絶対湿度[kg/kg]およびエンタルピー[kJ/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="enthalpy">エンタルピー[kJ/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHEN(double absoluteHumid, double enthalpy, Property airProperty, double atm)
+        public static double GetAirStateFromHREN(double humidityRatio, double enthalpy, Property airProperty, double atm)
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return absoluteHumid;
+                case Property.HumidityRatio:
+                    return humidityRatio;
                 case Property.Enthalpy:
                     return enthalpy;
                 case Property.WetBulbTemperature:
-                    return ftwb(ftdb(absoluteHumid, enthalpy), absoluteHumid, atm);
+                    return ftwb(ftdb(humidityRatio, enthalpy), humidityRatio, atm);
                 case Property.DryBulbTemperature:
-                    return ftdb(absoluteHumid, enthalpy);
+                    return ftdb(humidityRatio, enthalpy);
                 case Property.RelativeHumidity:
-                    return fphi(ftdb(absoluteHumid, enthalpy), absoluteHumid, atm);
+                    return fphi(ftdb(humidityRatio, enthalpy), humidityRatio, atm);
                 case Property.SpecificVolume:
-                    double dbTemp = ftdb(absoluteHumid, enthalpy);
-                    return getSpecificVolumeFromDBAH(dbTemp, absoluteHumid, atm);
+                    double dbTemp = ftdb(humidityRatio, enthalpy);
+                    return getSpecificVolumeFromDBHR(dbTemp, humidityRatio, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
         }
 
         /// <summary>絶対湿度[kg/kg]および比容積[m3/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="specificVolume">比容積[m3/kg]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHSV(double absoluteHumid, double specificVolume)
+        public static MoistAir GetAirStateFromHRSV(double humidityRatio, double specificVolume)
         {
-            return GetAirStateFromAHSV(absoluteHumid, specificVolume);
+            return GetAirStateFromHRSV(humidityRatio, specificVolume);
         }
 
         /// <summary>絶対湿度[kg/kg]および比容積[m3/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="specificVolume">比容積[m3/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static MoistAir GetAirStateFromAHSV(double absoluteHumid, double specificVolume, double atm)
+        public static MoistAir GetAirStateFromHRSV(double humidityRatio, double specificVolume, double atm)
         {
             MoistAir mAir = new MoistAir();
             mAir.AtmosphericPressure = atm;
-            mAir.AbsoluteHumidity = absoluteHumid;
-            mAir.DryBulbTemperature = getDryBulbTemperatureFromSVAH(specificVolume, absoluteHumid, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, absoluteHumid);
-            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, absoluteHumid, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = humidityRatio;
+            mAir.DryBulbTemperature = getDryBulbTemperatureFromSVHR(specificVolume, humidityRatio, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, humidityRatio);
+            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.RelativeHumidity = fphi(mAir.DryBulbTemperature, humidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
         /// <summary>絶対湿度[kg/kg]および比容積[m3/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="specificVolume">比容積[m3/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHSV(double absoluteHumid, double specificVolume, Property airProperty)
+        public static double GetAirStateFromHRSV(double humidityRatio, double specificVolume, Property airProperty)
         {
-            return GetAirStateFromAHSV(absoluteHumid, specificVolume, airProperty, ATM);
+            return GetAirStateFromHRSV(humidityRatio, specificVolume, airProperty, ATM);
         }
 
         /// <summary>絶対湿度[kg/kg]および比容積[m3/kg]から空気状態を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="specificVolume">比容積[m3/kg]</param>
         /// <param name="airProperty">計算する物性種類</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>空気状態</returns>
-        public static double GetAirStateFromAHSV(double absoluteHumid, double specificVolume, Property airProperty, double atm)
+        public static double GetAirStateFromHRSV(double humidityRatio, double specificVolume, Property airProperty, double atm)
         {
             double dbTemp;
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
-                    return absoluteHumid;
+                case Property.HumidityRatio:
+                    return humidityRatio;
                 case Property.Enthalpy:
-                    dbTemp = getDryBulbTemperatureFromSVAH(specificVolume, absoluteHumid, atm);
-                    return fhair(dbTemp, absoluteHumid);
+                    dbTemp = getDryBulbTemperatureFromSVHR(specificVolume, humidityRatio, atm);
+                    return fhair(dbTemp, humidityRatio);
                 case Property.WetBulbTemperature:
-                    dbTemp = getDryBulbTemperatureFromSVAH(specificVolume, absoluteHumid, atm);
-                    return ftwb(dbTemp, absoluteHumid, atm);
+                    dbTemp = getDryBulbTemperatureFromSVHR(specificVolume, humidityRatio, atm);
+                    return ftwb(dbTemp, humidityRatio, atm);
                 case Property.DryBulbTemperature:
-                    return getDryBulbTemperatureFromSVAH(specificVolume, absoluteHumid, atm);
+                    return getDryBulbTemperatureFromSVHR(specificVolume, humidityRatio, atm);
                 case Property.RelativeHumidity:
-                    dbTemp = getDryBulbTemperatureFromSVAH(specificVolume, absoluteHumid, atm);
-                    return fphi(dbTemp, absoluteHumid, atm);
+                    dbTemp = getDryBulbTemperatureFromSVHR(specificVolume, humidityRatio, atm);
+                    return fphi(dbTemp, humidityRatio, atm);
                 case Property.SpecificVolume:
                     return specificVolume;
                 default:
@@ -1372,9 +1372,9 @@ namespace Popolo.ThermophysicalProperty
             mAir.Enthalpy = enthalpy;
             mAir.RelativeHumidity = relativeHumid;
             mAir.DryBulbTemperature = fndbrh(relativeHumid, enthalpy, atm);
-            mAir.AbsoluteHumidity = fwha(mAir.DryBulbTemperature, enthalpy);
-            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwha(mAir.DryBulbTemperature, enthalpy);
+            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -1398,7 +1398,7 @@ namespace Popolo.ThermophysicalProperty
         {
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     return fwha(fndbrh(relativeHumid, enthalpy, atm), enthalpy);
                 case Property.Enthalpy:
                     return enthalpy;
@@ -1412,7 +1412,7 @@ namespace Popolo.ThermophysicalProperty
                 case Property.SpecificVolume:
                     double dbTemp = fndbrh(relativeHumid, enthalpy, atm);
                     double aHumid = fwha(dbTemp, enthalpy);
-                    return getSpecificVolumeFromDBAH(dbTemp, aHumid, atm);
+                    return getSpecificVolumeFromDBHR(dbTemp, aHumid, atm);
                 default:
                     throw new Exception("物性種類エラー");
             }
@@ -1438,10 +1438,10 @@ namespace Popolo.ThermophysicalProperty
             mAir.AtmosphericPressure = atm;
             mAir.RelativeHumidity = relativeHumid;
             mAir.DryBulbTemperature = getDryBulbTemperatureFromRHSV(relativeHumid, specificVolume, atm);
-            mAir.AbsoluteHumidity = fwphi(mAir.DryBulbTemperature, relativeHumid, atm);
-            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
-            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.AbsoluteHumidity);
-            mAir.SpecificVolume = getSpecificVolumeFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, atm);
+            mAir.HumidityRatio = fwphi(mAir.DryBulbTemperature, relativeHumid, atm);
+            mAir.WetBulbTemperature = ftwb(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
+            mAir.Enthalpy = fhair(mAir.DryBulbTemperature, mAir.HumidityRatio);
+            mAir.SpecificVolume = getSpecificVolumeFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, atm);
             return mAir;
         }
 
@@ -1466,7 +1466,7 @@ namespace Popolo.ThermophysicalProperty
             double dbTemp;
             switch (airProperty)
             {
-                case Property.AbsoluteHumidity:
+                case Property.HumidityRatio:
                     dbTemp = getDryBulbTemperatureFromRHSV(relativeHumid, specificVolume, atm);
                     return fwphi(dbTemp, relativeHumid, atm);
                 case Property.Enthalpy:
@@ -1510,28 +1510,28 @@ namespace Popolo.ThermophysicalProperty
         }
 
         /// <summary>湿り空気比熱[kJ/kg-K]を計算する</summary>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg(DA)]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg(DA)]</param>
         /// <returns>湿り空気比熱[kJ/kg-K]</returns>
-        public static double GetSpecificHeat(double absoluteHumidity)
+        public static double GetSpecificHeat(double humidityRatio)
         {
-            return CP_AIR + CP_VAPOR * absoluteHumidity;
+            return CP_AIR + CP_VAPOR * humidityRatio;
         }
 
         /// <summary>水蒸気圧[kPa]を取得する</summary>
-        /// <param name="absolteHumidity">絶対湿度[kg/kg(DA)]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg(DA)]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>水蒸気圧[kPa]</returns>
-        public static double GetWaterVaporPressure(double absolteHumidity, double atm)
+        public static double GetWaterVaporPressure(double humidityRatio, double atm)
         {
-            return (absolteHumidity * atm) / (absolteHumidity + 0.62198);
+            return (humidityRatio * atm) / (humidityRatio + 0.62198);
         }
 
         /// <summary>水蒸気圧[kPa]を取得する</summary>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg(DA)]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg(DA)]</param>
         /// <returns>水蒸気圧[kPa]</returns>
-        public static double GetWaterVaporPressure(double absoluteHumidity)
+        public static double GetWaterVaporPressure(double humidityRatio)
         {
-            return GetWaterVaporPressure(absoluteHumidity, ATM);
+            return GetWaterVaporPressure(humidityRatio, ATM);
         }
 
         /// <summary>動粘性係数[m2/s]を計算する</summary>
@@ -1571,7 +1571,7 @@ namespace Popolo.ThermophysicalProperty
             {
                 //if (air[i].DryBulbTemperature < -30.0d) air[i].DryBulbTemperature = -30.0d;
                 //if (air[i].DryBulbTemperature > 65.0d) air[i].DryBulbTemperature = 65.0d;   //←もう少し上限はあるかも。要確認
-                //if (air[i].AbsoluteHumidity < 0.0d) air[i].AbsoluteHumidity = 0.0d;
+                //if (air[i].HumidityRatio < 0.0d) air[i].HumidityRatio = 0.0d;
                 //割合を積算
                 if (rate[i] < 0) throw new Exception("湿空気の混合比率が0以下に設定されています");
                 rSum += rate[i];
@@ -1580,9 +1580,9 @@ namespace Popolo.ThermophysicalProperty
                 //温度[K]×割合を積算
                 trSum += air[i].DryBulbTemperature * rate[i];
                 //絶対湿度[kg/kg]を積算
-                hSum += air[i].AbsoluteHumidity;
+                hSum += air[i].HumidityRatio;
                 //絶対湿度[kg/kg]×割合を積算
-                hrSum += air[i].AbsoluteHumidity * rate[i];
+                hrSum += air[i].HumidityRatio * rate[i];
             }
             //混合後の乾球温度および絶対湿度を計算
             double drybulbTempOut;
@@ -1662,8 +1662,8 @@ namespace Popolo.ThermophysicalProperty
             if (air1Rate < 0 || air2Rate < 0) throw new Exception("湿空気の混合比率が0以下に設定されています");
             double rate = air1Rate + air2Rate;
             double dbt = (air1.DryBulbTemperature * air1Rate + air2.DryBulbTemperature * air2Rate) / rate;
-            double ahd = (air1.AbsoluteHumidity * air1Rate + air2.AbsoluteHumidity * air2Rate) / rate;
-            return MoistAir.GetAirStateFromDBAH(dbt, ahd);
+            double ahd = (air1.HumidityRatio * air1Rate + air2.HumidityRatio * air2Rate) / rate;
+            return MoistAir.GetAirStateFromDBHR(dbt, ahd);
         }
 
         #endregion
@@ -1687,7 +1687,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>顕熱差[kJ/kg]</returns>
         public static double CalculateSensibleHeatDifference(ImmutableMoistAir mAir1, ImmutableMoistAir mAir2)
         {
-            return (CP_AIR + CP_VAPOR * mAir1.AbsoluteHumidity) * mAir1.DryBulbTemperature - (CP_AIR + CP_VAPOR * mAir2.AbsoluteHumidity) * mAir2.DryBulbTemperature;
+            return (CP_AIR + CP_VAPOR * mAir1.HumidityRatio) * mAir1.DryBulbTemperature - (CP_AIR + CP_VAPOR * mAir2.HumidityRatio) * mAir2.DryBulbTemperature;
         }
 
         /// <summary>湿り空気の潜熱差[kJ/kg]を計算する</summary>
@@ -1696,7 +1696,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>潜熱差[kJ/kg]</returns>
         public static double CalculateLatentHeatDifference(ImmutableMoistAir mAir1, ImmutableMoistAir mAir2)
         {
-            return (mAir1.AbsoluteHumidity - mAir2.AbsoluteHumidity) * HFG;
+            return (mAir1.HumidityRatio - mAir2.HumidityRatio) * HFG;
         }
 
         /// <summary>湿り空気の顕熱[kJ/kg]および潜熱[kJ/kg]を計算する</summary>
@@ -1722,7 +1722,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>潜熱[kJ/kg]</returns>
         public static double CalculateLatentHeat(ImmutableMoistAir mAir)
         {
-            return (CP_VAPOR * mAir.DryBulbTemperature + HFG) * mAir.AbsoluteHumidity;
+            return (CP_VAPOR * mAir.DryBulbTemperature + HFG) * mAir.HumidityRatio;
         }
 
         #endregion
@@ -1736,7 +1736,7 @@ namespace Popolo.ThermophysicalProperty
             air.AtmosphericPressure = this.AtmosphericPressure;
             air.DryBulbTemperature = this.DryBulbTemperature;
             air.WetBulbTemperature = this.WetBulbTemperature;
-            air.AbsoluteHumidity = this.AbsoluteHumidity;
+            air.HumidityRatio = this.HumidityRatio;
             air.RelativeHumidity = this.RelativeHumidity;
             air.Enthalpy = this.Enthalpy;
             air.SpecificVolume = this.specificVolume;
@@ -1770,7 +1770,7 @@ namespace Popolo.ThermophysicalProperty
             //湿球温度[℃]
             wetBulbTemp = sInfo.GetDouble("wetBulbTemp");
             //絶対湿度[kg/kg]
-            absoluteHumid = sInfo.GetDouble("absoluteHumid");
+            humidityRatio = sInfo.GetDouble("humidityRatio");
             //相対湿度[%]
             relativeHumid = sInfo.GetDouble("relativeHumid");
             //エンタルピー[kJ/kg]
@@ -1796,7 +1796,7 @@ namespace Popolo.ThermophysicalProperty
             //湿球温度[℃]
             info.AddValue("wetBulbTemp", WetBulbTemperature);
             //絶対湿度[kg/kg]
-            info.AddValue("absoluteHumid", AbsoluteHumidity);
+            info.AddValue("humidityRatio", HumidityRatio);
             //相対湿度[%]
             info.AddValue("relativeHumid", RelativeHumidity);
             //エンタルピー[kJ/kg]
@@ -2087,9 +2087,9 @@ namespace Popolo.ThermophysicalProperty
             double dbt = 25;
             while (true)
             {
-                double err1 = fwphi(dbt, relativeHumidity, atm) - getAbsoluteHumidityFromDBSV(dbt, specificVolume, atm);
+                double err1 = fwphi(dbt, relativeHumidity, atm) - getHumidityRatioFromDBSV(dbt, specificVolume, atm);
                 if (Math.Abs(err1) < TOL) break;
-                double err2 = fwphi(dbt + DELTA, relativeHumidity, atm) - getAbsoluteHumidityFromDBSV(dbt + DELTA, specificVolume, atm);
+                double err2 = fwphi(dbt + DELTA, relativeHumidity, atm) - getHumidityRatioFromDBSV(dbt + DELTA, specificVolume, atm);
                 dbt -= err1 / ((err2 - err1) / DELTA);
                 iterNum++;
                 if (20 < iterNum) throw new Exception("Iteration Error");
@@ -2111,9 +2111,9 @@ namespace Popolo.ThermophysicalProperty
             double dbt = 25;
             while (true)
             {
-                double err1 = fwtwb(dbt, wbTemp, atm) - getAbsoluteHumidityFromDBSV(dbt, specificVolume, atm);
+                double err1 = fwtwb(dbt, wbTemp, atm) - getHumidityRatioFromDBSV(dbt, specificVolume, atm);
                 if (Math.Abs(err1) < TOL) break;
-                double err2 = fwtwb(dbt + DELTA, wbTemp, atm) - getAbsoluteHumidityFromDBSV(dbt + DELTA, specificVolume, atm);
+                double err2 = fwtwb(dbt + DELTA, wbTemp, atm) - getHumidityRatioFromDBSV(dbt + DELTA, specificVolume, atm);
                 dbt -= err1 / ((err2 - err1) / DELTA);
                 iterNum++;
                 if (20 < iterNum) throw new Exception("Iteration Error");
@@ -2123,22 +2123,22 @@ namespace Popolo.ThermophysicalProperty
 
         /// <summary>乾球温度[C]および絶対湿度[kg/kg]から湿り空気の比容積[m3/kg]を求める</summary>
         /// <param name="dbTemp">乾球温度[C]</param>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>比容積[m3/kg]</returns>
-        private static double getSpecificVolumeFromDBAH(double dbTemp, double absoluteHumidity, double atm)
+        private static double getSpecificVolumeFromDBHR(double dbTemp, double humidityRatio, double atm)
         {
-            return ((dbTemp + TCONV) * GAS_CONSTANT_DRY_AIR) / atm * (1.0d + 1.6078d * absoluteHumidity);
+            return ((dbTemp + TCONV) * GAS_CONSTANT_DRY_AIR) / atm * (1.0d + 1.6078d * humidityRatio);
         }
 
         /// <summary>比容積[m3/kg]および絶対湿度[kg/kg]から乾球温度[C]を求める</summary>
         /// <param name="specificVolume">比容積[m3/kg]</param>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>乾球温度[C]</returns>
-        private static double getDryBulbTemperatureFromSVAH(double specificVolume, double absoluteHumidity, double atm)
+        private static double getDryBulbTemperatureFromSVHR(double specificVolume, double humidityRatio, double atm)
         {
-            return specificVolume / (1.0 + 1.6078d * absoluteHumidity) * atm / GAS_CONSTANT_DRY_AIR - TCONV;
+            return specificVolume / (1.0 + 1.6078d * humidityRatio) * atm / GAS_CONSTANT_DRY_AIR - TCONV;
         }
 
         /// <summary>乾球温度[C]および比容積[m3/kg]から絶対湿度[kg/kg]を求める</summary>
@@ -2146,7 +2146,7 @@ namespace Popolo.ThermophysicalProperty
         /// <param name="specificVolume">比容積[m3/kg]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>絶対湿度[kg/kg]</returns>
-        private static double getAbsoluteHumidityFromDBSV(double dryBulbTemperature, double specificVolume, double atm)
+        private static double getHumidityRatioFromDBSV(double dryBulbTemperature, double specificVolume, double atm)
         {
             return (specificVolume / (dryBulbTemperature + TCONV) / GAS_CONSTANT_DRY_AIR * atm - 1.0d) / 1.6078d;
         }
@@ -2163,15 +2163,15 @@ namespace Popolo.ThermophysicalProperty
         }
 
         /// <summary>絶対湿度[kg/kg]と湿球温度[C]から乾球温度[C]を計算する</summary>
-        /// <param name="absoluteHumid">絶対湿度[kg/kg]</param>
+        /// <param name="humidityRatio">絶対湿度[kg/kg]</param>
         /// <param name="wetBulbTemp">湿球温度[C]</param>
         /// <param name="atm">大気圧[kPa]</param>
         /// <returns>乾球温度[C]</returns>
-        private static double fwwbdb(double absoluteHumid, double wetBulbTemp, double atm)
+        private static double fwwbdb(double humidityRatio, double wetBulbTemp, double atm)
         {
             double pstwb = fpws(wetBulbTemp);
             double ws = fwpw(pstwb, atm);
-            return (CP_AIR * wetBulbTemp + (CP_VAPOR * wetBulbTemp + HFG - fhc(wetBulbTemp)) * ws - (HFG - fhc(wetBulbTemp)) * absoluteHumid) / (CP_AIR + CP_VAPOR * absoluteHumid);
+            return (CP_AIR * wetBulbTemp + (CP_VAPOR * wetBulbTemp + HFG - fhc(wetBulbTemp)) * ws - (HFG - fhc(wetBulbTemp)) * humidityRatio) / (CP_AIR + CP_VAPOR * humidityRatio);
         }
 
         /// <summary>飽和蒸気分圧[kPa]から乾球温度[C]を計算する</summary>
