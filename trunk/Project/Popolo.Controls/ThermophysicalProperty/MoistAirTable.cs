@@ -39,7 +39,7 @@ namespace Popolo.ThermophysicalProperty
         private readonly MoistAir.Property[] properties = { 
             MoistAir.Property.DryBulbTemperature,
             MoistAir.Property.WetBulbTemperature,
-            MoistAir.Property.AbsoluteHumidity,
+            MoistAir.Property.HumidityRatio,
             MoistAir.Property.RelativeHumidity,
             MoistAir.Property.Enthalpy,
             MoistAir.Property.SpecificVolume,
@@ -176,11 +176,11 @@ namespace Popolo.ThermophysicalProperty
                         initializing = true;
                         dgAirTable[0, rowIndex].Value = mAir.DryBulbTemperature.ToString("F2");
                         dgAirTable[1, rowIndex].Value = mAir.WetBulbTemperature.ToString("F2");
-                        dgAirTable[2, rowIndex].Value = mAir.AbsoluteHumidity.ToString("F5");
+                        dgAirTable[2, rowIndex].Value = mAir.HumidityRatio.ToString("F5");
                         dgAirTable[3, rowIndex].Value = mAir.RelativeHumidity.ToString("F2");
                         dgAirTable[4, rowIndex].Value = mAir.Enthalpy.ToString("F2");
-                        dgAirTable[5, rowIndex].Value = MoistAir.GetAirStateFromDBAH(mAir.DryBulbTemperature, mAir.AbsoluteHumidity, MoistAir.Property.SpecificVolume, barometricPressure).ToString("F4");
-                        dgAirTable[6, rowIndex].Value = MoistAir.GetSaturatedDrybulbTemperature(mAir.AbsoluteHumidity, MoistAir.Property.AbsoluteHumidity, barometricPressure).ToString("F2");
+                        dgAirTable[5, rowIndex].Value = MoistAir.GetAirStateFromDBHR(mAir.DryBulbTemperature, mAir.HumidityRatio, MoistAir.Property.SpecificVolume, barometricPressure).ToString("F4");
+                        dgAirTable[6, rowIndex].Value = MoistAir.GetSaturatedDrybulbTemperature(mAir.HumidityRatio, MoistAir.Property.HumidityRatio, barometricPressure).ToString("F2");
                         dgAirTable[7, rowIndex].Value = barometricPressure.ToString("F3");
                         initializing = false;
                     }

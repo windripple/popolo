@@ -258,7 +258,7 @@ namespace Popolo.ThermalLoad
             {
                 //Bマトリクスを作成
                 //ゾーンの水蒸気容量/時間間隔[W/K]を計算
-                double airSV = MoistAir.GetAirStateFromDBAH(zones[i].CurrentDrybulbTemperature,
+                double airSV = MoistAir.GetAirStateFromDBHR(zones[i].CurrentDrybulbTemperature,
                             zones[i].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume);
                 double zSH = (zones[i].Volume / airSV + zones[i].LatentHeatCapacity) / TimeStep;
                 double cgo = zones[i].VentilationVolume / airSV / 3600d;
@@ -285,7 +285,7 @@ namespace Popolo.ThermalLoad
 
                 //Bベクトル・Tマトリクス
                 bVector.SetValue(arbPerm[i], zSH * zones[i].CurrentAbsoluteHumidity
-                    + cgo * zones[i].VentilationAirState.AbsoluteHumidity
+                    + cgo * zones[i].VentilationAirState.HumidityRatio
                     + zones[i].integrateLatentHeatGain() / MoistAir.LatentHeatOfVaporization / 1000);
                 if (zones[i].ControlAbsoluteHumidity)
                 {
@@ -394,7 +394,7 @@ namespace Popolo.ThermalLoad
             {
                 //Bマトリクスを作成
                 //ゾーンの熱容量/時間間隔[W/K]を計算
-                double airSV = MoistAir.GetAirStateFromDBAH(zones[i].CurrentDrybulbTemperature,
+                double airSV = MoistAir.GetAirStateFromDBHR(zones[i].CurrentDrybulbTemperature,
                             zones[i].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume);
                 double cpAir = MoistAir.GetSpecificHeat(zones[i].CurrentAbsoluteHumidity) * 1000;
                 double zSH = (zones[i].Volume / airSV * cpAir + zones[i].SensibleHeatCapacity) / TimeStep;

@@ -151,7 +151,7 @@ namespace Popolo.Utility
                     prevAHD = double.Parse(strs[3]);
 
                     //外気状態作成
-                    outdoor[0].AirState = MoistAir.GetAirStateFromDBAH(dbt, ahd, atm);
+                    outdoor[0].AirState = MoistAir.GetAirStateFromDBHR(dbt, ahd, atm);
                     if (outdoor[1] != null) outdoor[1].AirState = outdoor[0].AirState;
                     foreach (Zone rm in rooms) rm.VentilationAirState = outdoor[0].AirState;
                     if (testCase == TestCase.C990)
@@ -1372,7 +1372,7 @@ namespace Popolo.Utility
 
                     double dpt = wr.GetData(WeatherRecord.RecordType.DewPointTemperature).Value;
                     double atm = wr.GetData(WeatherRecord.RecordType.AtmosphericPressure).Value;
-                    double ahd = MoistAir.GetSaturatedAbsoluteHumidity(dpt, MoistAir.Property.DryBulbTemperature, atm);
+                    double ahd = MoistAir.GetSaturatedHumidityRatio(dpt, MoistAir.Property.DryBulbTemperature, atm);
                     sWriter.Write(ahd + ",");
 
                     wd = wr.GetData(WeatherRecord.RecordType.DirectNormalRadiation);

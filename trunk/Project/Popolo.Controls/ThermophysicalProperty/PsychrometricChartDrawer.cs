@@ -145,8 +145,8 @@ namespace Popolo.ThermophysicalProperty
             //等比容積線描画ペンを調整
             //lineProperties[Lines.SpecificVoluemLine].DrawingPen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
 
-            double hmax = MoistAir.GetAirStateFromDBAH(50, 0, MoistAir.Property.Enthalpy);
-            double hmin = MoistAir.GetAirStateFromDBAH(-10, 0, MoistAir.Property.Enthalpy);
+            double hmax = MoistAir.GetAirStateFromDBHR(50, 0, MoistAir.Property.Enthalpy);
+            double hmin = MoistAir.GetAirStateFromDBHR(-10, 0, MoistAir.Property.Enthalpy);
             ax = Math.Tan(58d / 180d * Math.PI) * (hmax - hmin) / 0.037;
         }
 
@@ -410,7 +410,7 @@ namespace Popolo.ThermophysicalProperty
             //上下範囲外の場合はnullを返す
             if (dbTemp < minDB || maxDB < dbTemp || aHumid < minAH || maxAH < aHumid) return null;
             //範囲内ならば空気状態を計算して返す
-            else return MoistAir.GetAirStateFromAHEN(aHumid, enthalpy, barometricPressure);
+            else return MoistAir.GetAirStateFromHREN(aHumid, enthalpy, barometricPressure);
         }
 
         /// <summary>乾球温度と絶対湿度に基づいて座標を計算する</summary>
@@ -429,7 +429,7 @@ namespace Popolo.ThermophysicalProperty
 
             /*return new PointF((float)(((dryBulbTemperature - minDB) * xRate) + L_MARGIN),
                 (float)((maxAH - absoluteHumidity) * yRate + T_MARGIN));*/
-            double en = MoistAir.GetAirStateFromDBAH(dryBulbTemperature, absoluteHumidity, MoistAir.Property.Enthalpy);
+            double en = MoistAir.GetAirStateFromDBHR(dryBulbTemperature, absoluteHumidity, MoistAir.Property.Enthalpy);
             double dbt = en - ax * absoluteHumidity;
             return new PointF((float)((dbt - minDB) * xRate + L_MARGIN),
                 (float)((maxAH - absoluteHumidity) * yRate + T_MARGIN));
@@ -471,7 +471,7 @@ namespace Popolo.ThermophysicalProperty
         private static PointF getPointFromDBandAH(double dbTemp, double absoluteHumidity, double xRate, double yRate)
         {
             //斜交座標変換
-            double en = MoistAir.GetAirStateFromDBAH(dbTemp, absoluteHumidity, MoistAir.Property.Enthalpy);
+            double en = MoistAir.GetAirStateFromDBHR(dbTemp, absoluteHumidity, MoistAir.Property.Enthalpy);
             double dbt = en - ax * absoluteHumidity;
             double minDB = lineProperties[Lines.DryBulbTemperatureLine].MinimumValue;
             double minAH = lineProperties[Lines.AbsoluteHumidityLine].MinimumValue;
@@ -498,18 +498,18 @@ namespace Popolo.ThermophysicalProperty
             double minAH = lineProperties[Lines.AbsoluteHumidityLine].MinimumValue;
             double maxAH = lineProperties[Lines.AbsoluteHumidityLine].MaximumValue;
 
-            double ahmd = MoistAir.GetSaturatedAbsoluteHumidity(minDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
+            double ahmd = MoistAir.GetSaturatedHumidityRatio(minDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
             if (ahmd < minAH)
             {
                 ahmd = minAH;
-                currentDB = MoistAir.GetSaturatedDrybulbTemperature(minAH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                currentDB = MoistAir.GetSaturatedDrybulbTemperature(minAH, MoistAir.Property.HumidityRatio, barometricPressure);
             }
             else if (maxAH < ahmd) return;
 
             PointF prevPtf = getPointFromDBandAH(currentDB, ahmd, xRate, yRate);
             while (currentDB < maxDB)
             {
-                ahmd = MoistAir.GetSaturatedAbsoluteHumidity(currentDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                ahmd = MoistAir.GetSaturatedHumidityRatio(currentDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
                 
                 //描画範囲内に含まれている場合
                 if (ahmd <= maxAH)
@@ -521,7 +521,7 @@ namespace Popolo.ThermophysicalProperty
                 else
                 {
                     ahmd = maxAH;
-                    currentDB = MoistAir.GetSaturatedDrybulbTemperature(maxAH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    currentDB = MoistAir.GetSaturatedDrybulbTemperature(maxAH, MoistAir.Property.HumidityRatio, barometricPressure);
                     PointF newPtf = getPointFromDBandAH(currentDB, ahmd, xRate, yRate);
                     gr.DrawLine(pen, prevPtf, newPtf);
                     return;
@@ -530,7 +530,7 @@ namespace Popolo.ThermophysicalProperty
                 currentDB += deltaDB;
             }
 
-            ahmd = MoistAir.GetSaturatedAbsoluteHumidity(maxDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
+            ahmd = MoistAir.GetSaturatedHumidityRatio(maxDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
             gr.DrawLine(pen, prevPtf, getPointFromDBandAH(maxDB, ahmd, xRate, yRate));
         }
 
@@ -549,14 +549,14 @@ namespace Popolo.ThermophysicalProperty
             double deltaDB = lineProperties[Lines.DryBulbTemperatureLine].Spacing;
             double minAH = lineProperties[Lines.AbsoluteHumidityLine].MinimumValue;
             double maxAH = lineProperties[Lines.AbsoluteHumidityLine].MaximumValue;
-            double satDB = MoistAir.GetSaturatedDrybulbTemperature(maxAH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+            double satDB = MoistAir.GetSaturatedDrybulbTemperature(maxAH, MoistAir.Property.HumidityRatio, barometricPressure);
 
             while (currentDB <= maxDB)
             {
                 //始点を計算
                 double ahmd;
                 if (satDB < currentDB) ahmd = maxAH;
-                else ahmd = MoistAir.GetSaturatedAbsoluteHumidity(currentDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                else ahmd = MoistAir.GetSaturatedHumidityRatio(currentDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
                 if (minAH <= ahmd)
                 {
                     PointF startPtf = getPointFromDBandAH(currentDB, ahmd, xRate, yRate);
@@ -585,7 +585,7 @@ namespace Popolo.ThermophysicalProperty
             double currentAH = minAH;
             double maxAH = lineProperties[Lines.AbsoluteHumidityLine].MaximumValue;
             double deltaAH = lineProperties[Lines.AbsoluteHumidityLine].Spacing;
-            double satAH = MoistAir.GetSaturatedAbsoluteHumidity(minDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
+            double satAH = MoistAir.GetSaturatedHumidityRatio(minDB, MoistAir.Property.DryBulbTemperature, barometricPressure);
 
             //絶対湿度deltaAH刻みで描画
             while (currentAH <= maxAH)
@@ -593,7 +593,7 @@ namespace Popolo.ThermophysicalProperty
                 //始点を計算
                 double dbt;
                 if (currentAH < satAH) dbt = minDB;
-                else dbt = MoistAir.GetSaturatedDrybulbTemperature(currentAH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                else dbt = MoistAir.GetSaturatedDrybulbTemperature(currentAH, MoistAir.Property.HumidityRatio, barometricPressure);
                 if (dbt <= maxDB)
                 {
                     PointF startPtf = getPointFromDBandAH(dbt, currentAH, xRate, yRate);
@@ -632,19 +632,19 @@ namespace Popolo.ThermophysicalProperty
                 bool outofRange = false;
                 //始点を計算
                 double dbt = MoistAir.GetSaturatedDrybulbTemperature(currentH, MoistAir.Property.Enthalpy, barometricPressure);
-                double ahmd = MoistAir.GetSaturatedAbsoluteHumidity(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                double ahmd = MoistAir.GetSaturatedHumidityRatio(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
                 //始点が描画領域よりも左方の場合
                 if (dbt < minDB)
                 {
                     dbt = minDB;
-                    ahmd = MoistAir.GetAirStateFromDBEN(minDB, currentH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    ahmd = MoistAir.GetAirStateFromDBEN(minDB, currentH, MoistAir.Property.HumidityRatio, barometricPressure);
                 }
                 else if (maxDB < dbt) outofRange = true;
                 //始点が描画領域よりも上方の場合
                 if (maxAH < ahmd)
                 {
                     ahmd = maxAH;
-                    dbt = MoistAir.GetAirStateFromAHEN(maxAH, currentH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    dbt = MoistAir.GetAirStateFromHREN(maxAH, currentH, MoistAir.Property.DryBulbTemperature, barometricPressure);
                     //始点が描画領域よりも右方の場合
                     if (maxDB < dbt) outofRange = true;
                 }
@@ -655,8 +655,8 @@ namespace Popolo.ThermophysicalProperty
                 if (!outofRange)
                 {
                     PointF finalPt;
-                    double dbtEnd = MoistAir.GetAirStateFromAHEN(minAH, currentH, MoistAir.Property.DryBulbTemperature, barometricPressure);
-                    double ahmdEnd = MoistAir.GetAirStateFromDBEN(maxDB, currentH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    double dbtEnd = MoistAir.GetAirStateFromHREN(minAH, currentH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    double ahmdEnd = MoistAir.GetAirStateFromDBEN(maxDB, currentH, MoistAir.Property.HumidityRatio, barometricPressure);
 
                     //右領域外へ出る場合
                     if (maxDB <= dbtEnd)
@@ -667,7 +667,7 @@ namespace Popolo.ThermophysicalProperty
                         {
                             dbt += deltaDB;
                             if (maxDB < dbt) break;
-                            ahmd = MoistAir.GetAirStateFromDBEN(dbt, currentH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBEN(dbt, currentH, MoistAir.Property.HumidityRatio, barometricPressure);
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
                             prevPtf = newPtf;
@@ -681,7 +681,7 @@ namespace Popolo.ThermophysicalProperty
                         while (true)
                         {
                             dbt += deltaDB;
-                            ahmd = MoistAir.GetAirStateFromDBEN(dbt, currentH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBEN(dbt, currentH, MoistAir.Property.HumidityRatio, barometricPressure);
                             if (ahmd < minAH) break;
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
@@ -722,20 +722,20 @@ namespace Popolo.ThermophysicalProperty
                 bool outofRange = false;
                 //始点を計算
                 double dbt = MoistAir.GetSaturatedDrybulbTemperature(currentWB, MoistAir.Property.WetBulbTemperature, barometricPressure);
-                double ahmd = MoistAir.GetSaturatedAbsoluteHumidity(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                double ahmd = MoistAir.GetSaturatedHumidityRatio(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
 
                 //始点が描画領域よりも左方の場合
                 if (dbt < minDB)
                 {
                     dbt = minDB;
-                    ahmd = MoistAir.GetAirStateFromDBWB(minDB, currentWB, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    ahmd = MoistAir.GetAirStateFromDBWB(minDB, currentWB, MoistAir.Property.HumidityRatio, barometricPressure);
                 }
                 else if (maxDB < dbt) outofRange = true;
                 //始点が描画領域よりも上方の場合
                 if (maxAH < ahmd)
                 {
                     ahmd = maxAH;
-                    dbt = MoistAir.GetAirStateFromWBAH(currentWB, maxAH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    dbt = MoistAir.GetAirStateFromWBHR(currentWB, maxAH, MoistAir.Property.DryBulbTemperature, barometricPressure);
                     //始点が描画領域よりも右方の場合
                     if (maxDB < dbt) outofRange = true;
                 }
@@ -748,8 +748,8 @@ namespace Popolo.ThermophysicalProperty
                 {
                     //終点を計算
                     PointF finalPt;
-                    double dbtEnd = MoistAir.GetAirStateFromWBAH(currentWB, minAH, MoistAir.Property.DryBulbTemperature, barometricPressure);
-                    double ahmdEnd = MoistAir.GetAirStateFromDBWB(maxDB, currentWB, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    double dbtEnd = MoistAir.GetAirStateFromWBHR(currentWB, minAH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    double ahmdEnd = MoistAir.GetAirStateFromDBWB(maxDB, currentWB, MoistAir.Property.HumidityRatio, barometricPressure);
                     //右領域外へ出る場合
                     if (maxDB <= dbtEnd)
                     {
@@ -759,7 +759,7 @@ namespace Popolo.ThermophysicalProperty
                         {
                             dbt += deltaDB;
                             if (maxDB < dbt) break;
-                            ahmd = MoistAir.GetAirStateFromDBWB(dbt, currentWB, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBWB(dbt, currentWB, MoistAir.Property.HumidityRatio, barometricPressure);
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
                             prevPtf = newPtf;
@@ -773,7 +773,7 @@ namespace Popolo.ThermophysicalProperty
                         while (true)
                         {
                             dbt += deltaDB;
-                            ahmd = MoistAir.GetAirStateFromDBWB(dbt, currentWB, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBWB(dbt, currentWB, MoistAir.Property.HumidityRatio, barometricPressure);
                             if (ahmd < minAH) break;
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
@@ -813,19 +813,19 @@ namespace Popolo.ThermophysicalProperty
                 bool outofRange = false;
                 //始点を計算
                 double dbt = MoistAir.GetSaturatedDrybulbTemperature(currentSV, MoistAir.Property.SpecificVolume, barometricPressure);
-                double ahmd = MoistAir.GetSaturatedAbsoluteHumidity(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                double ahmd = MoistAir.GetSaturatedHumidityRatio(dbt, MoistAir.Property.DryBulbTemperature, barometricPressure);
                 //始点が描画領域よりも左方の場合
                 if (dbt < minDB)
                 {
                     dbt = minDB;
-                    ahmd = MoistAir.GetAirStateFromDBSV(minDB, currentSV, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    ahmd = MoistAir.GetAirStateFromDBSV(minDB, currentSV, MoistAir.Property.HumidityRatio, barometricPressure);
                 }
                 else if (maxDB < dbt) outofRange = true;
                 //始点が描画領域よりも上方の場合
                 if (maxAH < ahmd)
                 {
                     ahmd = maxAH;
-                    dbt = MoistAir.GetAirStateFromAHSV(maxAH, currentSV, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    dbt = MoistAir.GetAirStateFromHRSV(maxAH, currentSV, MoistAir.Property.DryBulbTemperature, barometricPressure);
                     //始点が描画領域よりも右方の場合
                     if (maxDB < dbt) outofRange = true;
                 }
@@ -835,8 +835,8 @@ namespace Popolo.ThermophysicalProperty
                 if (!outofRange)
                 {
                     PointF finalPt;
-                    double dbtEnd = MoistAir.GetAirStateFromAHSV(minAH, currentSV, MoistAir.Property.DryBulbTemperature, barometricPressure);
-                    double ahmdEnd = MoistAir.GetAirStateFromDBSV(maxDB, currentSV, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    double dbtEnd = MoistAir.GetAirStateFromHRSV(minAH, currentSV, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    double ahmdEnd = MoistAir.GetAirStateFromDBSV(maxDB, currentSV, MoistAir.Property.HumidityRatio, barometricPressure);
                     //右領域外へ出る場合
                     if (maxDB <= dbtEnd)
                     {
@@ -846,7 +846,7 @@ namespace Popolo.ThermophysicalProperty
                         {
                             dbt += deltaDB;
                             if (maxDB < dbt) break;
-                            ahmd = MoistAir.GetAirStateFromDBSV(dbt, currentSV, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBSV(dbt, currentSV, MoistAir.Property.HumidityRatio, barometricPressure);
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
                             prevPtf = newPtf;
@@ -860,7 +860,7 @@ namespace Popolo.ThermophysicalProperty
                         while (true)
                         {
                             dbt += deltaDB;
-                            ahmd = MoistAir.GetAirStateFromDBSV(dbt, currentSV, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBSV(dbt, currentSV, MoistAir.Property.HumidityRatio, barometricPressure);
                             if (ahmd < minAH) break;
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
@@ -901,13 +901,13 @@ namespace Popolo.ThermophysicalProperty
                 bool outofRange = false;
                 //始点を計算
                 double dbt = minDB;
-                double ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                double ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.HumidityRatio, barometricPressure);
 
                 //描画領域の下方に位置する場合
                 if (ahmd < minAH)
                 {
                     ahmd = minAH;
-                    dbt = MoistAir.GetAirStateFromAHRH(minAH, currentRH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                    dbt = MoistAir.GetAirStateFromHRRH(minAH, currentRH, MoistAir.Property.DryBulbTemperature, barometricPressure);
                     if (maxDB < dbt) outofRange = true;
                 }
                 else if (maxAH < ahmd) outofRange = true;
@@ -918,17 +918,17 @@ namespace Popolo.ThermophysicalProperty
                 {
                     //終点を計算
                     PointF finalPt;
-                    double ahmdEnd = MoistAir.GetAirStateFromDBRH(maxDB, currentRH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                    double ahmdEnd = MoistAir.GetAirStateFromDBRH(maxDB, currentRH, MoistAir.Property.HumidityRatio, barometricPressure);
                     //上部領域外へ出る場合
                     if (maxAH < ahmdEnd)
                     {
-                        double dbtEnd = MoistAir.GetAirStateFromAHRH(maxAH, currentRH, MoistAir.Property.DryBulbTemperature, barometricPressure);
+                        double dbtEnd = MoistAir.GetAirStateFromHRRH(maxAH, currentRH, MoistAir.Property.DryBulbTemperature, barometricPressure);
                         finalPt = getPointFromDBandAH(dbtEnd, maxAH, xRate, yRate);
                         //乾球温度をdeltaDB刻みで描画
                         while (true)
                         {
                             dbt += deltaDB;
-                            ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.HumidityRatio, barometricPressure);
                             if (maxAH < ahmd) break;
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
@@ -944,7 +944,7 @@ namespace Popolo.ThermophysicalProperty
                         {
                             dbt += deltaDB;
                             if (maxDB < dbt) break;
-                            ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.AbsoluteHumidity, barometricPressure);
+                            ahmd = MoistAir.GetAirStateFromDBRH(dbt, currentRH, MoistAir.Property.HumidityRatio, barometricPressure);
                             PointF newPtf = getPointFromDBandAH(dbt, ahmd, xRate, yRate);
                             gr.DrawLine(pen, prevPtf, newPtf);
                             prevPtf = newPtf;

@@ -4,18 +4,151 @@
         <name>Popolo.Controls</name>
     </assembly>
     <members>
-        <member name="T:Popolo.Schedule.PhasedTreeNode">
-            <summary>子ノードの追加履歴を保存するプロパティを持つ段階的ツリーノード</summary>
+        <member name="T:Popolo.Schedule.SchedulerEditor`1">
+            <summary>スケジューラエディタ</summary>
         </member>
-        <member name="F:Popolo.Schedule.PhasedTreeNode.isSubFoldersAdded">
-            <summary>子ノード追加処理済か否かのフラグ</summary>
+        <member name="F:Popolo.Schedule.SchedulerEditor`1.defaultValue">
+            <summary>デフォルト値</summary>
         </member>
-        <member name="M:Popolo.Schedule.PhasedTreeNode.#ctor(System.String)">
+        <member name="F:Popolo.Schedule.SchedulerEditor`1.iTermStructures">
+            <summary>設定可能な期間定義オブジェクトリスト</summary>
+        </member>
+        <member name="F:Popolo.Schedule.SchedulerEditor`1.scheduler">
+            <summary>編集するスケジューラ</summary>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.#ctor">
             <summary>コンストラクタ</summary>
-            <param name="text">ツリーノードに表示する文字列</param>
         </member>
-        <member name="P:Popolo.Schedule.PhasedTreeNode.SubFoldersAdded">
-            <summary>子ノード追加処理済か否かのフラグを設定・取得する</summary>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetITermStructures(Popolo.Schedule.ITermStructure[])">
+            <summary>設定可能な期間定義オブジェクトリストを設定する</summary>
+            <param name="iTermStructures">設定可能な期間定義オブジェクトリスト</param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetScheduler(Popolo.Schedule.ITermStructure)">
+            <summary>スケジューラを設定する</summary>
+            <param name="iTermStructure">スケジューラで管理する期間定義オブジェクト</param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetScheduler(Popolo.Schedule.Scheduler{`0})">
+            <summary>スケジューラを設定する</summary>
+            <param name="scheduler">スケジューラ</param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.GetScheduler">
+            <summary>編集中のスケジューラを取得する</summary>
+            <returns>編集中のスケジューラ</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetSchedule(`0)">
+            <summary>選択中のスケジューラと期間にスケジュールを設定する</summary>
+            <param name="schedule">スケジュール内容</param>
+            <returns>設定成功の真偽</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.GetSchedule(`0@)">
+            <summary>選択中のスケジューラと期間のスケジュールを取得する</summary>
+            <param name="schedule">スケジュール内容</param>
+            <returns>取得成功の真偽</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.SchedulerNodeSelected">
+            <summary>スケジューラノードが選択されているか否かを取得する</summary>
+            <returns>スケジューラノードが選択されている場合は真</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.getTreeNodeFromSchedulerAndTermName(System.Windows.Forms.TreeNodeCollection,Popolo.Schedule.Scheduler{`0},System.String)">
+            <summary>TreeNodeCollectionを検索してSchedulerと期間名称に対応するTreeNodeを特定する</summary>
+            <param name="treeNodes">検索するTreeNodeCollection</param>
+            <param name="scheduler">TreeNodeのタグに関連付けられたSchedulerオブジェクト</param>
+            <param name="termName">ツリーノードに表示されているテキストの名称</param>
+            <returns>Schedulerと期間名称に対応するTreeNode</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.getTreeNodeFromScheduler(System.Windows.Forms.TreeNodeCollection,Popolo.Schedule.Scheduler{`0})">
+            <summary>TreeNodeCollectionを検索してSchedulerに対応するTreeNodeを特定する</summary>
+            <param name="treeNodes">検索するTreeNodeCollection</param>
+            <param name="scheduler">TreeNodeのタグに関連付けられたSchedulerオブジェクト</param>
+            <returns>Schedulerに対応するTreeNode</returns>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduleTree_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
+            <summary>選択ノード変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.updateTSBtn">
+            <summary>ToolStripButtonの状態を更新する</summary>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduleTree_BeforeExpand(System.Object,System.Windows.Forms.TreeViewCancelEventArgs)">
+            <summary>ノードを開く前の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnAdd_DropDownItemClicked(System.Object,System.Windows.Forms.ToolStripItemClickedEventArgs)">
+            <summary>スケジューラ追加ボタンクリック時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnRemove_Click(System.Object,System.EventArgs)">
+            <summary>スケジューラ削除ボタンクリック時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnAdd_DropDownOpening(System.Object,System.EventArgs)">
+            <summary>スケジューラ追加ボタンドロップダウンリスト表示前の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnProperty_Click(System.Object,System.EventArgs)">
+            <summary>プロパティボタンクリックイベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerNameChangeEvent(System.Object,System.EventArgs)">
+            <summary>スケジューラ名称変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerInitializeEvent(System.Object,System.EventArgs)">
+            <summary>スケジューラ初期化イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerRemoveEvent(System.Object,Popolo.Schedule.SchedulerEventArgs{`0})">
+            <summary>スケジューラ削除イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerSetEvent(System.Object,Popolo.Schedule.SchedulerEventArgs{`0})">
+            <summary>スケジューラ設定イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:Popolo.Schedule.SchedulerEditor`1.components">
+            <summary> 
+            必要なデザイナ変数です。
+            </summary>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.Dispose(System.Boolean)">
+            <summary> 
+            使用中のリソースをすべてクリーンアップします。
+            </summary>
+            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
+        </member>
+        <member name="M:Popolo.Schedule.SchedulerEditor`1.InitializeComponent">
+            <summary> 
+            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
+            コード エディタで変更しないでください。
+            </summary>
+        </member>
+        <member name="E:Popolo.Schedule.SchedulerEditor`1.SchedulerAddButtonOpeningEvent">
+            <summary>スケジューラ追加ボタンリスト表示イベント</summary>
+        </member>
+        <member name="E:Popolo.Schedule.SchedulerEditor`1.SchedulerSetEvent">
+            <summary>スケジューラ追加イベント</summary>
+        </member>
+        <member name="E:Popolo.Schedule.SchedulerEditor`1.TreeViewAfterSelectEvent">
+            <summary>スケジューラ選択イベント</summary>
+        </member>
+        <member name="P:Popolo.Schedule.SchedulerEditor`1.DefaultValue">
+            <summary>デフォルト値を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.Schedule.SchedulerEditor`1.SelectedNodeLevel">
+            <summary>選択中のノードの階層を取得する</summary>
+        </member>
+        <member name="T:Popolo.Schedule.SchedulerEditor`1.SchedulerEditorEventHandler">
+            <summary>スケジューライベントハンドラ</summary>
         </member>
         <member name="T:Popolo.ThermophysicalProperty.PsychrometricChartDrawer">
             <summary>空気線図描画クラス</summary>
@@ -237,79 +370,105 @@
             <param name="lineColor">線の色</param>
             <param name="diameter">直径</param>
         </member>
-        <member name="T:Popolo.ThermophysicalProperty.MoistAirTable">
-            <summary>湿り空気状態表示テーブル</summary>
+        <member name="T:Popolo.Schedule.SeasonsEditor">
+            <summary>Seasons編集コントロール</summary>
         </member>
-        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.properties">
-            <summary>空気状態の種類と列番号の対応</summary>
+        <member name="F:Popolo.Schedule.SeasonsEditor.seasons">
+            <summary>編集中のSeasonsオブジェクト</summary>
         </member>
-        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.initializing">
-            <summary>初期化中フラグ</summary>
+        <member name="F:Popolo.Schedule.SeasonsEditor.initializing">
+            <summary>初期化中か否かのフラグ</summary>
         </member>
-        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.editColsList">
-            <summary>編集中の列番号リスト（行の数だけ存在）</summary>
+        <member name="F:Popolo.Schedule.SeasonsEditor.editable">
+            <summary>編集可能か否かのフラグ</summary>
         </member>
-        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.barometricPressure">
-            <summary>気圧[kPa]</summary>
-        </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.#ctor">
+        <member name="M:Popolo.Schedule.SeasonsEditor.#ctor">
             <summary>コンストラクタ</summary>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_CellValueChanged(System.Object,System.Windows.Forms.DataGridViewCellEventArgs)">
-            <summary>セル編集イベント発生時の処理</summary>
+        <member name="M:Popolo.Schedule.SeasonsEditor.SetSeasons(Popolo.Schedule.Seasons)">
+            <summary>編集するSeasonsオブジェクトを設定する</summary>
+            <param name="seasons">編集するSeasonsオブジェクト</param>
+        </member>
+        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_NameChangeEvent(System.Object,System.EventArgs)">
+            <summary>名称変更イベント発生時の処理</summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_RowsAdded(System.Object,System.Windows.Forms.DataGridViewRowsAddedEventArgs)">
-            <summary>列追加イベント発生時の処理</summary>
+        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonRemoveEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
+            <summary>季節削除イベント発生時の処理</summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_RowsRemoved(System.Object,System.Windows.Forms.DataGridViewRowsRemovedEventArgs)">
-            <summary>列削除イベント発生時の処理</summary>
+        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonChangeEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
+            <summary>季節編集イベント発生時の処理</summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_KeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
-            <summary>キーダウンイベント発生時の処理</summary>
+        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonAddEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
+            <summary>季節追加イベント発生時の処理</summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.updateRow(System.Int32,System.Int32)">
-            <summary>行を更新する</summary>
-            <param name="rowIndex">更新に利用するセルの列方向番号</param>
-            <param name="colIndex">更新に利用するセルの行方向番号</param>
+        <member name="M:Popolo.Schedule.SeasonsEditor.tbxSeasonsName_TextChanged(System.Object,System.EventArgs)">
+            <summary>季節定義オブジェクト名称テキストボックス変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.PasteClipboardData">
-            <summary>クリップボードの値を貼り付ける</summary>
+        <member name="M:Popolo.Schedule.SeasonsEditor.tbxSeasonName_TextChanged(System.Object,System.EventArgs)">
+            <summary>季節名称テキストボックス変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.GetClipboardContent">
-            <summary>選択されたテーブルの内容を取得する</summary>
-            <returns>選択されたテーブルの内容</returns>
+        <member name="M:Popolo.Schedule.SeasonsEditor.btnAdd_Click(System.Object,System.EventArgs)">
+            <summary>季節追加ボタンクリックイベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.OutputDataToCSVFile(System.String)">
-            <summary>データをCSVファイルに書き出す</summary>
-            <param name="filePath">CSVファイルへのパス</param>
+        <member name="M:Popolo.Schedule.SeasonsEditor.btnRemove_Click(System.Object,System.EventArgs)">
+            <summary>季節削除ボタンクリックイベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
-        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.components">
+        <member name="M:Popolo.Schedule.SeasonsEditor.dtPickerStart_ValueChanged(System.Object,System.EventArgs)">
+            <summary>季節開始月日変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SeasonsEditor.dtPickerEnd_ValueChanged(System.Object,System.EventArgs)">
+            <summary>季節終了月日変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SeasonsEditor.lbxSeasons_SelectedIndexChanged(System.Object,System.EventArgs)">
+            <summary>選択中のSeasonsオブジェクト変更イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.Schedule.SeasonsEditor.updateControl">
+            <summary>コントロールを更新する</summary>
+        </member>
+        <member name="F:Popolo.Schedule.SeasonsEditor.components">
             <summary> 
             必要なデザイナ変数です。
             </summary>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.Dispose(System.Boolean)">
+        <member name="M:Popolo.Schedule.SeasonsEditor.Dispose(System.Boolean)">
             <summary> 
             使用中のリソースをすべてクリーンアップします。
             </summary>
             <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
         </member>
-        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.InitializeComponent">
+        <member name="M:Popolo.Schedule.SeasonsEditor.InitializeComponent">
             <summary> 
             デザイナ サポートに必要なメソッドです。このメソッドの内容を 
             コード エディタで変更しないでください。
             </summary>
         </member>
-        <member name="P:Popolo.ThermophysicalProperty.MoistAirTable.BarometricPressure">
-            <summary>気圧[kPa]を設定・取得する</summary>
+        <member name="P:Popolo.Schedule.SeasonsEditor.EdittingSeasons">
+            <summary>編集中のSeasonsオブジェクトを取得する</summary>
+        </member>
+        <member name="P:Popolo.Schedule.SeasonsEditor.Editable">
+            <summary>編集可能か否かを取得・設定する</summary>
         </member>
         <member name="T:Popolo.Schedule.TimePeriodsEditor">
             <summary>TimePeriods編集コントロール</summary>
@@ -411,8 +570,128 @@
         <member name="P:Popolo.Schedule.TimePeriodsEditor.Editable">
             <summary>編集可能か否かを取得・設定する</summary>
         </member>
+        <member name="T:Popolo.Controls.Properties.Resources">
+            <summary>
+              ローカライズされた文字列などを検索するための、厳密に型指定されたリソース クラスです。
+            </summary>
+        </member>
+        <member name="P:Popolo.Controls.Properties.Resources.ResourceManager">
+            <summary>
+              このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
+            </summary>
+        </member>
+        <member name="P:Popolo.Controls.Properties.Resources.Culture">
+            <summary>
+              厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
+              現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
+            </summary>
+        </member>
+        <member name="T:Popolo.ThermophysicalProperty.MoistAirTable">
+            <summary>湿り空気状態表示テーブル</summary>
+        </member>
+        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.components">
+            <summary> 
+            必要なデザイナ変数です。
+            </summary>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.Dispose(System.Boolean)">
+            <summary> 
+            使用中のリソースをすべてクリーンアップします。
+            </summary>
+            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.InitializeComponent">
+            <summary> 
+            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
+            コード エディタで変更しないでください。
+            </summary>
+        </member>
+        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.properties">
+            <summary>空気状態の種類と列番号の対応</summary>
+        </member>
+        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.initializing">
+            <summary>初期化中フラグ</summary>
+        </member>
+        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.editColsList">
+            <summary>編集中の列番号リスト（行の数だけ存在）</summary>
+        </member>
+        <member name="F:Popolo.ThermophysicalProperty.MoistAirTable.barometricPressure">
+            <summary>気圧[kPa]</summary>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.#ctor">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_CellValueChanged(System.Object,System.Windows.Forms.DataGridViewCellEventArgs)">
+            <summary>セル編集イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_RowsAdded(System.Object,System.Windows.Forms.DataGridViewRowsAddedEventArgs)">
+            <summary>列追加イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_RowsRemoved(System.Object,System.Windows.Forms.DataGridViewRowsRemovedEventArgs)">
+            <summary>列削除イベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.dgAirTable_KeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>キーダウンイベント発生時の処理</summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.updateRow(System.Int32,System.Int32)">
+            <summary>行を更新する</summary>
+            <param name="rowIndex">更新に利用するセルの列方向番号</param>
+            <param name="colIndex">更新に利用するセルの行方向番号</param>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.PasteClipboardData">
+            <summary>クリップボードの値を貼り付ける</summary>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.GetClipboardContent">
+            <summary>選択されたテーブルの内容を取得する</summary>
+            <returns>選択されたテーブルの内容</returns>
+        </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAirTable.OutputDataToCSVFile(System.String)">
+            <summary>データをCSVファイルに書き出す</summary>
+            <param name="filePath">CSVファイルへのパス</param>
+        </member>
+        <member name="P:Popolo.ThermophysicalProperty.MoistAirTable.BarometricPressure">
+            <summary>気圧[kPa]を設定・取得する</summary>
+        </member>
+        <member name="T:Popolo.Schedule.PhasedTreeNode">
+            <summary>子ノードの追加履歴を保存するプロパティを持つ段階的ツリーノード</summary>
+        </member>
+        <member name="F:Popolo.Schedule.PhasedTreeNode.isSubFoldersAdded">
+            <summary>子ノード追加処理済か否かのフラグ</summary>
+        </member>
+        <member name="M:Popolo.Schedule.PhasedTreeNode.#ctor(System.String)">
+            <summary>コンストラクタ</summary>
+            <param name="text">ツリーノードに表示する文字列</param>
+        </member>
+        <member name="P:Popolo.Schedule.PhasedTreeNode.SubFoldersAdded">
+            <summary>子ノード追加処理済か否かのフラグを設定・取得する</summary>
+        </member>
         <member name="T:Popolo.Schedule.DaysEditor">
             <summary>曜日定義編集コントロール</summary>
+        </member>
+        <member name="F:Popolo.Schedule.DaysEditor.components">
+            <summary> 
+            必要なデザイナ変数です。
+            </summary>
+        </member>
+        <member name="M:Popolo.Schedule.DaysEditor.Dispose(System.Boolean)">
+            <summary> 
+            使用中のリソースをすべてクリーンアップします。
+            </summary>
+            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
+        </member>
+        <member name="M:Popolo.Schedule.DaysEditor.InitializeComponent">
+            <summary> 
+            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
+            コード エディタで変更しないでください。
+            </summary>
         </member>
         <member name="F:Popolo.Schedule.DaysEditor.days">
             <summary>編集中のSeasonsオブジェクト</summary>
@@ -453,290 +732,11 @@
         <member name="M:Popolo.Schedule.DaysEditor.updateControl">
             <summary>コントロールを更新する</summary>
         </member>
-        <member name="F:Popolo.Schedule.DaysEditor.components">
-            <summary> 
-            必要なデザイナ変数です。
-            </summary>
-        </member>
-        <member name="M:Popolo.Schedule.DaysEditor.Dispose(System.Boolean)">
-            <summary> 
-            使用中のリソースをすべてクリーンアップします。
-            </summary>
-            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
-        </member>
-        <member name="M:Popolo.Schedule.DaysEditor.InitializeComponent">
-            <summary> 
-            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
-            コード エディタで変更しないでください。
-            </summary>
-        </member>
         <member name="P:Popolo.Schedule.DaysEditor.EdittingDays">
             <summary>編集中のDaysオブジェクトを取得する</summary>
         </member>
         <member name="P:Popolo.Schedule.DaysEditor.Editable">
             <summary>編集可能か否かを取得・設定する</summary>
-        </member>
-        <member name="T:Popolo.Schedule.SchedulerEditor`1">
-            <summary>スケジューラエディタ</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SchedulerEditor`1.defaultValue">
-            <summary>デフォルト値</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SchedulerEditor`1.iTermStructures">
-            <summary>設定可能な期間定義オブジェクトリスト</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SchedulerEditor`1.scheduler">
-            <summary>編集するスケジューラ</summary>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.#ctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetITermStructures(Popolo.Schedule.ITermStructure[])">
-            <summary>設定可能な期間定義オブジェクトリストを設定する</summary>
-            <param name="iTermStructures">設定可能な期間定義オブジェクトリスト</param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetScheduler(Popolo.Schedule.ITermStructure)">
-            <summary>スケジューラを設定する</summary>
-            <param name="iTermStructure">スケジューラで管理する期間定義オブジェクト</param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetScheduler(Popolo.Schedule.Scheduler{`0})">
-            <summary>スケジューラを設定する</summary>
-            <param name="scheduler">スケジューラ</param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.GetScheduler">
-            <summary>編集中のスケジューラを取得する</summary>
-            <returns>編集中のスケジューラ</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.SetSchedule(`0)">
-            <summary>選択中のスケジューラと期間にスケジュールを設定する</summary>
-            <param name="schedule">スケジュール内容</param>
-            <returns>設定成功の真偽</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.GetSchedule(`0@)">
-            <summary>選択中のスケジューラと期間のスケジュールを取得する</summary>
-            <param name="schedule">スケジュール内容</param>
-            <returns>取得成功の真偽</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.SchedulerNodeSelected">
-            <summary>スケジューラノードが選択されているか否かを取得する</summary>
-            <returns>スケジューラノードが選択されている場合は真</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.getTreeNodeFromSchedulerAndTermName(System.Windows.Forms.TreeNodeCollection,Popolo.Schedule.Scheduler{`0},System.String)">
-            <summary>TreeNodeCollectionを検索してSchedulerと期間名称に対応するTreeNodeを特定する</summary>
-            <param name="treeNodes">検索するTreeNodeCollection</param>
-            <param name="scheduler">TreeNodeのタグに関連付けられたSchedulerオブジェクト</param>
-            <param name="termName">ツリーノードに表示されているテキストの名称</param>
-            <returns>Schedulerと期間名称に対応するTreeNode</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.getTreeNodeFromScheduler(System.Windows.Forms.TreeNodeCollection,Popolo.Schedule.Scheduler{`0})">
-            <summary>TreeNodeCollectionを検索してSchedulerに対応するTreeNodeを特定する</summary>
-            <param name="treeNodes">検索するTreeNodeCollection</param>
-            <param name="scheduler">TreeNodeのタグに関連付けられたSchedulerオブジェクト</param>
-            <returns>Schedulerに対応するTreeNode</returns>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduleTree_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
-            <summary>選択ノード変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.updateTSBtn">
-            <summary>ToolStripButtonの状態を更新する</summary>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduleTree_BeforeExpand(System.Object,System.Windows.Forms.TreeViewCancelEventArgs)">
-            <summary>ノードを開く前の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnAdd_DropDownItemClicked(System.Object,System.Windows.Forms.ToolStripItemClickedEventArgs)">
-            <summary>スケジューラ追加ボタンクリック時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnRemove_Click(System.Object,System.EventArgs)">
-            <summary>スケジューラ削除ボタンクリック時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnAdd_DropDownOpening(System.Object,System.EventArgs)">
-            <summary>スケジューラ追加ボタンドロップダウンリスト表示前の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.tsbtnProperty_Click(System.Object,System.EventArgs)">
-            <summary>プロパティボタンクリックイベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerNameChangeEvent(System.Object,System.EventArgs)">
-            <summary>スケジューラ名称変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerInitializeEvent(System.Object,System.EventArgs)">
-            <summary>スケジューラ初期化イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerRemoveEvent(System.Object,Popolo.Schedule.SchedulerEventArgs{`0})">
-            <summary>スケジューラ削除イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.scheduler_SchedulerSetEvent(System.Object,Popolo.Schedule.SchedulerEventArgs{`0})">
-            <summary>スケジューラ設定イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="F:Popolo.Schedule.SchedulerEditor`1.components">
-            <summary> 
-            必要なデザイナ変数です。
-            </summary>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.Dispose(System.Boolean)">
-            <summary> 
-            使用中のリソースをすべてクリーンアップします。
-            </summary>
-            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
-        </member>
-        <member name="M:Popolo.Schedule.SchedulerEditor`1.InitializeComponent">
-            <summary> 
-            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
-            コード エディタで変更しないでください。
-            </summary>
-        </member>
-        <member name="E:Popolo.Schedule.SchedulerEditor`1.SchedulerAddButtonOpeningEvent">
-            <summary>スケジューラ追加ボタンリスト表示イベント</summary>
-        </member>
-        <member name="E:Popolo.Schedule.SchedulerEditor`1.SchedulerSetEvent">
-            <summary>スケジューラ追加イベント</summary>
-        </member>
-        <member name="E:Popolo.Schedule.SchedulerEditor`1.TreeViewAfterSelectEvent">
-            <summary>スケジューラ選択イベント</summary>
-        </member>
-        <member name="P:Popolo.Schedule.SchedulerEditor`1.DefaultValue">
-            <summary>デフォルト値を設定・取得する</summary>
-        </member>
-        <member name="P:Popolo.Schedule.SchedulerEditor`1.SelectedNodeLevel">
-            <summary>選択中のノードの階層を取得する</summary>
-        </member>
-        <member name="T:Popolo.Schedule.SchedulerEditor`1.SchedulerEditorEventHandler">
-            <summary>スケジューライベントハンドラ</summary>
-        </member>
-        <member name="T:Popolo.Schedule.SeasonsEditor">
-            <summary>Seasons編集コントロール</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SeasonsEditor.components">
-            <summary> 
-            必要なデザイナ変数です。
-            </summary>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.Dispose(System.Boolean)">
-            <summary> 
-            使用中のリソースをすべてクリーンアップします。
-            </summary>
-            <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.InitializeComponent">
-            <summary> 
-            デザイナ サポートに必要なメソッドです。このメソッドの内容を 
-            コード エディタで変更しないでください。
-            </summary>
-        </member>
-        <member name="F:Popolo.Schedule.SeasonsEditor.seasons">
-            <summary>編集中のSeasonsオブジェクト</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SeasonsEditor.initializing">
-            <summary>初期化中か否かのフラグ</summary>
-        </member>
-        <member name="F:Popolo.Schedule.SeasonsEditor.editable">
-            <summary>編集可能か否かのフラグ</summary>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.#ctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.SetSeasons(Popolo.Schedule.Seasons)">
-            <summary>編集するSeasonsオブジェクトを設定する</summary>
-            <param name="seasons">編集するSeasonsオブジェクト</param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_NameChangeEvent(System.Object,System.EventArgs)">
-            <summary>名称変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonRemoveEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
-            <summary>季節削除イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonChangeEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
-            <summary>季節編集イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.seasons_SeasonAddEvent(System.Object,Popolo.Schedule.SeasonsEventArgs)">
-            <summary>季節追加イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.tbxSeasonsName_TextChanged(System.Object,System.EventArgs)">
-            <summary>季節定義オブジェクト名称テキストボックス変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.tbxSeasonName_TextChanged(System.Object,System.EventArgs)">
-            <summary>季節名称テキストボックス変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.btnAdd_Click(System.Object,System.EventArgs)">
-            <summary>季節追加ボタンクリックイベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.btnRemove_Click(System.Object,System.EventArgs)">
-            <summary>季節削除ボタンクリックイベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.dtPickerStart_ValueChanged(System.Object,System.EventArgs)">
-            <summary>季節開始月日変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.dtPickerEnd_ValueChanged(System.Object,System.EventArgs)">
-            <summary>季節終了月日変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.lbxSeasons_SelectedIndexChanged(System.Object,System.EventArgs)">
-            <summary>選択中のSeasonsオブジェクト変更イベント発生時の処理</summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Popolo.Schedule.SeasonsEditor.updateControl">
-            <summary>コントロールを更新する</summary>
-        </member>
-        <member name="P:Popolo.Schedule.SeasonsEditor.EdittingSeasons">
-            <summary>編集中のSeasonsオブジェクトを取得する</summary>
-        </member>
-        <member name="P:Popolo.Schedule.SeasonsEditor.Editable">
-            <summary>編集可能か否かを取得・設定する</summary>
-        </member>
-        <member name="T:Popolo.Controls.Properties.Resources">
-            <summary>
-              ローカライズされた文字列などを検索するための、厳密に型指定されたリソース クラスです。
-            </summary>
-        </member>
-        <member name="P:Popolo.Controls.Properties.Resources.ResourceManager">
-            <summary>
-              このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
-            </summary>
-        </member>
-        <member name="P:Popolo.Controls.Properties.Resources.Culture">
-            <summary>
-              厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
-              現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
-            </summary>
         </member>
     </members>
 </doc>

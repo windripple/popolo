@@ -969,8 +969,8 @@ namespace Popolo.Utility
                     if (wdIndex < 0) wdIndex = 23;
                     double dbt = wdDbt[wdIndex];
                     double ahd = wdAhd[wdIndex];
-                    oDoor.AirState = MoistAir.GetAirStateFromDBAH(dbt, ahd);
-                    room.VentilationAirState = MoistAir.GetAirStateFromDBAH(dbt, ahd);
+                    oDoor.AirState = MoistAir.GetAirStateFromDBHR(dbt, ahd);
+                    room.VentilationAirState = MoistAir.GetAirStateFromDBHR(dbt, ahd);
 
                     //太陽の情報を更新
                     sun.Update(dt);
@@ -1448,18 +1448,18 @@ namespace Popolo.Utility
             double dbTemp = -10;
             while (dbTemp <= 50)
             {
-                double aHumidMax = MoistAir.GetSaturatedAbsoluteHumidity(dbTemp, MoistAir.Property.DryBulbTemperature);
+                double aHumidMax = MoistAir.GetSaturatedHumidityRatio(dbTemp, MoistAir.Property.DryBulbTemperature);
                 sWriterl2.Write(aHumidMax + "," + dbTemp);
                 double aHumid = 0;
                 double wbTemp;
                 while (aHumid <= Math.Min(0.037, aHumidMax))
                 {
-                    wbTemp = MoistAir.GetAirStateFromDBAH(dbTemp, aHumid, MoistAir.Property.WetBulbTemperature, 101.325);
+                    wbTemp = MoistAir.GetAirStateFromDBHR(dbTemp, aHumid, MoistAir.Property.WetBulbTemperature, 101.325);
                     sWriterl1.WriteLine(dbTemp + "," + aHumid + "," + wbTemp);
                     sWriterl2.Write("," + wbTemp);
                     aHumid += 0.0005;
                 }
-                wbTemp = MoistAir.GetAirStateFromDBAH(dbTemp, aHumidMax, MoistAir.Property.WetBulbTemperature, 101.325);
+                wbTemp = MoistAir.GetAirStateFromDBHR(dbTemp, aHumidMax, MoistAir.Property.WetBulbTemperature, 101.325);
                 sWriterl1.WriteLine(dbTemp + "," + aHumid + "," + wbTemp);
                 sWriterl2.Write("," + wbTemp);
 
@@ -2090,7 +2090,7 @@ namespace Popolo.Utility
                 {
                     if (zns[j].VentilationVolume != 0)
                     {
-                        double airDS = 1d / (MoistAir.GetAirStateFromDBAH(zns[j].CurrentDrybulbTemperature, zns[j].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume));
+                        double airDS = 1d / (MoistAir.GetAirStateFromDBHR(zns[j].CurrentDrybulbTemperature, zns[j].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume));
                         double cpAir = MoistAir.GetSpecificHeat(zns[j].CurrentAbsoluteHumidity);
                         oaLoad += zns[j].VentilationVolume * airDS * cpAir * (zns[j].VentilationAirState.DryBulbTemperature - zns[j].CurrentDrybulbTemperature);
                     }
