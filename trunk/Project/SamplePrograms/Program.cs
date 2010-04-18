@@ -4,6 +4,7 @@ using System.Text;
 
 using Popolo.ThermophysicalProperty;
 using Popolo.CircuitNetwork;
+using Popolo.ThermalComfort;
 
 namespace SamplePrograms
 {
@@ -12,7 +13,7 @@ namespace SamplePrograms
         static void Main(string[] args)
         {
 
-            circuitTest3();
+            humanBodyTest();
 
         }
 
@@ -181,6 +182,51 @@ namespace SamplePrograms
                 for (int j = 0; j < nodes.Length; j++) Console.Write(nodes[j].Potential.ToString("F1") + "  ");
                 Console.WriteLine();
             }
+            Console.Read();
+        }
+
+        #endregion
+
+        #region Chapter 4
+
+        /// <summary>Sample program calculating human body</summary>
+        private static void humanBodyTest()
+        {
+            //This is constructor to make standard human body.
+            //HumanBody body = new HumanBody();
+
+            //Make human body model : Weight 70kg, Height 1.6m, Age 35, Female, Cardiac index 2.58, Fat 20%
+            HumanBody body = new HumanBody(70, 1.6, 35, false, 2.58, 20);
+
+            //Set clothing index [clo]
+            body.SetClothingIndex(0);
+            //Set dry-bulb temperature [C]
+            body.SetDrybulbTemperature(42);
+            //Set mean radiant temperature [C]
+            body.SetMeanRadiantTemperature(42);
+            //Set velocity [m/s]
+            body.SetVelocity(1.0);
+            //Set relative humidity [%]
+            body.SetRelativeHumidity(50);
+
+            //Use Nodes enumarator to set bouncary condition to particular position
+            body.SetDrybulbTemperature(HumanBody.Nodes.RightHand, 20);
+
+            //Updating body state
+            Console.WriteLine("Time     |  R.Shoulder C temp  |  R.Shoulder S temp  |  L.Shoulder C temp  |  L.Shoulder S temp");
+            for (int i = 0; i < 15; i++)
+            {
+                body.Update(120);
+                ImmutableBodyPart rightShoulder = body.GetBodyPart(HumanBody.Nodes.RightShoulder);
+                ImmutableBodyPart leftShoulder = body.GetBodyPart(HumanBody.Nodes.LeftShoulder);
+                Console.Write(((i + 1) * 120) + "sec | ");
+                Console.Write(rightShoulder.GetTemperature(BodyPart.Segments.Core).ToString("F2") + " | ");
+                Console.Write(rightShoulder.GetTemperature(BodyPart.Segments.Skin).ToString("F2") + " | ");
+                Console.Write(leftShoulder.GetTemperature(BodyPart.Segments.Core).ToString("F2") + " | ");
+                Console.Write(leftShoulder.GetTemperature(BodyPart.Segments.Skin).ToString("F2") + " | ");
+                Console.WriteLine();
+            }
+
             Console.Read();
         }
 
