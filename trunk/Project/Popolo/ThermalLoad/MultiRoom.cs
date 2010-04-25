@@ -624,6 +624,9 @@ namespace Popolo.ThermalLoad
             LinearAlgebra.LUDecomposition(ref ax, ref perm, out sig);
             LinearAlgebra.LUInvert(ax, perm, ref xa);
 
+            //マトリクス解放
+            ax.Dispose();
+
             //FIO変更フラグを初期化
             hasFIOChanged = false;
         }

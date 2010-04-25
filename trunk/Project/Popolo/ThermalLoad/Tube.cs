@@ -108,6 +108,10 @@ namespace Popolo.ThermalLoad
         {
             if (FluidFlowRate != flowRate)
             {
+                //流体への移動熱量を更新
+                if (FluidFlowRate == 0) HeatTransferToFluid = 0;
+                else HeatTransferToFluid *= flowRate / FluidFlowRate;
+
                 FluidFlowRate = flowRate;
                 if(FlowRateChangeEvent != null) FlowRateChangeEvent(this, new EventArgs());
             }
