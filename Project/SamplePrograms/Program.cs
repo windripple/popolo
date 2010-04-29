@@ -5,6 +5,7 @@ using System.Text;
 using Popolo.ThermophysicalProperty;
 using Popolo.CircuitNetwork;
 using Popolo.ThermalComfort;
+using Popolo.Weather;
 
 namespace SamplePrograms
 {
@@ -13,7 +14,7 @@ namespace SamplePrograms
         static void Main(string[] args)
         {
 
-            humanBodyTest();
+            weatherTest();
 
         }
 
@@ -226,6 +227,43 @@ namespace SamplePrograms
                 Console.Write(leftShoulder.GetTemperature(BodyPart.Segments.Skin).ToString("F2") + " | ");
                 Console.WriteLine();
             }
+
+            Console.Read();
+        }
+
+        #endregion
+
+        #region Chapter 5
+
+        /// <summary>Sample program calculating weather state</summary>
+        private static void weatherTest()
+        {
+            //Create an instance of the Sun class. (Location is Tokyo)
+            Sun sun = new Sun(Sun.City.Tokyo);
+
+            //Set date and time information(1983/12/21 12:00)
+            DateTime dTime = new DateTime(1983, 12, 21, 12, 0, 0);
+            sun.Update(dTime);
+
+            //Create instances of the Incline class. Vertical south east surface and 45 degree west surface.
+            Incline seInc = new Incline(Incline.Orientation.SE, 0.5 * Math.PI);
+            Incline wInc = new Incline(Incline.Orientation.W, 0.25 * Math.PI);
+
+            //Estimate direct normal and diffuse horizontal radiation from global horizontal radiation (467 W/m2)
+            sun.EstimateDiffuseAndDirectNormalRadiation(467);
+
+            //Calculate insolation rate on the inclined plane.
+            double cosThetaSE, cosThetaW;
+            cosThetaSE = seInc.GetDirectSolarRadiationRate(sun);
+            cosThetaW = wInc.GetDirectSolarRadiationRate(sun);
+
+            Console.WriteLine("Location:Tokyo, Date and time:12/21 12:00");
+            Console.WriteLine("Altitude of sun=" + Sky.RadianToDegree(sun.Altitude).ToString("F1") + " degree");
+            Console.WriteLine("Orientation of sun=" + Sky.RadianToDegree(sun.Orientation).ToString("F1") + " degree");
+            Console.WriteLine("Direct normal radiation=" + sun.DirectNormalRadiation.ToString("F1") + " W/m2");
+            Console.WriteLine("Diffuse horizontal radiation=" + sun.GlobalHorizontalRadiation.ToString("F1") + " W/m2");
+            Console.WriteLine("Direct normal radiation to SE surface=" + (sun.DirectNormalRadiation * cosThetaSE).ToString("F1") + " W/m2");
+            Console.WriteLine("Direct normal radiation to W surface=" + (sun.DirectNormalRadiation * cosThetaW).ToString("F1") + " W/m2");
 
             Console.Read();
         }
