@@ -480,8 +480,8 @@ namespace Popolo.ThermalLoad
             if (cosineDN < 0) cosineDN = 0;
             else if (cosineDN < 0.01) cosineDN = 0.01;
             double idn = cosineDN * sun.DirectNormalRadiation;
-            double id = incline.GeometricFactor * sun.DiffuseHorizontalRadiation +
-                (1 - incline.GeometricFactor) * outsideSurface.Albedo * sun.GlobalHorizontalRadiation;
+            double id = incline.ConfigurationFactorToSky * sun.DiffuseHorizontalRadiation +
+                (1 - incline.ConfigurationFactorToSky) * outsideSurface.Albedo * sun.GlobalHorizontalRadiation;
             double charac = GetStandardIncidentAngleCharacteristic(cosineDN);
             double buff = SurfaceArea * ((1d - shadowRate) * idn * charac + 0.91 * id);
 
@@ -493,7 +493,7 @@ namespace Popolo.ThermalLoad
 
             //外表面の放射を設定
             outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.OverallHeatTransferCoefficient * outsideSurface.OverallHeatTransferCoefficient
-                - outsideSurface.LongWaveEmissivity * incline.GeometricFactor * NocturnalRadiation;
+                - outsideSurface.LongWaveEmissivity * incline.ConfigurationFactorToSky * NocturnalRadiation;
 
             //温度差による貫流熱取得[W]を計算
             double insideSAT = GetSolAirTemperature(false);

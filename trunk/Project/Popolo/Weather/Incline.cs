@@ -71,13 +71,13 @@ namespace Popolo.Weather
         #region インスタンス変数
 
         /// <summary>方位角および傾斜角</summary>
-        private double alpha, beta;
+        private double horizontalAngle, verticalAngle;
 
         /// <summary>方向余弦</summary>
         private double ws, ww, wz;
 
         /// <summary>天空への形態係数[-]</summary>
-        private double geometricFactor;
+        private double configurationFactorToSky;
 
         /// <summary>正弦、余弦</summary>
         private double sinAlpha, sinBeta, cosAlpha, cosBeta;
@@ -87,20 +87,20 @@ namespace Popolo.Weather
         #region プロパティ
 
         /// <summary>方位角[radian]（南を0、東を負、西を正とする）を取得する</summary>
-        public double Alpha
+        public double HorizontalAngle
         {
             get
             {
-                return alpha;
+                return horizontalAngle;
             }
         }
 
         /// <summary>傾斜角[radian]（水平面を0、垂直面を1/2πとする）を取得する</summary>
-        public double Beta
+        public double VerticalAngle
         {
             get
             {
-                return beta;
+                return verticalAngle;
             }
         }
 
@@ -132,11 +132,11 @@ namespace Popolo.Weather
         }
 
         /// <summary>天空への形態係数[-]を取得する</summary>
-        public double GeometricFactor
+        public double ConfigurationFactorToSky
         {
             get
             {
-                return geometricFactor;
+                return configurationFactorToSky;
             }
         }
 
@@ -145,26 +145,26 @@ namespace Popolo.Weather
         #region コンストラクタ
 
         /// <summary>コンストラクタ</summary>
-        /// <param name="alpha">方位角[radian]（南を0、東を負、西を正とする）</param>
-        /// <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
-        public Incline(double alpha, double beta)
+        /// <param name="horizontalAngle">方位角[radian]（南を0、東を負、西を正とする）</param>
+        /// <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+        public Incline(double horizontalAngle, double verticalAngle)
         {
-            Initialize(alpha, beta);
+            Initialize(horizontalAngle, verticalAngle);
         }
 
         /// <summary>コンストラクタ</summary>
         /// <param name="ori">方位</param>
-        /// <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
-        public Incline(Orientation ori, double beta)
+        /// <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+        public Incline(Orientation ori, double verticalAngle)
         {
-            Initialize(ori, beta);
+            Initialize(ori, verticalAngle);
         }
 
         /// <summary>コピーコンストラクタ</summary>
         /// <param name="incline">傾斜面</param>
         public Incline(ImmutableIncline incline)
         {
-            Initialize(incline.Alpha, incline.Beta);
+            Initialize(incline.HorizontalAngle, incline.VerticalAngle);
         }
 
         #endregion
@@ -175,88 +175,88 @@ namespace Popolo.Weather
         /// <param name="incline">傾斜面オブジェクト</param>
         public void Copy(ImmutableIncline incline)
         {
-            Initialize(incline.Alpha, incline.Beta);
+            Initialize(incline.HorizontalAngle, incline.VerticalAngle);
         }
 
         /// <summary>初期化処理</summary>
-        /// <param name="alpha">方位角[radian]（南を0、東を負、西を正とする）</param>
-        /// <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
-        public void Initialize(double alpha, double beta)
+        /// <param name="horizontalAngle">方位角[radian]（南を0、東を負、西を正とする）</param>
+        /// <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+        public void Initialize(double horizontalAngle, double verticalAngle)
         {
             //方位角は-180~180
-            if (Math.PI < alpha || alpha < -Math.PI) this.alpha = alpha % Math.PI;
-            else this.alpha = alpha;
+            if (Math.PI < horizontalAngle || horizontalAngle < -Math.PI) this.horizontalAngle = horizontalAngle % Math.PI;
+            else this.horizontalAngle = horizontalAngle;
 
             //傾斜角は0~180
-            this.beta = beta % Math.PI;
-            if (Math.PI < this.beta)
+            this.verticalAngle = verticalAngle % Math.PI;
+            if (Math.PI < this.verticalAngle)
             {
-                this.beta = Math.PI - this.beta;
+                this.verticalAngle = Math.PI - this.verticalAngle;
             }
 
-            GetDirectionCosine(this.alpha, this.beta, out wz, out ws, out ww);
-            geometricFactor = GetGeometricFactorOfIncline(beta);
+            GetDirectionCosine(this.horizontalAngle, this.verticalAngle, out wz, out ws, out ww);
+            configurationFactorToSky = GetConfigurationFactorToSky(verticalAngle);
 
-            sinAlpha = Math.Sin(alpha);
-            sinBeta = Math.Sin(beta);
-            cosAlpha = Math.Cos(alpha);
-            cosBeta = Math.Cos(beta);
+            sinAlpha = Math.Sin(horizontalAngle);
+            sinBeta = Math.Sin(verticalAngle);
+            cosAlpha = Math.Cos(horizontalAngle);
+            cosBeta = Math.Cos(verticalAngle);
         }
 
         /// <summary>初期化処理</summary>
         /// <param name="ori">方位</param>
-        /// <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
-        public void Initialize(Orientation ori, double beta)
+        /// <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+        public void Initialize(Orientation ori, double verticalAngle)
         {
             switch (ori)
             {
                 case Orientation.S:
-                    Initialize(0d, beta);
+                    Initialize(0d, verticalAngle);
                     return;
                 case Orientation.SSE:
-                    Initialize(-Math.PI / 8 * 1, beta);
+                    Initialize(-Math.PI / 8 * 1, verticalAngle);
                     return;
                 case Orientation.SE:
-                    Initialize(-Math.PI / 8 * 2, beta);
+                    Initialize(-Math.PI / 8 * 2, verticalAngle);
                     return;
                 case Orientation.ESE:
-                    Initialize(-Math.PI / 8 * 3, beta);
+                    Initialize(-Math.PI / 8 * 3, verticalAngle);
                     return;
                 case Orientation.E:
-                    Initialize(-Math.PI / 8 * 4, beta);
+                    Initialize(-Math.PI / 8 * 4, verticalAngle);
                     return;
                 case Orientation.ENE:
-                    Initialize(-Math.PI / 8 * 5, beta);
+                    Initialize(-Math.PI / 8 * 5, verticalAngle);
                     return;
                 case Orientation.NE:
-                    Initialize(-Math.PI / 8 * 6, beta);
+                    Initialize(-Math.PI / 8 * 6, verticalAngle);
                     return;
                 case Orientation.NNE:
-                    Initialize(-Math.PI / 8 * 7, beta);
+                    Initialize(-Math.PI / 8 * 7, verticalAngle);
                     return;
                 case Orientation.N:
-                    Initialize(Math.PI, beta);
+                    Initialize(Math.PI, verticalAngle);
                     return;
                 case Orientation.SSW:
-                    Initialize(Math.PI / 8 * 1, beta);
+                    Initialize(Math.PI / 8 * 1, verticalAngle);
                     return;
                 case Orientation.SW:
-                    Initialize(Math.PI / 8 * 2, beta);
+                    Initialize(Math.PI / 8 * 2, verticalAngle);
                     return;
                 case Orientation.WSW:
-                    Initialize(Math.PI / 8 * 3, beta);
+                    Initialize(Math.PI / 8 * 3, verticalAngle);
                     return;
                 case Orientation.W:
-                    Initialize(Math.PI / 8 * 4, beta);
+                    Initialize(Math.PI / 8 * 4, verticalAngle);
                     return;
                 case Orientation.WNW:
-                    Initialize(Math.PI / 8 * 5, beta);
+                    Initialize(Math.PI / 8 * 5, verticalAngle);
                     return;
                 case Orientation.NW:
-                    Initialize(Math.PI / 8 * 6, beta);
+                    Initialize(Math.PI / 8 * 6, verticalAngle);
                     return;
                 case Orientation.NNW:
-                    Initialize(Math.PI / 8 * 7, beta);
+                    Initialize(Math.PI / 8 * 7, verticalAngle);
                     return;
             }
         }
@@ -264,10 +264,10 @@ namespace Popolo.Weather
         /// <summary>向きを逆転させる</summary>
         public void Reverse()
         {
-            alpha += Math.PI;
-            beta += Math.PI;
+            horizontalAngle += Math.PI;
+            verticalAngle += Math.PI;
 
-            Initialize(alpha, beta);
+            Initialize(horizontalAngle, verticalAngle);
         }
 
         /// <summary>プロファイル角および傾斜面の法線を基準とした太陽方位角の正接を求める</summary>
@@ -302,7 +302,7 @@ namespace Popolo.Weather
         /// <summary>天空に対する傾斜面の形態係数[-]を計算する</summary>
         /// <param name="beta">傾斜面の傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
         /// <returns>天空に対する傾斜面の形態係数[-]</returns>
-        public static double GetGeometricFactorOfIncline(double beta)
+        public static double GetConfigurationFactorToSky(double beta)
         {
             return (1d + Math.Cos(beta)) / 2d;
         }
@@ -376,13 +376,13 @@ namespace Popolo.Weather
         #region プロパティ
 
         /// <summary>方位角[radian]（南を0、東を負、西を正とする）を取得する</summary>
-        double Alpha
+        double HorizontalAngle
         {
             get;
         }
 
         /// <summary>傾斜角[radian]（水平面を0、垂直面を1/2πとする）を取得する</summary>
-        double Beta
+        double VerticalAngle
         {
             get;
         }
@@ -406,7 +406,7 @@ namespace Popolo.Weather
         }
 
         /// <summary>天空への形態係数[-]を取得する</summary>
-        double GeometricFactor
+        double ConfigurationFactorToSky
         {
             get;
         }

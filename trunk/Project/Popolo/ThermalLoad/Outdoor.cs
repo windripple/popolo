@@ -153,7 +153,7 @@ namespace Popolo.ThermalLoad
             {
                 ImmutableIncline ic = ws.Incline;
                 ws.Radiation = ws.SolarAbsorptance * GetRadiationToIncline(ic, ws.Albedo, ws.ShadingRate)
-                    - ws.LongWaveEmissivity * ic.GeometricFactor * NocturnalRadiation;
+                    - ws.LongWaveEmissivity * ic.ConfigurationFactorToSky * NocturnalRadiation;
                 ws.AirTemperature = airState.DryBulbTemperature;
             }
             foreach (WallSurface ws in groundWallSurfaces)
@@ -258,9 +258,9 @@ namespace Popolo.ThermalLoad
             //日影部分に関しては直達日射は0
             dsRate *= sun.DirectNormalRadiation * (1d - shadingRate);
             //拡散成分
-            double dfRad = incline.GeometricFactor * sun.DiffuseHorizontalRadiation;
+            double dfRad = incline.ConfigurationFactorToSky * sun.DiffuseHorizontalRadiation;
             //地表面反射成分
-            double alRad = (1 - incline.GeometricFactor) * albedo * sun.GlobalHorizontalRadiation;
+            double alRad = (1 - incline.ConfigurationFactorToSky) * albedo * sun.GlobalHorizontalRadiation;
 
             return dsRate + dfRad + alRad;
         }
