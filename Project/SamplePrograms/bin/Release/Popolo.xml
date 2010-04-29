@@ -6346,10 +6346,10 @@
             <param name="sun">太陽</param>
             <returns>傾斜面の法線に対する太陽光線入射角の余弦cosθ[-]</returns>
         </member>
-        <member name="P:Popolo.Weather.ImmutableIncline.Alpha">
+        <member name="P:Popolo.Weather.ImmutableIncline.HorizontalAngle">
             <summary>方位角[radian]（南を0、東を負、西を正とする）を取得する</summary>
         </member>
-        <member name="P:Popolo.Weather.ImmutableIncline.Beta">
+        <member name="P:Popolo.Weather.ImmutableIncline.VerticalAngle">
             <summary>傾斜角[radian]（水平面を0、垂直面を1/2πとする）を取得する</summary>
         </member>
         <member name="P:Popolo.Weather.ImmutableIncline.DirectionCosineZ">
@@ -6361,13 +6361,13 @@
         <member name="P:Popolo.Weather.ImmutableIncline.DirectionCosineWE">
             <summary>東西軸に関する方向余弦を取得する（西向きを正とする）</summary>
         </member>
-        <member name="P:Popolo.Weather.ImmutableIncline.GeometricFactor">
+        <member name="P:Popolo.Weather.ImmutableIncline.ConfigurationFactorToSky">
             <summary>天空への形態係数[-]を取得する</summary>
         </member>
-        <member name="F:Popolo.Weather.Incline.alpha">
+        <member name="F:Popolo.Weather.Incline.horizontalAngle">
             <summary>方位角および傾斜角</summary>
         </member>
-        <member name="F:Popolo.Weather.Incline.beta">
+        <member name="F:Popolo.Weather.Incline.verticalAngle">
             <summary>方位角および傾斜角</summary>
         </member>
         <member name="F:Popolo.Weather.Incline.ws">
@@ -6379,7 +6379,7 @@
         <member name="F:Popolo.Weather.Incline.wz">
             <summary>方向余弦</summary>
         </member>
-        <member name="F:Popolo.Weather.Incline.geometricFactor">
+        <member name="F:Popolo.Weather.Incline.configurationFactorToSky">
             <summary>天空への形態係数[-]</summary>
         </member>
         <member name="F:Popolo.Weather.Incline.sinAlpha">
@@ -6396,13 +6396,13 @@
         </member>
         <member name="M:Popolo.Weather.Incline.#ctor(System.Double,System.Double)">
             <summary>コンストラクタ</summary>
-            <param name="alpha">方位角[radian]（南を0、東を負、西を正とする）</param>
-            <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+            <param name="horizontalAngle">方位角[radian]（南を0、東を負、西を正とする）</param>
+            <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
         </member>
         <member name="M:Popolo.Weather.Incline.#ctor(Popolo.Weather.Incline.Orientation,System.Double)">
             <summary>コンストラクタ</summary>
             <param name="ori">方位</param>
-            <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+            <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
         </member>
         <member name="M:Popolo.Weather.Incline.#ctor(Popolo.Weather.ImmutableIncline)">
             <summary>コピーコンストラクタ</summary>
@@ -6414,13 +6414,13 @@
         </member>
         <member name="M:Popolo.Weather.Incline.Initialize(System.Double,System.Double)">
             <summary>初期化処理</summary>
-            <param name="alpha">方位角[radian]（南を0、東を負、西を正とする）</param>
-            <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+            <param name="horizontalAngle">方位角[radian]（南を0、東を負、西を正とする）</param>
+            <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
         </member>
         <member name="M:Popolo.Weather.Incline.Initialize(Popolo.Weather.Incline.Orientation,System.Double)">
             <summary>初期化処理</summary>
             <param name="ori">方位</param>
-            <param name="beta">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
+            <param name="verticalAngle">傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
         </member>
         <member name="M:Popolo.Weather.Incline.Reverse">
             <summary>向きを逆転させる</summary>
@@ -6436,7 +6436,7 @@
             <param name="sun">太陽</param>
             <returns>傾斜面の法線に対する太陽光線入射角の余弦cosθ[-]</returns>
         </member>
-        <member name="M:Popolo.Weather.Incline.GetGeometricFactorOfIncline(System.Double)">
+        <member name="M:Popolo.Weather.Incline.GetConfigurationFactorToSky(System.Double)">
             <summary>天空に対する傾斜面の形態係数[-]を計算する</summary>
             <param name="beta">傾斜面の傾斜角[radian]（水平面を0、垂直面を1/2πとする）</param>
             <returns>天空に対する傾斜面の形態係数[-]</returns>
@@ -6473,10 +6473,10 @@
             <param name="incline">傾斜面</param>
             <returns>傾斜面に対する太陽光線入射角の余弦cosθ[-]</returns>
         </member>
-        <member name="P:Popolo.Weather.Incline.Alpha">
+        <member name="P:Popolo.Weather.Incline.HorizontalAngle">
             <summary>方位角[radian]（南を0、東を負、西を正とする）を取得する</summary>
         </member>
-        <member name="P:Popolo.Weather.Incline.Beta">
+        <member name="P:Popolo.Weather.Incline.VerticalAngle">
             <summary>傾斜角[radian]（水平面を0、垂直面を1/2πとする）を取得する</summary>
         </member>
         <member name="P:Popolo.Weather.Incline.DirectionCosineZ">
@@ -6488,7 +6488,7 @@
         <member name="P:Popolo.Weather.Incline.DirectionCosineWE">
             <summary>東西軸に関する方向余弦を取得する（西向きを正とする）</summary>
         </member>
-        <member name="P:Popolo.Weather.Incline.GeometricFactor">
+        <member name="P:Popolo.Weather.Incline.ConfigurationFactorToSky">
             <summary>天空への形態係数[-]を取得する</summary>
         </member>
         <member name="T:Popolo.Weather.Incline.Orientation">
