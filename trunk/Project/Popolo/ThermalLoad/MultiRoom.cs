@@ -721,7 +721,7 @@ namespace Popolo.ThermalLoad
                     {
                         ImmutableWindow win = ((WindowSurface)sf).WindowBody;
                         crxVector.SetValue(i, sf.FO * (sf2.GetSolAirTemperature() +
-                            win.AbsorbedHeatGain / win.Glass.OverallHeatTransferCoefficient / win.SurfaceArea) + sf.CF
+                            win.AbsorbedHeatGain / win.HeatTransmissionCoefficient / win.SurfaceArea) + sf.CF
                                                + sf.FI * sf.Radiation / sf.OverallHeatTransferCoefficient + sf.FPT);
                     }
                     //壁体の場合

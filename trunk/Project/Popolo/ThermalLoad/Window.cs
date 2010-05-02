@@ -314,6 +314,15 @@ namespace Popolo.ThermalLoad
             }
         }
 
+        /// <summary>熱貫流率[W/(m2-K)]を取得する</summary>
+        public double HeatTransmissionCoefficient
+        {
+            get
+            {
+                return glassPanes.HeatTransmissionCoefficient;
+            }
+        }
+
         #endregion
 
         #region コンストラクタ
@@ -377,7 +386,7 @@ namespace Popolo.ThermalLoad
         private void initialize(ImmutableGlassPanes glassPanes, ImmutableIncline incline, ImmutableSunShade sunShade, string name)
         {
             this.glassPanes.Copy(glassPanes);
-            FO = glassPanes.OverallHeatTransferCoefficient /
+            FO = glassPanes.HeatTransmissionCoefficient /
                     glassPanes.InsideOverallHeatTransferCoefficient;
             if(incline != null) this.incline.Copy(incline);
             if (sunShade != null)
@@ -410,7 +419,7 @@ namespace Popolo.ThermalLoad
         public void Initialize(ImmutableGlassPanes glassPanes)
         {
             this.glassPanes.Copy(glassPanes);
-            FO = glassPanes.OverallHeatTransferCoefficient /
+            FO = glassPanes.HeatTransmissionCoefficient /
                     glassPanes.InsideOverallHeatTransferCoefficient;
 
             if (FIOChangeEvent != null) FIOChangeEvent(this, new EventArgs());
@@ -438,7 +447,7 @@ namespace Popolo.ThermalLoad
         internal void setOutsideOverallHeatTransferCoefficient(double outsideOverallHeatTransferCoefficient)
         {
             glassPanes.SetOutsideOverallHeatTransferCoefficient(outsideOverallHeatTransferCoefficient);
-            FO = glassPanes.OverallHeatTransferCoefficient /
+            FO = glassPanes.HeatTransmissionCoefficient /
                     glassPanes.InsideOverallHeatTransferCoefficient;
         }
 
@@ -447,7 +456,7 @@ namespace Popolo.ThermalLoad
         internal void setInsideOverallHeatTransferCoefficient(double insideOverallHeatTransferCoefficient)
         {
             glassPanes.SetInsideOverallHeatTransferCoefficient(insideOverallHeatTransferCoefficient);
-            FO = glassPanes.OverallHeatTransferCoefficient /
+            FO = glassPanes.HeatTransmissionCoefficient /
                     glassPanes.InsideOverallHeatTransferCoefficient;
         }
 
@@ -492,13 +501,13 @@ namespace Popolo.ThermalLoad
             absorbedHeatGain = glassPanes.OverallAbsorptance * buff;
 
             //外表面の放射を設定
-            outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.OverallHeatTransferCoefficient * outsideSurface.OverallHeatTransferCoefficient
+            outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.HeatTransmissionCoefficient * outsideSurface.OverallHeatTransferCoefficient
                 - outsideSurface.LongWaveEmissivity * incline.ConfigurationFactorToSky * NocturnalRadiation;
 
             //温度差による貫流熱取得[W]を計算
             double insideSAT = GetSolAirTemperature(false);
             double outsideSAT = GetSolAirTemperature(true);
-            transferHeatGain = surfaceArea * glassPanes.OverallHeatTransferCoefficient * (outsideSAT - insideSAT);
+            transferHeatGain = surfaceArea * glassPanes.HeatTransmissionCoefficient * (outsideSAT - insideSAT);
 
             //対流・放射成分に分ける
             double at = absorbedHeatGain + transferHeatGain;
@@ -590,11 +599,11 @@ namespace Popolo.ThermalLoad
             get;
         }
 
-        /// <summary>複層ガラスを取得する</summary>
+        /*/// <summary>複層ガラスを取得する</summary>
         ImmutableGlassPanes Glass
         {
             get;
-        }
+        }*/
 
         /// <summary>日除けを取得する</summary>
         ImmutableSunShade Shade
@@ -634,6 +643,12 @@ namespace Popolo.ThermalLoad
 
         /// <summary>屋内の窓近傍の乾球温度[C]を取得する</summary>
         double IndoorDrybulbTemperature
+        {
+            get;
+        }
+
+        /// <summary>熱貫流率[W/(m2-K)]を取得する</summary>
+        double HeatTransmissionCoefficient
         {
             get;
         }

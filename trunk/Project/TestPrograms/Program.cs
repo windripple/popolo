@@ -1732,7 +1732,7 @@ namespace Popolo.Utility
             Console.WriteLine("室内側：透明ガラス　室外側：熱線吸収ガラス");
             Console.WriteLine("総合透過率[-] = " + glass.OverallTransmittance.ToString("F3"));
             Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptance.ToString("F3"));
-            Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
+            //Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
             Console.WriteLine();
 
             //室内側は6mmの熱線吸収ガラス、室外側は6mmの透明ガラスの場合
@@ -1748,7 +1748,7 @@ namespace Popolo.Utility
             Console.WriteLine("室内側：熱線吸収ガラス　室外側：透明ガラス");
             Console.WriteLine("総合透過率[-] = " + glass.OverallTransmittance.ToString("F3"));
             Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptance.ToString("F3"));
-            Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
+            //Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
 
             Console.Read();
         }
@@ -1959,7 +1959,7 @@ namespace Popolo.Utility
             GlassPanes gPanesWithBlind = new GlassPanes(new GlassPanes.Pane[] {
                 new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm),
                 new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatAbsorbingGlass03mm),
-                new GlassPanes.Pane(0.05, 0.35)
+                new GlassPanes.Pane(0.05, 0.35, 9999)
             });
             Window window = new Window(gPanes, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
             window.SurfaceArea = 1 * 3;
