@@ -6,6 +6,7 @@ using Popolo.ThermophysicalProperty;
 using Popolo.CircuitNetwork;
 using Popolo.ThermalComfort;
 using Popolo.Weather;
+using Popolo.ThermalLoad;
 
 namespace SamplePrograms
 {
@@ -13,8 +14,25 @@ namespace SamplePrograms
     {
         static void Main(string[] args)
         {
+            AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm), 0.05,
+                new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm), 0.05, 1, 1);
+            afWindow.SetInletAirTemperature(15);
+            afWindow.IndoorTemperature = 24;
+            afWindow.OutdoorTemperature = 35;
 
-            weatherTest();
+            for (int i = 0; i < 5; i++)
+            {
+                afWindow.SetAirFlowVolume(100 * (i + 1) * 2);
+                Console.WriteLine(afWindow.GetExteriorGlassTemperature().ToString("F3") + ", " +
+                    afWindow.GetBlindTemperature().ToString("F3") + ", " +
+                    afWindow.GetInteriorGlassTemperature().ToString("F3") + ", " +
+                    afWindow.GetExteriorAirFlowTemperature().ToString("F3") + ", " +
+                    afWindow.GetInteriorAirFlowTemperature().ToString("F3"));
+            }
+
+            Console.WriteLine("*******************");
+
+            //weatherTest();
 
         }
 

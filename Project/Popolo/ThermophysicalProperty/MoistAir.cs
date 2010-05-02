@@ -116,7 +116,7 @@ namespace Popolo.ThermophysicalProperty
         #region プロパティ
 
         /// <summary>乾き空気比熱[kJ/kg-K]を取得する</summary>
-        public static double DryAirSpecificHeat
+        public static double IsobaricSpecificHeatOfDryAir
         {
             get
             {
@@ -1548,6 +1548,14 @@ namespace Popolo.ThermophysicalProperty
         public static double GetThermalConductivity(double drybulbTemperature)
         {
             return 0.0241 + 0.000077 * drybulbTemperature;
+        }
+
+        /// <summary>Calculate expansion coefficient from dryb-bulb temperature</summary>
+        /// <param name="drybulbTemperature">dryb-bulb temperature of moist air</param>
+        /// <returns>expansion coefficient</returns>
+        public static double GetExpansionCoefficient(double drybulbTemperature)
+        {
+            return  1 / (drybulbTemperature + TCONV);
         }
 
         #endregion

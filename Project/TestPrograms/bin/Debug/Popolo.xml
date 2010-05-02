@@ -3229,6 +3229,179 @@
             <param name="zone">発熱要素が属するゾーン</param>s
             <returns>潜熱負荷[W]</returns>
         </member>
+        <member name="T:Popolo.ThermalLoad.AirFlowWindow">
+            <summary>Air flow window class</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.hasMatrixBoundaryChanged">
+            <summary>has boundary conditions related to matrix changed or not.</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.hasBoundaryChanged">
+            <summary>has boundary conditions not related to matrix changed or not.</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.inletAirTemperature">
+            <summary>Inlet air temperature of air flow window.</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.interiorGlassPane">
+            <summary>glass pane of interior side[m]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorGlassPane">
+            <summary>glass pnae of exterior side[m]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.interiorSideAverageTemperature">
+            <summary></summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorSideAverageTemperature">
+            <summary></summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.interiorOverallHeatTransferCoefficient">
+            <summary>Interior side overall heat transfer coefficient [W/(m2K)]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorOverallHeatTransferCoefficient">
+            <summary>Exterior side overall heat transfer coefficient [W/(m2K)]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.solarAbsorptionAtExteriorGlass">
+            <summary>Solar absorption [W/(m2)] at exterior glass</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.solarAbsorptionAtBlind">
+            <summary>Solar absorption [W/(m2)] at blind</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.solarAbsorptionAtInteriorGlass">
+            <summary>Solar absorption [W/(m2)] at interior glass</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.wi3">
+            <summary></summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.we3">
+            <summary></summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.itemp">
+            <summary>inside temperature[C]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.otemp">
+            <summary>outside temperature[C]</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.aMatrix">
+            <summary>Matrix A</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.bMatrix">
+            <summary>Inverse Matrix B</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.tVector">
+            <summary>Matrix T</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.zVector">
+            <summary>Matrix Z</summary>
+        </member>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.perm">
+            <summary>Permutation Vector</summary>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.#ctor(Popolo.ThermalLoad.GlassPanes.Pane,System.Double,Popolo.ThermalLoad.GlassPanes.Pane,System.Double,System.Double,System.Double)">
+            <summary>Constructor</summary>
+            <param name="interiorGlassPane">glass pane of interior side</param>
+            <param name="interiorAirGap">interior side air gap thickness[m]</param>
+            <param name="exteriorGlassPane">glass pnae of exterior side</param>
+            <param name="exteriorAirGap">exterior side air gap thickness[m]</param>
+            <param name="windowWidth">width [m] of the air flow window</param>
+            <param name="windowHeight">height [m] of the air flow window</param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.SetInletAirTemperature(System.Double)">
+            <summary>Set inlet air temperature of air flow window.</summary>
+            <param name="inletAirTemperature">temperature of inlet air</param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.SetAirFlowVolume(System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="airFlowVolume"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.SetAirFlowVolume(System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="interiorSideAirFlowVolume"></param>
+            <param name="exteriorSideAirFlowVolume"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetBlindTemperature">
+            <summary>Gets temperature[C] of the blind</summary>
+            <returns>temperature[C] of the blind</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetInteriorGlassTemperature">
+            <summary>Gets temperature[C] of the interior glass</summary>
+            <returns>temperature[C] of the interior glass</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetExteriorGlassTemperature">
+            <summary>Gets temperature[C] of the exterior glass</summary>
+            <returns>temperature[C] of the exterior glass</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetExteriorAirFlowTemperature">
+            <summary>Gets the average temperature[C] of exterior air flow</summary>
+            <returns>average temperature[C] of exterior air flow</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetInteriorAirFlowTemperature">
+            <summary>Gets the average temperature[C] of interior air flow</summary>
+            <returns>average temperature[C] of interior air flow</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.updateMatrix">
+            <summary>Update the matrix</summary>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.updateHeatTransferCoefficientAirGap">
+            <summary>update overall heat transfer coefficient of air gaps</summary>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.getConvectiveHeatTransferCoefficient(System.Double,System.Double,System.Double)">
+            <summary>Calculate a convective heat transfer coefficient</summary>
+            <param name="surfaceTemperature">temperature of surface (blind or glass)</param>
+            <param name="airTemperature">temperature of air</param>
+            <param name="airVelocity">velocity of air</param>
+            <returns>convective heat transfer coefficient</returns>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.IndoorTemperature">
+            <summary>Gets or Sets temperature [C] around interior glass.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.OutdoorTemperature">
+            <summary>Gets or Sets temperature [C] around exterior glass.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorAirGap">
+            <summary>Gets the interior side air gap thickness [m]</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorAirGap">
+            <summary>Gets the exterior side air gap thickness [m]</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.WindowWidth">
+            <summary>Gets the width [m] of the air flow window</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.WindowHeight">
+            <summary>Gets the height [m] of the air flow window</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorSideAirFlowVolume">
+            <summary>Gets the air flow volume [CMH] at interior side.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideAirFlowVolume">
+            <summary>Gets the air flow volume [CMH] at exterior side.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorSideAirVelocity">
+            <summary>Gets the air flow volume [m/s] at interior side.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideAirVelocity">
+            <summary>Gets the air flow volume [m/s] at exterior side.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorAirGapConvectiveHeatTransferCoefficient">
+            <summary>Convective heat transfer coefficient [W/(m2K)] at interior air gap.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorAirGapConvectiveHeatTransferCoefficient">
+            <summary>Convective heat transfer coefficient [W/(m2K)] at exterior air gap.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorAirGapRadiativeHeatTransferCoefficient">
+            <summary>Radiative heat transfer coefficient [W/(m2K)] at interior air gap.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorAirGapRadiativeHeatTransferCoefficient">
+            <summary>Radiative heat transfer coefficient [W/(m2K)] at exterior air gap.</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorSideOverallHeatTransferCoefficient">
+            <summary>Sets and Gets interior side overall heat transfer coefficient [W/(m2K)].</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideOverallHeatTransferCoefficient">
+            <summary>Sets and Gets exterior side overall heat transfer coefficient [W/(m2K)].</summary>
+        </member>
         <member name="T:Popolo.Schedule.Seasons">
             <summary>季節クラス</summary>
         </member>
@@ -3645,7 +3818,7 @@
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransferCoefficientOfGlass">
             <summary>ガラスの熱貫流率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransmissionCoefficient">
             <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.Panes">
@@ -3732,7 +3905,7 @@
         <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransferCoefficientOfGlass">
             <summary>ガラスの熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.OverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransmissionCoefficient">
             <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.Panes">
@@ -3769,17 +3942,19 @@
         <member name="T:Popolo.ThermalLoad.GlassPanes.Pane">
             <summary>ガラス板</summary>
         </member>
-        <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(System.Double,System.Double,System.Double)">
             <summary>コンストラクタ</summary>
             <param name="transmittance">透過率[-]</param>
             <param name="reflectance">反射率[-]</param>
+            <param name="heatTransferCoefficient">Heat transfer coefficient [W/(m2K)]</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>コンストラクタ</summary>
             <param name="outerSideTransmittance">外側透過率[-]</param>
             <param name="outerSideReflectance">外側反射率[-]</param>
             <param name="innerSideTransmittance">内側透過率[-]</param>
             <param name="innerSideReflectance">内側反射率[-]</param>
+            <param name="heatTransferCoefficient">Heat transfer coefficient [W/(m2K)]</param>
         </member>
         <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(Popolo.ThermalLoad.GlassPanes.Pane.PredifinedGlassPane)">
             <summary>コンストラクタ</summary>
@@ -3788,6 +3963,9 @@
         <member name="M:Popolo.ThermalLoad.GlassPanes.Pane.#ctor(Popolo.ThermalLoad.GlassPanes.Pane)">
             <summary>コンストラクタ</summary>
             <param name="pane">コピー対象のガラスオブジェクト</param>
+        </member>
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.HeatTransferCoefficient">
+            <summary>Gets heat transfer coefficient [W/(m2K)].</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideTransmittance">
             <summary>外側透過率[-]を取得する</summary>
@@ -4666,6 +4844,11 @@
             <param name="drybulbTemperature">乾球温度[C]</param>
             <returns>熱伝導率[W/(mK)]</returns>
         </member>
+        <member name="M:Popolo.ThermophysicalProperty.MoistAir.GetExpansionCoefficient(System.Double)">
+            <summary>Calculate expansion coefficient from dryb-bulb temperature</summary>
+            <param name="drybulbTemperature">dryb-bulb temperature of moist air</param>
+            <returns>expansion coefficient</returns>
+        </member>
         <member name="M:Popolo.ThermophysicalProperty.MoistAir.BlendAir(Popolo.ThermophysicalProperty.ImmutableMoistAir[],System.Double[])">
             <summary>空気を混合する</summary>
             <param name="air">混合する空気の配列</param>
@@ -4895,7 +5078,7 @@
             <param name="atm">大気圧[kPa]</param>
             <returns>乾球温度[C]</returns>
         </member>
-        <member name="P:Popolo.ThermophysicalProperty.MoistAir.DryAirSpecificHeat">
+        <member name="P:Popolo.ThermophysicalProperty.MoistAir.IsobaricSpecificHeatOfDryAir">
             <summary>乾き空気比熱[kJ/kg-K]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermophysicalProperty.MoistAir.LatentHeatOfVaporization">
@@ -5324,9 +5507,6 @@
         <member name="P:Popolo.ThermalLoad.ImmutableWindow.FO">
             <summary>FOを取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableWindow.Glass">
-            <summary>複層ガラスを取得する</summary>
-        </member>
         <member name="P:Popolo.ThermalLoad.ImmutableWindow.Shade">
             <summary>日除けを取得する</summary>
         </member>
@@ -5347,6 +5527,9 @@
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableWindow.IndoorDrybulbTemperature">
             <summary>屋内の窓近傍の乾球温度[C]を取得する</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.ImmutableWindow.HeatTransmissionCoefficient">
+            <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.Window.hasChanged">
             <summary>状態値変更フラグ</summary>
@@ -5537,6 +5720,9 @@
         </member>
         <member name="P:Popolo.ThermalLoad.Window.IndoorDrybulbTemperature">
             <summary>屋内の窓近傍の乾球温度[C]を設定・取得する</summary>
+        </member>
+        <member name="P:Popolo.ThermalLoad.Window.HeatTransmissionCoefficient">
+            <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="T:Popolo.ThermalComfort.PMVCalculator">
             <summary>熱的快適性計算クラス</summary>

@@ -56,6 +56,7 @@
     <Compile Include="ThermalComfort\HumanBody.cs" />
     <Compile Include="ThermalComfort\PMVCalculator.cs" />
     <Compile Include="ThermalComfort\SETStarCalculator.cs" />
+    <Compile Include="ThermalLoad\AirFlowWindow.cs" />
     <Compile Include="ThermalLoad\ConstantHeatGain.cs" />
     <Compile Include="ThermalLoad\GlassPanes.cs" />
     <Compile Include="ThermalLoad\IHeatGain.cs" />
