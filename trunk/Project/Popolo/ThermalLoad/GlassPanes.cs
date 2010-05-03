@@ -249,20 +249,17 @@ namespace Popolo.ThermalLoad
                     double xr = Panes[i].OuterSideTransmittance / (1d - Panes[i].InnerSideReflectance * overallReflectance);
                     for (int j = 0; j < i; j++) absorptance[j] *= xr;
                     absorptance[i] = Panes[i].OuterSideAbsorptance + Panes[i].InnerSideAbsorptance * overallReflectance * xr;
+                    overallReflectance = Panes[i].OuterSideReflectance + Panes[i].InnerSideTransmittance* overallReflectance * xr;
                     OverallTransmittance *= xr;
                 }
 
                 //総合吸収率[-]を計算
-                double rSum = 1d / insideOverallHeatTransferCoefficient + 1d / outsideOverallHeatTransferCoefficient;
-                for (int i = 0; i < heatTransferCoefficientsOfAirGaps.Count; i++) rSum += 1d / heatTransferCoefficientsOfAirGaps[i];
-                double kg = 1d / rSum;
                 OverallAbsorptance = 0;
-                rSum = 1d / insideOverallHeatTransferCoefficient;
+                double rSum = 1d / insideOverallHeatTransferCoefficient + 1d / Panes[0].HeatTransferCoefficient;
                 for (int i = 0; i < Panes.Length; i++)
                 {
-                    OverallAbsorptance += (1d - kg * rSum) * absorptance[i];
-
-                    if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i];
+                    OverallAbsorptance += (1d - HeatTransmissionCoefficient * rSum) * absorptance[i];
+                    if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i] + 1d / Panes[i].HeatTransferCoefficient;
                 }
             }
             //簡易の場合
@@ -342,6 +339,7 @@ namespace Popolo.ThermalLoad
                     SetHeatTransferCoefficientsOfGaps(index, 99999);//修正
                     break;
             }
+            throw new Exception("未実装");
         }
 
 
@@ -500,7 +498,7 @@ namespace Popolo.ThermalLoad
                 if (outerSideTransmittance < 0 || outerSideReflectance < 0 || 1 < (outerSideTransmittance + outerSideReflectance) ||
                     innerSideTransmittance < 0 || innerSideReflectance < 0 || 1 < (innerSideTransmittance + innerSideReflectance)) throw new Exception("ガラス物性エラー");
 
-                OuterSideTransmittance = outerSideReflectance;
+                OuterSideTransmittance = outerSideTransmittance;
                 InnerSideTransmittance = innerSideTransmittance;
                 OuterSideReflectance = outerSideReflectance;
                 InnerSideReflectance = innerSideReflectance;
