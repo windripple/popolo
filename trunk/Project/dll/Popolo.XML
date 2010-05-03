@@ -3374,6 +3374,14 @@
         <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetExteriorAirGapRadiativeHeatTransferCoefficient">
             <summary>Gets the radiative heat transfer coefficient [W/(m2K)] at exterior air gap.</summary>
         </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetOutletAirTemperature">
+            <summary>Gets the outlet air flow temperature [C]</summary>
+            <returns>outlet air flow temperature [C]</returns>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.GetHeatRemovalByAirFlow">
+            <summary>Gets heat removal by airflow [W/m2]</summary>
+            <returns>heat removal by airflow [W/m2]</returns>
+        </member>
         <member name="M:Popolo.ThermalLoad.AirFlowWindow.updateMatrix">
             <summary>Update the matrix</summary>
         </member>
