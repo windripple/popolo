@@ -353,7 +353,24 @@ namespace Popolo.ThermalLoad
 
             if (transmittance < 0 || reflectance < 0 || absorptance < 0) throw new Exception("Transmittance, Reflectance and Absorptance must take value between 0 to 1");
 
-            //calculate solar absorptance at exterior glass.
+            //calculate solar absorptance
+            double overallTransmittance = interiorGlassPane.OuterSideTransmittance;
+            double overallReflectance = interiorGlassPane.OuterSideReflectance;
+            solarAbsorptionRateAtInteriorGlass = interiorGlassPane.OuterSideAbsorptance;
+            xr = transmittance / (1d - reflectance * overallReflectance);
+            solarAbsorptionRateAtInteriorGlass *= xr;
+            solarAbsorptionRateAtBlind = absorptance + absorptance * overallReflectance * xr;
+            overallReflectance = reflectance + transmittance * overallReflectance * xr;
+            overallTransmittance *= xr;
+            //
+            xr = exteriorGlassPane.OuterSideTransmittance / (1d - exteriorGlassPane.InnerSideReflectance * overallReflectance);
+            solarAbsorptionRateAtInteriorGlass *= xr;
+            solarAbsorptionRateAtBlind *= xr;
+            solarAbsorptionRateAtExteriorGlass = exteriorGlassPane.OuterSideAbsorptance + exteriorGlassPane.InnerSideAbsorptance * overallReflectance * xr;
+            overallReflectance = exteriorGlassPane.OuterSideReflectance + exteriorGlassPane.InnerSideTransmittance * overallReflectance * xr;
+            overallTransmittance *= xr;            
+            
+            /*//calculate solar absorptance at exterior glass.
             double overallTransmittance = exteriorGlassPane.OuterSideTransmittance;
             double overallReflectance = exteriorGlassPane.OuterSideReflectance;
             solarAbsorptionRateAtExteriorGlass = exteriorGlassPane.OuterSideAbsorptance;
@@ -369,7 +386,7 @@ namespace Popolo.ThermalLoad
             solarAbsorptionRateAtBlind *= xr;
             solarAbsorptionRateAtInteriorGlass = interiorGlassPane.OuterSideAbsorptance + interiorGlassPane.InnerSideAbsorptance * overallReflectance * xr;
             overallReflectance = interiorGlassPane.OuterSideReflectance + interiorGlassPane.InnerSideTransmittance * overallReflectance * xr;
-            overallTransmittance *= xr;
+            overallTransmittance *= xr;*/
 
             hasMatrixBoundaryChanged = true;
         }
@@ -383,7 +400,7 @@ namespace Popolo.ThermalLoad
         public double GetBlindTemperature()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
             //update state
             updateState();
 
@@ -395,7 +412,7 @@ namespace Popolo.ThermalLoad
         public double GetInteriorGlassTemperature()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
             //update state
             updateState();
 
@@ -407,7 +424,7 @@ namespace Popolo.ThermalLoad
         public double GetExteriorGlassTemperature()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
             //update state
             updateState();
 
@@ -419,7 +436,7 @@ namespace Popolo.ThermalLoad
         public double GetExteriorAirFlowTemperature()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
             //update state
             updateState();
 
@@ -432,7 +449,7 @@ namespace Popolo.ThermalLoad
         public double GetInteriorAirFlowTemperature()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
             //update state
             updateState();
 
@@ -444,7 +461,7 @@ namespace Popolo.ThermalLoad
         public double GetInteriorAirGapConvectiveHeatTransferCoefficient()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
 
             return interiorAirGapConvectiveHeatTransferCoefficient;
         }
@@ -453,7 +470,7 @@ namespace Popolo.ThermalLoad
         public double GetExteriorAirGapConvectiveHeatTransferCoefficient()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
 
             return exteriorAirGapConvectiveHeatTransferCoefficient;
         }
@@ -462,7 +479,7 @@ namespace Popolo.ThermalLoad
         public double GetInteriorAirGapRadiativeHeatTransferCoefficient()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
 
             return interiorAirGapRadiativeHeatTransferCoefficient;
         }
@@ -471,9 +488,51 @@ namespace Popolo.ThermalLoad
         public double GetExteriorAirGapRadiativeHeatTransferCoefficient()
         {
             //update matirx if boundary conditions have changed
-            if (hasMatrixBoundaryChanged) updateMatrix();
+            updateMatrix();
 
             return exteriorAirGapRadiativeHeatTransferCoefficient;
+        }
+
+        /// <summary>Gets the outlet air flow temperature [C]</summary>
+        /// <returns>outlet air flow temperature [C]</returns>
+        public double GetOutletAirTemperature()
+        {
+            //update matirx if boundary conditions have changed
+            updateMatrix();
+            //update state
+            updateState();
+
+            double teo, tio;
+            double dens = 1.293 / (1 + inletAirTemperature / 273.15);
+            if (ExteriorSideAirFlowVolume <= 0) teo = 0;
+            else
+            {
+                double tes = 0.5 * (tVector.GetValue(0) + tVector.GetValue(1));
+                double whe = (2 * exteriorAirGapConvectiveHeatTransferCoefficient) / (CPA * ExteriorSideAirFlowVolume / 3.6d * dens);
+                double eps = 1 - Math.Exp(-whe);
+                teo = tes - (tes - inletAirTemperature) * Math.Exp(-whe);
+            }
+            if (InteriorSideAirFlowVolume <= 0) tio = 0;
+            else
+            {
+                double tis = 0.5 * (tVector.GetValue(1) + tVector.GetValue(2));
+                double whi = (2 * interiorAirGapConvectiveHeatTransferCoefficient) / (CPA * InteriorSideAirFlowVolume / 3.6d * dens);
+                double eps = 1 - Math.Exp(-whi);
+                tio = tis - (tis - inletAirTemperature) * Math.Exp(-whi);
+            }
+
+            double eRate = ExteriorSideAirFlowVolume / (ExteriorSideAirFlowVolume + InteriorSideAirFlowVolume);
+            return teo * eRate + tio * (1 - eRate);
+        }
+
+        /// <summary>Gets heat removal by airflow [W/m2]</summary>
+        /// <returns>heat removal by airflow [W/m2]</returns>
+        public double GetHeatRemovalByAirFlow()
+        {
+            double outT = GetOutletAirTemperature();
+            double dens = 1.293 / (1 + inletAirTemperature / 273.15);
+
+            return (outT - inletAirTemperature) * (ExteriorSideAirFlowVolume + InteriorSideAirFlowVolume) * dens * CPA / 3.6;
         }
 
         #endregion
@@ -503,12 +562,15 @@ namespace Popolo.ThermalLoad
             double charac = GetStandardIncidentAngleCharacteristic(cosineDN);
             double radiation = (1d - shadowRate) * idn * charac + 0.91 * id;
 
+            //
+            double od = OutdoorTemperature - NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky / ExteriorSideOverallHeatTransferCoefficient;
+
             //Make zVector**********************************
             double kiw = 1 / (1 / interiorGlassPane.HeatTransferCoefficient + 1 / interiorOverallHeatTransferCoefficient);
             double kew = 1 / (1 / exteriorGlassPane.HeatTransferCoefficient + 1 / exteriorOverallHeatTransferCoefficient);
-            zVector.SetValue(0, solarAbsorptionRateAtExteriorGlass * radiation - 
-                NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky + 
-                kew * OutdoorTemperature + exteriorAirGapConvectiveHeatTransferCoefficient * we3 * inletAirTemperature);
+            zVector.SetValue(0, solarAbsorptionRateAtExteriorGlass * radiation 
+                // - NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky +
+                +kew * od + exteriorAirGapConvectiveHeatTransferCoefficient * we3 * inletAirTemperature);
             zVector.SetValue(1, solarAbsorptionRateAtBlind * radiation + 
                 exteriorAirGapConvectiveHeatTransferCoefficient * we3 * inletAirTemperature + interiorAirGapConvectiveHeatTransferCoefficient * wi3 * inletAirTemperature);
             zVector.SetValue(2, solarAbsorptionRateAtInteriorGlass * radiation + 
@@ -523,11 +585,22 @@ namespace Popolo.ThermalLoad
                 exteriorAirGapConvectiveHeatTransferCoefficient * (GetExteriorAirFlowTemperature() - tVector.GetValue(0)) +
                 exteriorAirGapRadiativeHeatTransferCoefficient * (tVector.GetValue(1) - tVector.GetValue(0)) +
                 kew * (OutdoorTemperature - tVector.GetValue(0));
+            double sum2 = solarAbsorptionRateAtBlind * radiation +
+                exteriorAirGapConvectiveHeatTransferCoefficient * (GetExteriorAirFlowTemperature() - tVector.GetValue(1)) +
+                exteriorAirGapRadiativeHeatTransferCoefficient * (tVector.GetValue(0) - tVector.GetValue(1)) +
+                interiorAirGapConvectiveHeatTransferCoefficient * (GetInteriorAirFlowTemperature() - tVector.GetValue(1)) +
+                interiorAirGapRadiativeHeatTransferCoefficient * (tVector.GetValue(2) - tVector.GetValue(1));
+            double sum3 = solarAbsorptionRateAtInteriorGlass * radiation +
+                interiorAirGapConvectiveHeatTransferCoefficient * (GetInteriorAirFlowTemperature() - tVector.GetValue(2)) +
+                interiorAirGapRadiativeHeatTransferCoefficient * (tVector.GetValue(1) - tVector.GetValue(2)) +
+                kiw * (IndoorTemperature - tVector.GetValue(2));
         }
 
         /// <summary>Update the matrix</summary>
         private void updateMatrix()
         {
+            if (!hasMatrixBoundaryChanged) return;
+
             //Update heat transfer coefficients
             updateHeatTransferCoefficientAirGap();
             
@@ -544,7 +617,7 @@ namespace Popolo.ThermalLoad
             }
             else
             {
-                whi = (2 * interiorAirGapConvectiveHeatTransferCoefficient) / (CPA * InteriorSideAirFlowVolume / 3600d * dens);
+                whi = (2 * interiorAirGapConvectiveHeatTransferCoefficient) / (CPA * InteriorSideAirFlowVolume / 3.6d * dens);
                 epwi = 1 - Math.Exp(-whi);
                 wi1 = (1 - epwi / whi) * 0.5;
                 wi3 = epwi / whi;
@@ -561,7 +634,7 @@ namespace Popolo.ThermalLoad
             }
             else
             {
-                whe = (2 * exteriorAirGapConvectiveHeatTransferCoefficient) / (CPA * ExteriorSideAirFlowVolume / 3600d * dens);
+                whe = (2 * exteriorAirGapConvectiveHeatTransferCoefficient) / (CPA * ExteriorSideAirFlowVolume / 3.6d * dens);
                 epwe = 1 - Math.Exp(-whe);
                 we1 = (1 - epwe / whe) * 0.5;
                 we3 = epwe / whe;
@@ -609,6 +682,8 @@ namespace Popolo.ThermalLoad
         /// <returns>convective heat transfer coefficient</returns>
         private double getConvectiveHeatTransferCoefficient(double surfaceTemperature, double airTemperature, double airVelocity)
         {
+            //return 11.2 * airVelocity - 0.05;//非常に良い近似結果
+
             double aveTemp = (surfaceTemperature + airTemperature) * 0.5;
 
             //Thermodynamic properties of air (interior side).
