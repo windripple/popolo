@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 using Popolo.ThermophysicalProperty;
 using Popolo.CircuitNetwork;
@@ -14,26 +15,76 @@ namespace SamplePrograms
     {
         static void Main(string[] args)
         {
-            AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm), 0.05,
-                new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm), 0.05, 1, 1);
+
+            AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
+                new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
+            Sun sun = new Sun(Sun.City.Tokyo);
+            sun.Update(new DateTime(1985, 11, 19, 7, 30, 0));
             afWindow.SetInletAirTemperature(15);
             afWindow.IndoorTemperature = 24;
             afWindow.OutdoorTemperature = 35;
+            afWindow.InteriorSideOverallHeatTransferCoefficient = 15 * 4.186 / 3.6;
+            afWindow.ExteriorSideOverallHeatTransferCoefficient = 4.5 * 4.186 / 3.6;
+            afWindow.Sun = sun;
+            afWindow.SetBlind(0.1, 0.4);
+            afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600, 0.22 * 0.032 * 3600);
+
+            Console.WriteLine("*******************");
+            using (StreamReader sReader = new StreamReader("bnd.csv"))
+            using (StreamWriter sWriter = new StreamWriter("out.csv"))
+            {
+                string buff;
+                while((buff = sReader.ReadLine())!=null){
+                    string[] sb = buff.Split(',');
+                    double drn = double.Parse(sb[0]);
+                    double dfr = double.Parse(sb[1]);
+                    double dbo = double.Parse(sb[2]);
+                    double dbi = double.Parse(sb[5]);
+                    double nrd = double.Parse(sb[7]);
+                    afWindow.OutdoorTemperature = dbo;
+                    afWindow.IndoorTemperature = dbi;
+                    afWindow.SetInletAirTemperature(dbi);
+                    afWindow.SetNocturnalRadiation(nrd);
+                    sun.SetGlobalHorizontalRadiation(dfr, drn);
+
+                    sWriter.WriteLine(
+                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," + afWindow.GetInteriorGlassTemperature()
+                        );
+
+                    sun.Update(sun.CurrentDateTime.AddHours(1));
+                }
+            }
+
+            /*
+            afWindow.SetAirFlowVolume(0.06 * 0.04 * 3600, 0.06 * 0.04 * 3600);
+            Console.WriteLine(afWindow.ExteriorSideAirVelocity.ToString("F3") + ", " + afWindow.GetExteriorAirGapConvectiveHeatTransferCoefficient().ToString("F3"));
+            afWindow.SetAirFlowVolume(0.11 * 0.04 * 3600, 0.11 * 0.04 * 3600);
+            Console.WriteLine(afWindow.ExteriorSideAirVelocity.ToString("F3") + ", " + afWindow.GetExteriorAirGapConvectiveHeatTransferCoefficient().ToString("F3"));
+            afWindow.SetAirFlowVolume(0.22 * 0.04 * 3600, 0.22 * 0.04 * 3600);
+            Console.WriteLine(afWindow.ExteriorSideAirVelocity.ToString("F3") + ", " + afWindow.GetExteriorAirGapConvectiveHeatTransferCoefficient().ToString("F3"));
+            afWindow.SetAirFlowVolume(0.32 * 0.04 * 3600, 0.32 * 0.04 * 3600);
+            Console.WriteLine(afWindow.ExteriorSideAirVelocity.ToString("F3") + ", " + afWindow.GetExteriorAirGapConvectiveHeatTransferCoefficient().ToString("F3"));
 
             for (int i = 0; i < 5; i++)
             {
-                afWindow.SetAirFlowVolume(100 * (i + 1) * 2);
+                afWindow.SetAirFlowVolume(0.5 * 0.04 * 3600, 0.5 * 0.04 * 3600);
                 Console.WriteLine(afWindow.GetExteriorGlassTemperature().ToString("F3") + ", " +
                     afWindow.GetBlindTemperature().ToString("F3") + ", " +
                     afWindow.GetInteriorGlassTemperature().ToString("F3") + ", " +
                     afWindow.GetExteriorAirFlowTemperature().ToString("F3") + ", " +
                     afWindow.GetInteriorAirFlowTemperature().ToString("F3"));
+            }*/
+
+            sun.Update(new DateTime(1985, 11, 19, 0, 30, 0));
+            Incline sinc = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
+            Console.WriteLine(sun.GetExtraterrestrialRadiation());
+            Console.WriteLine(sun.Altitude);
+            for (int i = 0; i < 24; i++)
+            {
+                sun.Update(sun.CurrentDateTime.AddHours(1));
+                //Console.WriteLine(sun.Altitude);
+                Console.WriteLine(sinc.GetDirectSolarRadiationRate(sun));
             }
-
-            Console.WriteLine("*******************");
-
-            //weatherTest();
-
         }
 
         #region Chapter 1
@@ -284,6 +335,24 @@ namespace SamplePrograms
             Console.WriteLine("Direct normal radiation to W surface=" + (sun.DirectNormalRadiation * cosThetaW).ToString("F1") + " W/m2");
 
             Console.Read();
+        }
+
+        #endregion
+
+        #region Chapter 6
+
+        private static void glassPanesTest()
+        {
+            GlassPanes gps = new GlassPanes(new GlassPanes.Pane[] {
+                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131) ,
+                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131) ,
+                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131)});
+            gps.SetInsideOverallHeatTransferCoefficient(9.2592592);
+            gps.SetOutsideOverallHeatTransferCoefficient(23.255813);
+            gps.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
+            gps.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
+            Console.WriteLine(gps.OverallTransmittance);
+            Console.WriteLine(gps.OverallAbsorptance);
         }
 
         #endregion

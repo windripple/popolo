@@ -649,6 +649,13 @@ namespace Popolo.Weather
             revision++;
         }
 
+        /// <summary>大気圏外日射量[W/m2]を計算する</summary>
+        /// <returns>大気圏外日射量[W/m2]</returns>
+        public double GetExtraterrestrialRadiation()
+        {
+            return GetExtraterrestrialRadiation(CurrentDateTime.DayOfYear);
+        }
+
         /// <summary>直散分離を行い、法線面直達日射量と水平面全天日射量を推定する</summary>
         /// <param name="globalHorizontalRadiation">水平面全天日射量[W/m2]</param>
         public void EstimateDiffuseAndDirectNormalRadiation(double globalHorizontalRadiation)
