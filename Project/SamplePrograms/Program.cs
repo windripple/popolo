@@ -379,8 +379,8 @@ namespace SamplePrograms
             gps.SetOutsideOverallHeatTransferCoefficient(23.255813);
             gps.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
             gps.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
-            Console.WriteLine(gps.OverallTransmittance);
-            Console.WriteLine(gps.OverallAbsorptance);
+            Console.WriteLine(gps.OverallTransmissivity);
+            Console.WriteLine(gps.OverallAbsorptivity);
         }
 
         #endregion

@@ -354,20 +354,20 @@ namespace Popolo.ThermalLoad
             if (transmittance < 0 || reflectance < 0 || absorptance < 0) throw new Exception("Transmittance, Reflectance and Absorptance must take value between 0 to 1");
 
             //calculate solar absorptance
-            double overallTransmittance = interiorGlassPane.OuterSideTransmittance;
-            double overallReflectance = interiorGlassPane.OuterSideReflectance;
-            solarAbsorptionRateAtInteriorGlass = interiorGlassPane.OuterSideAbsorptance;
+            double overallTransmittance = interiorGlassPane.OuterSideTransmissivity;
+            double overallReflectance = interiorGlassPane.OuterSideReflectivity;
+            solarAbsorptionRateAtInteriorGlass = interiorGlassPane.OuterSideAbsorptivity;
             xr = transmittance / (1d - reflectance * overallReflectance);
             solarAbsorptionRateAtInteriorGlass *= xr;
             solarAbsorptionRateAtBlind = absorptance + absorptance * overallReflectance * xr;
             overallReflectance = reflectance + transmittance * overallReflectance * xr;
             overallTransmittance *= xr;
             //
-            xr = exteriorGlassPane.OuterSideTransmittance / (1d - exteriorGlassPane.InnerSideReflectance * overallReflectance);
+            xr = exteriorGlassPane.OuterSideTransmissivity / (1d - exteriorGlassPane.InnerSideReflectivity * overallReflectance);
             solarAbsorptionRateAtInteriorGlass *= xr;
             solarAbsorptionRateAtBlind *= xr;
-            solarAbsorptionRateAtExteriorGlass = exteriorGlassPane.OuterSideAbsorptance + exteriorGlassPane.InnerSideAbsorptance * overallReflectance * xr;
-            overallReflectance = exteriorGlassPane.OuterSideReflectance + exteriorGlassPane.InnerSideTransmittance * overallReflectance * xr;
+            solarAbsorptionRateAtExteriorGlass = exteriorGlassPane.OuterSideAbsorptivity + exteriorGlassPane.InnerSideAbsorptivity * overallReflectance * xr;
+            overallReflectance = exteriorGlassPane.OuterSideReflectivity + exteriorGlassPane.InnerSideTransmissivity * overallReflectance * xr;
             overallTransmittance *= xr;            
             
             /*//calculate solar absorptance at exterior glass.
