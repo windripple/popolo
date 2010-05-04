@@ -15,6 +15,7 @@ namespace SamplePrograms
     {
         static void Main(string[] args)
         {
+            windowTest();
 
             AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
                 new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
@@ -369,18 +370,127 @@ namespace SamplePrograms
 
         #region Chapter 6
 
+        /// <summary>Sample program calculating the charateristics of a glass panes</summary>
         private static void glassPanesTest()
         {
-            GlassPanes gps = new GlassPanes(new GlassPanes.Pane[] {
-                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131) ,
-                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131) ,
-                new GlassPanes.Pane(0.79,0.07,0.85,0.07,131)});
-            gps.SetInsideOverallHeatTransferCoefficient(9.2592592);
-            gps.SetOutsideOverallHeatTransferCoefficient(23.255813);
-            gps.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
-            gps.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
-            Console.WriteLine(gps.OverallTransmissivity);
-            Console.WriteLine(gps.OverallAbsorptivity);
+            //Create an array of the GlassPanes.Glass class 
+            GlassPanes.Pane[] panes = new GlassPanes.Pane[3];
+
+            //Create a transparent glass (3mm).
+            panes[0] = new GlassPanes.Pane(0.79, 0.07, 0.85, 0.07, 131);    //Inside of the window
+            panes[1] = new GlassPanes.Pane(0.79, 0.07, 0.85, 0.07, 131);
+            panes[2] = new GlassPanes.Pane(0.79, 0.07, 0.85, 0.07, 131);    //Outside of the window
+
+            //Create an instance of GlassPanes class
+            GlassPanes glass = new GlassPanes(panes);
+
+            //Set heat transfer coefficients[W/(m2-K)] of air gap
+            glass.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
+            glass.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
+
+            //Set overall heat transfer coefficients[W/(m2-K)] at the surface of glass.
+            glass.SetInsideOverallHeatTransferCoefficient(9.26);      //Inside of the window
+            glass.SetOutsideOverallHeatTransferCoefficient(23.26);    //Outside of the window
+
+            //Check the characteristics of the glass panes.
+            Console.WriteLine("Transparent glass(3mm) * 3");
+            Console.WriteLine("Overall transmissivity[-] = " + glass.OverallTransmissivity.ToString("F2"));
+            Console.WriteLine("Overall absorptivity[-] = " + glass.OverallAbsorptivity.ToString("F2"));
+            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.HeatTransferCoefficientOfGlass.ToString("F2"));
+            Console.WriteLine("Heat transmission coefficient of glass[-] = " + glass.HeatTransmissionCoefficient.ToString("F2"));
+            Console.WriteLine();
+
+            //Change the outside glass pane to heat reflecting glass(6mm)
+            panes[0] = new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatReflectingGlass06mm);
+
+            //Check the characteristics of a single glass pane.
+            Console.WriteLine("Heat reflecting glass(6mm)");
+            Console.WriteLine("Transmissivity[-] = " + panes[0].OuterSideTransmissivity.ToString("F2"));
+            Console.WriteLine("absorptivity[-] = " + panes[0].OuterSideAbsorptivity.ToString("F2"));
+            Console.WriteLine("Reflectivity[-] = " + panes[0].OuterSideReflectivity.ToString("F2"));
+            Console.WriteLine();
+
+            //Create an instance of GlassPanes class. Other properties are same as above
+            glass = new GlassPanes(panes);
+            glass.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
+            glass.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
+            glass.SetInsideOverallHeatTransferCoefficient(9.26);      //Inside of the window
+            glass.SetOutsideOverallHeatTransferCoefficient(23.26);    //Outside of the window
+
+            //Check the characteristics of the glass panes.
+            Console.WriteLine("Heat reflecting glass(6mm) + Transparent glass(3mm) * 2");
+            Console.WriteLine("Overall transmissivity[-] = " + glass.OverallTransmissivity.ToString("F2"));
+            Console.WriteLine("Overall absorptivity[-] = " + glass.OverallAbsorptivity.ToString("F2"));
+            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.HeatTransferCoefficientOfGlass.ToString("F2"));
+            Console.WriteLine("Heat transmission coefficient of glass[-] = " + glass.HeatTransmissionCoefficient.ToString("F2"));
+
+            Console.Read();
+        }
+
+        /// <summary>Sample program calculating the heat gain from the window</summary>
+        private static void windowTest()
+        {
+            //A sample weather data
+            //direct normal radiation [W/m2]
+            double[] wdIdn = new double[] { 0, 0, 0, 0, 0, 244, 517, 679, 774, 829, 856, 862, 847, 809, 739, 619, 415, 97, 0, 0, 0, 0, 0, 0 };
+            //diffuse horizontal radiation [W/m2]
+            double[] wdIsky = new double[] { 0, 0, 0, 0, 21, 85, 109, 116, 116, 113, 110, 109, 111, 114, 116, 114, 102, 63, 0, 0, 0, 0, 0, 0 };
+            //drybulb temperature [C]
+            double[] wdDbt = new double[] { 27, 27, 27, 27, 27, 28, 29, 30, 31, 32, 32, 33, 33, 33, 34, 33, 32, 32, 31, 30, 29, 29, 28, 28 };
+            //nocturnal radiation [W/m2]
+            double[] wdRN = new double[] { 24, 24, 24, 24, 24, 24, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 25, 25, 25, 25, 24, 24, 24 };
+
+            //Create a window with a single 3mm transparent glass pane
+            GlassPanes.Pane pane = new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass03mm);
+            GlassPanes glassPane = new GlassPanes(pane);
+            Window window = new Window(glassPane);
+
+            //Set wall surface information
+            WindowSurface outsideWindowSurface = window.GetSurface(true);
+            outsideWindowSurface.OverallHeatTransferCoefficient = 23d;
+            outsideWindowSurface.Albedo = 0.2;
+            WindowSurface insideWindowSurface = window.GetSurface(false);
+            insideWindowSurface.OverallHeatTransferCoefficient = 9.3;
+
+            //Set incline of an outdoor surface : South, vertical incline
+            window.OutSideIncline = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
+
+            //There is no sun shade
+            window.Shade = SunShade.EmptySunShade;
+
+            //Initialize sun. Tokyo : 7/21 0:00
+            Sun sun = new Sun(Sun.City.Tokyo);
+            DateTime dTime = new DateTime(2001, 7, 21, 0, 0, 0);
+            sun.Update(dTime);
+            window.Sun = sun;
+
+            //Indoor drybulb temperature is constant (25C)
+            window.IndoorDrybulbTemperature = 25;
+
+            //Result : Title line
+            Console.WriteLine(" Time |Transmission[W]|Absorption[W]|Transfer[W]|Convective[W]|Radiative[W]");
+
+            //execute simulation
+            for (int i = 0; i < 24; i++)
+            {
+                //Set radiations (calculate global horizontal radiation from direct normal and diffuse horizontal radiation)
+                sun.SetGlobalHorizontalRadiation(wdIsky[i], wdIdn[i]);
+                //Set nocturnal radiation
+                window.NocturnalRadiation = wdRN[i];
+                //Set outdoor temperature
+                window.OutdoorDrybulbTemperature = wdDbt[i];
+
+                //Output result
+                Console.WriteLine(dTime.ToShortTimeString().PadLeft(5) + " | " + window.TransmissionHeatGain.ToString("F1").PadLeft(13) + " | " +
+                  window.AbsorbedHeatGain.ToString("F1").PadLeft(11) + " | " + window.TransferHeatGain.ToString("F1").PadLeft(9) + " | " +
+                  window.ConvectiveHeatGain.ToString("F1").PadLeft(11) + " | " + window.RadiativeHeatGain.ToString("F1").PadLeft(11));
+
+                //Update time
+                dTime = dTime.AddHours(1);
+                sun.Update(dTime);
+            }
+
+            Console.Read();
         }
 
         #endregion

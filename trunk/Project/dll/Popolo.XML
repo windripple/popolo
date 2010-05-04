@@ -3934,10 +3934,10 @@
             <summary>ガラス層オブジェクトをコピーする</summary>
             <param name="glassPanes">ガラス層オブジェクト</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.GlassPanes.GetStandardIncidentAngleCharacteristic(System.Double)">
-            <summary>ガラスの標準入射角特性[-]を計算する</summary>
+        <member name="M:Popolo.ThermalLoad.GlassPanes.GetIncidentAngleCharacteristic(System.Double)">
+            <summary>ガラスの入射角特性[-]を計算する</summary>
             <param name="cosineIncidentAngle">入射角の余弦（cosθ）</param>
-            <returns>ガラスの標準入射角特性[-]</returns>
+            <returns>ガラスの入射角特性[-]</returns>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.OverallTransmissivity">
             <summary>総合透過率[-]を取得する</summary>
