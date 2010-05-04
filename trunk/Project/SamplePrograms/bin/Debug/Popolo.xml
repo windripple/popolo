@@ -3852,10 +3852,10 @@
         <member name="T:Popolo.ThermalLoad.ImmutableGlassPanes">
             <summary>読み取り専用のガラス層</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallTransmittance">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallTransmissivity">
             <summary>総合透過率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallAbsorptance">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallAbsorptivity">
             <summary>総合吸収率[-]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransferCoefficientOfGlass">
@@ -3939,10 +3939,10 @@
             <param name="cosineIncidentAngle">入射角の余弦（cosθ）</param>
             <returns>ガラスの標準入射角特性[-]</returns>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.OverallTransmittance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.OverallTransmissivity">
             <summary>総合透過率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.OverallAbsorptance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.OverallAbsorptivity">
             <summary>総合吸収率[-]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransferCoefficientOfGlass">
@@ -4010,22 +4010,22 @@
         <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.HeatTransferCoefficient">
             <summary>Gets heat transfer coefficient [W/(m2K)].</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideTransmittance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideTransmissivity">
             <summary>外側透過率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideAbsorptance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideAbsorptivity">
             <summary>外側吸収率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideReflectance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.OuterSideReflectivity">
             <summary>外側反射率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideTransmittance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideTransmissivity">
             <summary>内側透過率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideAbsorptance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideAbsorptivity">
             <summary>内側吸収率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideReflectance">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.Pane.InnerSideReflectivity">
             <summary>内側反射率[-]を取得する</summary>
         </member>
         <member name="T:Popolo.ThermalLoad.GlassPanes.Pane.PredifinedGlassPane">

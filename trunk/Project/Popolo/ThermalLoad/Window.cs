@@ -439,7 +439,7 @@ namespace Popolo.ThermalLoad
         /// <returns>ガラスの標準入射角特性[-]</returns>
         public double GetStandardIncidentAngleCharacteristic(double cosineIncidentAngle)
         {
-            return glassPanes.GetStandardIncidentAngleCharacteristic(cosineIncidentAngle);
+            return glassPanes.GetIncidentAngleCharacteristic(cosineIncidentAngle);
         }
         
         /// <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
@@ -495,10 +495,10 @@ namespace Popolo.ThermalLoad
             double buff = SurfaceArea * ((1d - shadowRate) * idn * charac + 0.91 * id);
 
             //透過日射による熱取得[W]を更新
-            transmissionHeatGain = glassPanes.OverallTransmittance * buff;
+            transmissionHeatGain = glassPanes.OverallTransmissivity * buff;
 
             //吸収日射による熱取得[W]
-            absorbedHeatGain = glassPanes.OverallAbsorptance * buff;
+            absorbedHeatGain = glassPanes.OverallAbsorptivity * buff;
 
             //外表面の放射を設定
             outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.HeatTransmissionCoefficient * outsideSurface.OverallHeatTransferCoefficient

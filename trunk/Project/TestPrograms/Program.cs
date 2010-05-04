@@ -1717,10 +1717,10 @@ namespace Popolo.Utility
             panes[1] = new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatAbsorbingGlass06mm);
 
             //物性確認
-            Console.WriteLine("透明ガラスの透過率=" + panes[0].InnerSideTransmittance.ToString("F2"));
-            Console.WriteLine("透明ガラスの吸収率=" + panes[0].InnerSideAbsorptance.ToString("F2"));
-            Console.WriteLine("熱線吸収ガラスの透過率=" + panes[1].InnerSideTransmittance.ToString("F2"));
-            Console.WriteLine("熱線吸収ガラスの吸収率=" + panes[1].InnerSideAbsorptance.ToString("F2"));
+            Console.WriteLine("透明ガラスの透過率=" + panes[0].InnerSideTransmissivity.ToString("F2"));
+            Console.WriteLine("透明ガラスの吸収率=" + panes[0].InnerSideAbsorptivity.ToString("F2"));
+            Console.WriteLine("熱線吸収ガラスの透過率=" + panes[1].InnerSideTransmissivity.ToString("F2"));
+            Console.WriteLine("熱線吸収ガラスの吸収率=" + panes[1].InnerSideAbsorptivity.ToString("F2"));
             Console.WriteLine();            
 
             //ガラス作成
@@ -1730,8 +1730,8 @@ namespace Popolo.Utility
             glass.SetHeatTransferCoefficientsOfGaps(0, 6d);
 
             Console.WriteLine("室内側：透明ガラス　室外側：熱線吸収ガラス");
-            Console.WriteLine("総合透過率[-] = " + glass.OverallTransmittance.ToString("F3"));
-            Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptance.ToString("F3"));
+            Console.WriteLine("総合透過率[-] = " + glass.OverallTransmissivity.ToString("F3"));
+            Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptivity.ToString("F3"));
             //Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
             Console.WriteLine();
 
@@ -1746,8 +1746,8 @@ namespace Popolo.Utility
             glass.SetHeatTransferCoefficientsOfGaps(0, 6d);
 
             Console.WriteLine("室内側：熱線吸収ガラス　室外側：透明ガラス");
-            Console.WriteLine("総合透過率[-] = " + glass.OverallTransmittance.ToString("F3"));
-            Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptance.ToString("F3"));
+            Console.WriteLine("総合透過率[-] = " + glass.OverallTransmissivity.ToString("F3"));
+            Console.WriteLine("総合吸収率[-] = " + glass.OverallAbsorptivity.ToString("F3"));
             //Console.WriteLine("熱貫流率[W/(m2-K)]" + glass.OverallHeatTransferCoefficient.ToString("F3"));
 
             Console.Read();

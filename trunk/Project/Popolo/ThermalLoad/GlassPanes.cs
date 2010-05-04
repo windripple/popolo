@@ -62,14 +62,14 @@ namespace Popolo.ThermalLoad
         #region プロパティ
 
         /// <summary>総合透過率[-]を取得する</summary>
-        public double OverallTransmittance
+        public double OverallTransmissivity
         {
             get;
             private set;
         }
 
         /// <summary>総合吸収率[-]を取得する</summary>
-        public double OverallAbsorptance
+        public double OverallAbsorptivity
         {
             get;
             private set;
@@ -88,34 +88,6 @@ namespace Popolo.ThermalLoad
             get;
             private set;
         }
-
-        /*/// <summary>熱取得の内、対流成分の割合[-]を設定・取得する</summary>
-        public double ConvectiveRate
-        {
-            get
-            {
-                return kc;
-            }
-            set
-            {
-                kc = Math.Min(1, Math.Max(value, 0));
-                kr = 1 - kc;
-            }
-        }*/
-
-        /*/// <summary>熱取得の内、放射成分の割合[-]を設定・取得する</summary>
-        public double RadiativeRate
-        {
-            get
-            {
-                return kr;
-            }
-            set
-            {
-                kr = Math.Min(1, Math.Max(value, 0));
-                kc = 1 - kr;
-            }
-        }*/
 
         /// <summary>ガラスを取得する</summary>
         public Pane[] Panes
@@ -178,8 +150,8 @@ namespace Popolo.ThermalLoad
             //入射角特性係数[-]を初期化
             angularDependenceCoefficients.AddRange(new double[] { 3.4167, -4.389, 2.4948, -0.5224 });
 
-            this.OverallTransmittance = overallTransmittance;
-            this.OverallAbsorptance = overallAbsorptance;
+            this.OverallTransmissivity = overallTransmittance;
+            this.OverallAbsorptivity = overallAbsorptance;
             this.HeatTransferCoefficientOfGlass = heatTransferCoefficient;
 
             initialize();
@@ -241,24 +213,24 @@ namespace Popolo.ThermalLoad
                 HeatTransmissionCoefficient = 1d / HeatTransmissionCoefficient;
 
                 //総合透過率[-]を計算
-                OverallTransmittance = Panes[0].OuterSideTransmittance;
-                double overallReflectance = Panes[0].OuterSideReflectance;
-                absorptance[0] = Panes[0].OuterSideAbsorptance;
+                OverallTransmissivity = Panes[0].OuterSideTransmissivity;
+                double overallReflectance = Panes[0].OuterSideReflectivity;
+                absorptance[0] = Panes[0].OuterSideAbsorptivity;
                 for (int i = 1; i < Panes.Length; i++)
                 {
-                    double xr = Panes[i].OuterSideTransmittance / (1d - Panes[i].InnerSideReflectance * overallReflectance);
+                    double xr = Panes[i].OuterSideTransmissivity / (1d - Panes[i].InnerSideReflectivity * overallReflectance);
                     for (int j = 0; j < i; j++) absorptance[j] *= xr;
-                    absorptance[i] = Panes[i].OuterSideAbsorptance + Panes[i].InnerSideAbsorptance * overallReflectance * xr;
-                    overallReflectance = Panes[i].OuterSideReflectance + Panes[i].InnerSideTransmittance* overallReflectance * xr;
-                    OverallTransmittance *= xr;
+                    absorptance[i] = Panes[i].OuterSideAbsorptivity + Panes[i].InnerSideAbsorptivity * overallReflectance * xr;
+                    overallReflectance = Panes[i].OuterSideReflectivity + Panes[i].InnerSideTransmissivity* overallReflectance * xr;
+                    OverallTransmissivity *= xr;
                 }
 
                 //総合吸収率[-]を計算
-                OverallAbsorptance = 0;
+                OverallAbsorptivity = 0;
                 double rSum = 1d / insideOverallHeatTransferCoefficient + 1d / Panes[0].HeatTransferCoefficient;
                 for (int i = 0; i < Panes.Length; i++)
                 {
-                    OverallAbsorptance += (1d - HeatTransmissionCoefficient * rSum) * absorptance[i];
+                    OverallAbsorptivity += (1d - HeatTransmissionCoefficient * rSum) * absorptance[i];
                     if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i] + 1d / Panes[i].HeatTransferCoefficient;
                 }
             }
@@ -347,8 +319,8 @@ namespace Popolo.ThermalLoad
         /// <param name="glassPanes">ガラス層オブジェクト</param>
         public void Copy(ImmutableGlassPanes glassPanes)
         {
-            this.OverallAbsorptance = glassPanes.OverallAbsorptance;
-            this.OverallTransmittance = glassPanes.OverallTransmittance;
+            this.OverallAbsorptivity = glassPanes.OverallAbsorptivity;
+            this.OverallTransmissivity = glassPanes.OverallTransmissivity;
             this.HeatTransferCoefficientOfGlass = glassPanes.HeatTransferCoefficientOfGlass;
 
             if (Panes != null)
@@ -374,10 +346,10 @@ namespace Popolo.ThermalLoad
             initialize();
         }
 
-        /// <summary>ガラスの標準入射角特性[-]を計算する</summary>
+        /// <summary>ガラスの入射角特性[-]を計算する</summary>
         /// <param name="cosineIncidentAngle">入射角の余弦（cosθ）</param>
-        /// <returns>ガラスの標準入射角特性[-]</returns>
-        public double GetStandardIncidentAngleCharacteristic(double cosineIncidentAngle)
+        /// <returns>ガラスの入射角特性[-]</returns>
+        public double GetIncidentAngleCharacteristic(double cosineIncidentAngle)
         {
             double ci = cosineIncidentAngle;
             double val = 0;
@@ -427,42 +399,42 @@ namespace Popolo.ThermalLoad
             }
 
             /// <summary>外側透過率[-]を取得する</summary>
-            public double OuterSideTransmittance
+            public double OuterSideTransmissivity
             {
                 get;
                 private set;
             }
 
             /// <summary>外側吸収率[-]を取得する</summary>
-            public double OuterSideAbsorptance
+            public double OuterSideAbsorptivity
             {
                 get;
                 private set;
             }
 
             /// <summary>外側反射率[-]を取得する</summary>
-            public double OuterSideReflectance
+            public double OuterSideReflectivity
             {
                 get;
                 private set;
             }
 
             /// <summary>内側透過率[-]を取得する</summary>
-            public double InnerSideTransmittance
+            public double InnerSideTransmissivity
             {
                 get;
                 private set;
             }
 
             /// <summary>内側吸収率[-]を取得する</summary>
-            public double InnerSideAbsorptance
+            public double InnerSideAbsorptivity
             {
                 get;
                 private set;
             }
 
             /// <summary>内側反射率[-]を取得する</summary>
-            public double InnerSideReflectance
+            public double InnerSideReflectivity
             {
                 get;
                 private set;
@@ -480,9 +452,9 @@ namespace Popolo.ThermalLoad
             {
                 if (transmittance < 0 || reflectance < 0 || 1 < (transmittance + reflectance)) throw new Exception("ガラス物性エラー");
 
-                OuterSideTransmittance = InnerSideTransmittance = transmittance;
-                OuterSideReflectance = InnerSideReflectance = reflectance;
-                OuterSideAbsorptance = InnerSideAbsorptance = 1 - (OuterSideTransmittance + OuterSideReflectance);
+                OuterSideTransmissivity = InnerSideTransmissivity = transmittance;
+                OuterSideReflectivity = InnerSideReflectivity = reflectance;
+                OuterSideAbsorptivity = InnerSideAbsorptivity = 1 - (OuterSideTransmissivity + OuterSideReflectivity);
                 HeatTransferCoefficient = heatTransferCoefficient;
             }
 
@@ -498,12 +470,12 @@ namespace Popolo.ThermalLoad
                 if (outerSideTransmittance < 0 || outerSideReflectance < 0 || 1 < (outerSideTransmittance + outerSideReflectance) ||
                     innerSideTransmittance < 0 || innerSideReflectance < 0 || 1 < (innerSideTransmittance + innerSideReflectance)) throw new Exception("ガラス物性エラー");
 
-                OuterSideTransmittance = outerSideTransmittance;
-                InnerSideTransmittance = innerSideTransmittance;
-                OuterSideReflectance = outerSideReflectance;
-                InnerSideReflectance = innerSideReflectance;
-                OuterSideAbsorptance = 1 - (OuterSideTransmittance + OuterSideReflectance);
-                InnerSideAbsorptance = 1 - (InnerSideTransmittance + InnerSideReflectance);
+                OuterSideTransmissivity = outerSideTransmittance;
+                InnerSideTransmissivity = innerSideTransmittance;
+                OuterSideReflectivity = outerSideReflectance;
+                InnerSideReflectivity = innerSideReflectance;
+                OuterSideAbsorptivity = 1 - (OuterSideTransmissivity + OuterSideReflectivity);
+                InnerSideAbsorptivity = 1 - (InnerSideTransmissivity + InnerSideReflectivity);
                 HeatTransferCoefficient = heatTransferCoefficient;
             }
 
@@ -516,49 +488,49 @@ namespace Popolo.ThermalLoad
                 switch (predifinedGlass)
                 {
                     case PredifinedGlassPane.TransparentGlass03mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.85;
-                        OuterSideReflectance = InnerSideReflectance = 0.07;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.85;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.07;
                         HeatTransferCoefficient = THCG / 0.003;
                         break;
                     case PredifinedGlassPane.TransparentGlass06mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.79;
-                        OuterSideReflectance = InnerSideReflectance = 0.07;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.79;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.07;
                         HeatTransferCoefficient = THCG / 0.006;
                         break;
                     case PredifinedGlassPane.TransparentGlass12mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.69;
-                        OuterSideReflectance = InnerSideReflectance = 0.07;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.69;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.07;
                         HeatTransferCoefficient = THCG / 0.012;
                         break;
                     case PredifinedGlassPane.HeatAbsorbingGlass03mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.74;
-                        OuterSideReflectance = InnerSideReflectance = 0.07;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.74;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.07;
                         HeatTransferCoefficient = THCG / 0.003;
                         break;
                     case PredifinedGlassPane.HeatAbsorbingGlass06mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.60;
-                        OuterSideReflectance = InnerSideReflectance = 0.06;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.60;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.06;
                         HeatTransferCoefficient = THCG / 0.006;
                         break;
                     case PredifinedGlassPane.HeatReflectingGlass06mm:
-                        OuterSideTransmittance = InnerSideTransmittance = 0.60;
-                        OuterSideReflectance = InnerSideReflectance = 0.30;
+                        OuterSideTransmissivity = InnerSideTransmissivity = 0.60;
+                        OuterSideReflectivity = InnerSideReflectivity = 0.30;
                         HeatTransferCoefficient = THCG / 0.012;
                         break;
                 }
-                OuterSideAbsorptance = InnerSideAbsorptance = 1 - (OuterSideTransmittance + OuterSideReflectance);
+                OuterSideAbsorptivity = InnerSideAbsorptivity = 1 - (OuterSideTransmissivity + OuterSideReflectivity);
             }
 
             /// <summary>コンストラクタ</summary>
             /// <param name="pane">コピー対象のガラスオブジェクト</param>
             public Pane(Pane pane)
             {
-                this.OuterSideAbsorptance = pane.OuterSideAbsorptance;
-                this.OuterSideReflectance = pane.OuterSideReflectance;
-                this.OuterSideTransmittance = pane.OuterSideTransmittance;
-                this.InnerSideAbsorptance = pane.InnerSideAbsorptance;
-                this.InnerSideReflectance = pane.InnerSideReflectance;
-                this.InnerSideTransmittance = pane.InnerSideTransmittance;
+                this.OuterSideAbsorptivity = pane.OuterSideAbsorptivity;
+                this.OuterSideReflectivity = pane.OuterSideReflectivity;
+                this.OuterSideTransmissivity = pane.OuterSideTransmissivity;
+                this.InnerSideAbsorptivity = pane.InnerSideAbsorptivity;
+                this.InnerSideReflectivity = pane.InnerSideReflectivity;
+                this.InnerSideTransmissivity = pane.InnerSideTransmissivity;
                 this.HeatTransferCoefficient = pane.HeatTransferCoefficient;
             }
 
@@ -577,13 +549,13 @@ namespace Popolo.ThermalLoad
         #region プロパティ
 
         /// <summary>総合透過率[-]を取得する</summary>
-        double OverallTransmittance
+        double OverallTransmissivity
         {
             get;
         }
 
         /// <summary>総合吸収率[-]を取得する</summary>
-        double OverallAbsorptance
+        double OverallAbsorptivity
         {
             get;
         }
