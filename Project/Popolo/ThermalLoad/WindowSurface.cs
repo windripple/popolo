@@ -156,12 +156,12 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>表面総合熱伝達率[W/(m^2K)]を設定・取得する</summary>
-        public double OverallHeatTransferCoefficient
+        public double FilmCoefficient
         {
             get
             {
-                if (isOutside) return window.Glass.OutsideOverallHeatTransferCoefficient;
-                else return window.Glass.InsideOverallHeatTransferCoefficient;
+                if (isOutside) return window.Glass.OutsideFilmCoefficient;
+                else return window.Glass.InsideFilmCoefficient;
             }
             set
             {
@@ -292,14 +292,14 @@ namespace Popolo.ThermalLoad
         /// <returns>周辺の空気から窓への熱移動量[W]</returns>
         public double GetHeatTransfer()
         {
-            return (GetSolAirTemperature() - Temperature) * OverallHeatTransferCoefficient * Area;
+            return (GetSolAirTemperature() - Temperature) * FilmCoefficient * Area;
         }
 
         /// <summary>放射[W/m2]を考慮した相当温度[C]を計算する</summary>
         /// <returns>相当温度[C]</returns>
         public double GetSolAirTemperature()
         {
-            return AirTemperature + Radiation / OverallHeatTransferCoefficient;
+            return AirTemperature + Radiation / FilmCoefficient;
         }
 
         #endregion        

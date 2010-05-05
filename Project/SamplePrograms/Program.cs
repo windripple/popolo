@@ -15,7 +15,7 @@ namespace SamplePrograms
     {
         static void Main(string[] args)
         {
-            windowTest();
+            wallTest3();
 
             AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
                 new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
@@ -389,15 +389,15 @@ namespace SamplePrograms
             glass.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
 
             //Set overall heat transfer coefficients[W/(m2-K)] at the surface of glass.
-            glass.SetInsideOverallHeatTransferCoefficient(9.26);      //Inside of the window
-            glass.SetOutsideOverallHeatTransferCoefficient(23.26);    //Outside of the window
+            glass.SetInsideFilmCoefficient(9.26);      //Inside of the window
+            glass.SetOutsideFilmCoefficient(23.26);    //Outside of the window
 
             //Check the characteristics of the glass panes.
             Console.WriteLine("Transparent glass(3mm) * 3");
             Console.WriteLine("Overall transmissivity[-] = " + glass.OverallTransmissivity.ToString("F2"));
             Console.WriteLine("Overall absorptivity[-] = " + glass.OverallAbsorptivity.ToString("F2"));
-            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.HeatTransferCoefficientOfGlass.ToString("F2"));
-            Console.WriteLine("Heat transmission coefficient of glass[-] = " + glass.HeatTransmissionCoefficient.ToString("F2"));
+            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.ThermalTransmittanceOfGlass.ToString("F2"));
+            Console.WriteLine("Heat transmission coefficient[-] = " + glass.ThermalTransmittance.ToString("F2"));
             Console.WriteLine();
 
             //Change the outside glass pane to heat reflecting glass(6mm)
@@ -414,15 +414,15 @@ namespace SamplePrograms
             glass = new GlassPanes(panes);
             glass.SetHeatTransferCoefficientsOfGaps(0, 1 / 0.12);
             glass.SetHeatTransferCoefficientsOfGaps(1, 1 / 0.12);
-            glass.SetInsideOverallHeatTransferCoefficient(9.26);      //Inside of the window
-            glass.SetOutsideOverallHeatTransferCoefficient(23.26);    //Outside of the window
+            glass.SetInsideFilmCoefficient(9.26);      //Inside of the window
+            glass.SetOutsideFilmCoefficient(23.26);    //Outside of the window
 
             //Check the characteristics of the glass panes.
             Console.WriteLine("Heat reflecting glass(6mm) + Transparent glass(3mm) * 2");
             Console.WriteLine("Overall transmissivity[-] = " + glass.OverallTransmissivity.ToString("F2"));
             Console.WriteLine("Overall absorptivity[-] = " + glass.OverallAbsorptivity.ToString("F2"));
-            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.HeatTransferCoefficientOfGlass.ToString("F2"));
-            Console.WriteLine("Heat transmission coefficient of glass[-] = " + glass.HeatTransmissionCoefficient.ToString("F2"));
+            Console.WriteLine("Heat transfer coefficient of glass[-] = " + glass.ThermalTransmittanceOfGlass.ToString("F2"));
+            Console.WriteLine("Heat transmission coefficient[-] = " + glass.ThermalTransmittance.ToString("F2"));
 
             Console.Read();
         }
@@ -447,10 +447,10 @@ namespace SamplePrograms
 
             //Set wall surface information
             WindowSurface outsideWindowSurface = window.GetSurface(true);
-            outsideWindowSurface.OverallHeatTransferCoefficient = 23d;
+            outsideWindowSurface.FilmCoefficient = 23d;
             outsideWindowSurface.Albedo = 0.2;
             WindowSurface insideWindowSurface = window.GetSurface(false);
-            insideWindowSurface.OverallHeatTransferCoefficient = 9.3;
+            insideWindowSurface.FilmCoefficient = 9.3;
 
             //Set incline of an outdoor surface : South, vertical incline
             window.OutSideIncline = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
@@ -490,6 +490,214 @@ namespace SamplePrograms
                 sun.Update(dTime);
             }
 
+            Console.Read();
+        }
+
+        /// <summary>Sample program calculating the thermal transimission of the wall layers</summary>
+        private static void wallLayersTest()
+        {
+            //Create an instance of WallLayers
+            WallLayers wLayers = new WallLayers("Sample wall layer");
+
+            //Make an array of materials
+            WallMaterial[] materials = new WallMaterial[4];
+            //The first layer : plywood
+            materials[0] = new WallMaterial(WallMaterial.PredefinedMaterials.Plywood);
+            //The second layer : air gap
+            materials[1] = new WallMaterial(WallMaterial.PredefinedMaterials.AirGap);
+            //The thirg layer : concrete
+            materials[2] = new WallMaterial(WallMaterial.PredefinedMaterials.ReinforcedConcrete);
+            //The fourth layer : white Wash
+            materials[3] = new WallMaterial("White Wash", 0.7, 1000);
+
+            //Add a layer to WallLayers object
+            //plywood : 20mm
+            wLayers.AddLayer(new WallLayers.Layer(materials[0], 0.02));
+            //air gap : heat conductance doesn't depend on thickness
+            wLayers.AddLayer(new WallLayers.Layer(materials[1], 0.01));
+            //concrete : 150mm
+            wLayers.AddLayer(new WallLayers.Layer(materials[2], 0.15));
+            //white Wash : 10mm
+            wLayers.AddLayer(new WallLayers.Layer(materials[3], 0.01));
+
+            //output result
+            Console.WriteLine("Wall composition");
+            for (uint i = 0; i < wLayers.LayerNumber; i++)
+            {
+                WallLayers.Layer layer = wLayers.GetLayer(i);
+                Console.WriteLine("Layer " + (i + 1) + "：" + layer.Material.Name + "(" + layer.Thickness + "m)");
+            }
+            Console.WriteLine("Thermal transmission = " + wLayers.GetThermalTransmission().ToString("F1") + " W/(m2-K)");
+            Console.WriteLine();
+
+            //Replace concrete to light weight concrete
+            wLayers.ReplaceLayer(2, new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.LightweightConcrete), 0.15));
+
+            //output result
+            Console.WriteLine("Wall composition");
+            for (uint i = 0; i < wLayers.LayerNumber; i++)
+            {
+                WallLayers.Layer layer = wLayers.GetLayer(i);
+                Console.WriteLine("Layer " + (i + 1) + "：" + layer.Material.Name + "(" + layer.Thickness + "m)");
+            }
+            Console.WriteLine("Thermal transmission = " + wLayers.GetThermalTransmission().ToString("F1") + " W/(m2-K)");
+            Console.WriteLine();
+
+            Console.Read();
+        }
+
+        /// <summary>Sample program calculating the unsteady heat conduction of wall</summary>
+        private static void wallTest1()
+        {
+            WallLayers layers = new WallLayers();
+            WallLayers.Layer layer;
+            layer = new WallLayers.Layer(new WallMaterial("Plywood", 0.19, 716), 0.025);
+            layers.AddLayer(layer);
+            layer = new WallLayers.Layer(new WallMaterial("Concrete", 1.4, 1934), 0.120);
+            layers.AddLayer(layer);
+            layer = new WallLayers.Layer(new WallMaterial("Air gap", 1d / 0.086, 0), 0.020);
+            layers.AddLayer(layer);
+            layer = new WallLayers.Layer(new WallMaterial("Rock wool", 0.042, 84), 0.050);
+            layers.AddLayer(layer);
+            Wall wall = new Wall(layers);
+
+            wall.TimeStep = 3600;
+            wall.AirTemperature1 = 20;
+            wall.AirTemperature2 = 10;
+            wall.InitializeTemperature(10); //Initial temperature is 10 C
+            wall.SurfaceArea = 1;
+
+            Console.WriteLine("Plywood, Concrete, Air gap, Rock wool");
+            double[] temps;
+            for (int i = 0; i < 24; i++)
+            {
+                wall.Update();
+                temps = wall.GetTemperatures();
+                Console.Write((i + 1).ToString("F0").PadLeft(2) + "Hour | ");
+                for (int j = 0; j < temps.Length - 1; j++) Console.Write(((temps[j] + temps[j + 1]) / 2d).ToString("F1") + " | ");
+                Console.WriteLine();
+            }
+
+            //Iterate until wall become steady state
+            for (int i = 0; i < 1000; i++) wall.Update();
+            Console.WriteLine();
+            Console.WriteLine("Steady state");
+            temps = wall.GetTemperatures();
+            for (int j = 0; j < temps.Length - 1; j++) Console.Write(((temps[j] + temps[j + 1]) / 2d).ToString("F1") + " | ");
+
+            Console.WriteLine();
+            Console.WriteLine("Heat transfer at steady state 1: " + wall.GetHeatTransfer(true).ToString("F1"));
+            Console.WriteLine("Heat transfer at steady state 2: " + wall.GetHeatTransfer(false).ToString("F1"));
+            Console.WriteLine("Heat transfer at steady state 3: " + wall.GetStaticHeatTransfer().ToString("F1"));
+
+            Console.Read();
+        }
+
+        /// <summary>Sample program calculating the unsteady heat conduction of wall with heating tube</summary>
+        private static void wallTest2()
+        {
+            WallLayers wl = new WallLayers();
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.FrexibleBoard), 0.0165));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial("Water", 0.59, 4186), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial("Water", 0.59, 4186), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.ExtrudedPolystyreneFoam_3), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.009));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.AirGap), 0.015));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.009));
+            Wall wall = new Wall(wl);
+            wall.TimeStep = 300;
+            wall.AirTemperature1 = 20;
+            wall.AirTemperature2 = 10;
+            wall.SurfaceArea = 6.48;
+
+            Tube tube = new Tube(0.84, 0.346, 4186);
+            //installing tube to wall
+            wall.AddTube(tube, 1);
+            tube.SetFlowRate(0);  //initial flow rate is 0 kg/s
+            tube.FluidTemperature = 30;
+
+            wall.InitializeTemperature(20); //initialize temperature of the wall
+
+            for (int i = 0; i < wall.Layers.LayerNumber; i++) Console.Write("temperature" + i + ", ");
+            Console.WriteLine("heat transfer to the tube[W], outlet temperature of fluid[C]");
+            for (int i = 0; i < 100; i++)
+            {
+                if (i == 50) tube.SetFlowRate(0.54);  //start heating
+                wall.Update();
+                double[] tmp = wall.GetTemperatures();
+                for (int j = 0; j < tmp.Length - 1; j++) Console.Write(((tmp[j] + tmp[j + 1]) / 2d).ToString("F1") + ", ");
+                Console.Write(wall.GetHeatTransferToTube(1).ToString("F0") + ", " + tube.GetOutletFluidTemperature().ToString("F1"));
+                Console.WriteLine();
+            }
+            Console.Read();
+        }
+
+        /// <summary>Sample program calculating the unsteady heat conduction of wall with latent heat storage material</summary>
+        private static void wallTest3()
+        {
+            //Initial temperature
+            const double INIT_TEMP = 35;
+
+            //Create an instance of WallLayers class
+            WallLayers wl = new WallLayers();
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.FrexibleBoard), 0.0165));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial("dummy", 1, 1), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial("dummy", 1, 1), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.ExtrudedPolystyreneFoam_3), 0.02));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.009));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.AirGap), 0.015));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.009));
+
+            //Create an instance of Wall class
+            Wall wall = new Wall(wl);
+            wall.TimeStep = 1200;
+            wall.AirTemperature1 = 20;
+            wall.AirTemperature2 = 20;
+            wall.SurfaceArea = 6.48;
+
+            //Create an instance of LatentHeatStorageMaterial class
+            LatentHeatStorageMaterial pmc1;
+            pmc1 = new LatentHeatStorageMaterial(19, new WallMaterial("PCM1 (Solid)", 0.19, 3.6 * 1400));
+            pmc1.AddMaterial(23, new WallMaterial("PCM1 (Two phase)", (0.19 + 0.22) / 2d, 15.1 * 1400));
+            pmc1.AddMaterial(100, new WallMaterial("PCM1 (Liquid)", 0.22, 3.6 * 1400));
+            pmc1.Initialize(INIT_TEMP);
+            //Set PCM to second wall layer
+            wall.SetLatentHeatStorageMaterial(1, pmc1);
+
+            //Create an instance of LatentHeatStorageMaterial class
+            LatentHeatStorageMaterial pcm2;
+            pcm2 = new LatentHeatStorageMaterial(30, new WallMaterial("PCM2 (Solid)", 0.19, 3.6 * 1390));
+            pcm2.AddMaterial(32, new WallMaterial("PCM2 (Two phase)", (0.19 + 0.22) / 2d, 63.25 * 1400));
+            pcm2.AddMaterial(100, new WallMaterial("PCM2 (Liquid)", 0.22, 3.5 * 1410));
+            pcm2.Initialize(INIT_TEMP);
+            //Set PCM to third wall layer
+            wall.SetLatentHeatStorageMaterial(2, pcm2);
+
+            //Install heating tube between PMCs
+            Tube tube = new Tube(0.84, 0.346, 4186);
+            wall.AddTube(tube, 1);
+            tube.SetFlowRate(0);
+            tube.FluidTemperature = 40;
+
+            //Initialize wall temperature
+            wall.InitializeTemperature(INIT_TEMP);
+
+            for (int i = 0; i < wall.Layers.LayerNumber; i++) Console.Write("Temperature" + i + ", ");
+            Console.WriteLine("Heat storage[kJ]");
+            for (int i = 0; i < 200; i++)
+            {
+                if (i == 100)
+                {
+                    tube.SetFlowRate(0.54); //Start heating
+                    wall.AirTemperature1 = 30;
+                    wall.AirTemperature2 = 30;
+                }
+                wall.Update();
+                double[] tmp = wall.GetTemperatures();
+                for (int j = 0; j < tmp.Length - 1; j++) Console.Write(((tmp[j] + tmp[j + 1]) / 2d).ToString("F1") + ", ");
+                Console.Write(wall.GetHeatStorage(INIT_TEMP).ToString("F0"));
+                Console.WriteLine();
+            }
             Console.Read();
         }
 

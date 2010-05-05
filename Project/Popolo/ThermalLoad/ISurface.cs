@@ -125,7 +125,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>表面熱伝達率[W/m2-K]を取得する</summary>
-        double OverallHeatTransferCoefficient
+        double FilmCoefficient
         {
             get;
         }

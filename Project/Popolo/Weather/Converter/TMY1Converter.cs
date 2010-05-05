@@ -144,7 +144,7 @@ namespace Popolo.Weather.Converter
                     //相対湿度[%]
                     wRecord.SetData(WeatherRecord.RecordType.RelativeHumidity, new WeatherData(mAir.RelativeHumidity, WeatherData.DataSource.CalculatedValue, -1));
                     //絶対湿度[kg/kg(DA)]
-                    wRecord.SetData(WeatherRecord.RecordType.AbsoluteHumidity, new WeatherData(mAir.HumidityRatio, WeatherData.DataSource.CalculatedValue, -1));
+                    wRecord.SetData(WeatherRecord.RecordType.HumidityRatio, new WeatherData(mAir.HumidityRatio, WeatherData.DataSource.CalculatedValue, -1));
 
                     //風向
                     wData = new WeatherData(double.Parse(str.Substring(111, 3)), WeatherData.DataSource.MeasuredValue, -1);

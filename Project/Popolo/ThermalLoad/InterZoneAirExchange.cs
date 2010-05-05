@@ -110,7 +110,7 @@ namespace Popolo.ThermalLoad
             foreach (ImmutableZone zn in val.Keys)
             {
                 dbt[index] = zn.CurrentDrybulbTemperature;
-                ahd[index] = zn.CurrentAbsoluteHumidity;
+                ahd[index] = zn.CurrentHumidityRatio;
                 vol[index] = val[zn];
                 volume += vol[index];
                 index++;

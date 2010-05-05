@@ -108,7 +108,7 @@ namespace Popolo.Weather.Converter
                             WeatherData wData = new WeatherData();
                             wData.Source = WeatherData.DataSource.CalculatedValue;
                             wData.Value = double.Parse(bf) / 10000d;
-                            wRecords[j].SetData(WeatherRecord.RecordType.AbsoluteHumidity, wData);
+                            wRecords[j].SetData(WeatherRecord.RecordType.HumidityRatio, wData);
                         }
 
                         //法線面直達日射[kcal/m2-h]
@@ -404,7 +404,7 @@ namespace Popolo.Weather.Converter
             //絶対湿度[kg/kg(DA)]書き出し
             for (int i = 0; i < 24; i++)
             {
-                WeatherData wd = wRecord[i].GetData(WeatherRecord.RecordType.AbsoluteHumidity);
+                WeatherData wd = wRecord[i].GetData(WeatherRecord.RecordType.HumidityRatio);
                 if (wd.Source == WeatherData.DataSource.MissingValue) return false;
                 else sWriter.Write(convertTo3WordString(wd.Value * 10000));
             }
