@@ -259,7 +259,7 @@ namespace Popolo.ThermalLoad
                 //Bマトリクスを作成
                 //ゾーンの水蒸気容量/時間間隔[W/K]を計算
                 double airSV = MoistAir.GetAirStateFromDBHR(zones[i].CurrentDrybulbTemperature,
-                            zones[i].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume);
+                            zones[i].CurrentHumidityRatio, MoistAir.Property.SpecificVolume);
                 double zSH = (zones[i].Volume / airSV + zones[i].LatentHeatCapacity) / TimeStep;
                 double cgo = zones[i].VentilationVolume / airSV / 3600d;
                 Dictionary<ImmutableZone, double> aFlow = airFlowToZone[zones[i]];
@@ -284,12 +284,12 @@ namespace Popolo.ThermalLoad
                 }
 
                 //Bベクトル・Tマトリクス
-                bVector.SetValue(arbPerm[i], zSH * zones[i].CurrentAbsoluteHumidity
+                bVector.SetValue(arbPerm[i], zSH * zones[i].CurrentHumidityRatio
                     + cgo * zones[i].VentilationAirState.HumidityRatio
                     + zones[i].integrateLatentHeatGain() / MoistAir.LatentHeatOfVaporization / 1000);
-                if (zones[i].ControlAbsoluteHumidity)
+                if (zones[i].ControlHumidityRatio)
                 {
-                    tzVector.SetValue(arbPerm[i], zones[i].AbsoluteHumiditySetPoint);
+                    tzVector.SetValue(arbPerm[i], zones[i].HumidityRatioSetPoint);
                 }
                 else
                 {
@@ -327,7 +327,7 @@ namespace Popolo.ThermalLoad
             }
 
             //絶対湿度をゾーンに設定
-            for (uint i = 0; i < zones.Length; i++) zones[i].setAbsoluteHumidity(tzVector.GetValue(arbPerm[i]));
+            for (uint i = 0; i < zones.Length; i++) zones[i].setHumidityRatio(tzVector.GetValue(arbPerm[i]));
 
             if (0 < ccZones)
             {
@@ -340,7 +340,7 @@ namespace Popolo.ThermalLoad
                 //
                 for (uint i = 0; i < zones.Length; i++)
                 {
-                    if (zones[i].ControlAbsoluteHumidity)
+                    if (zones[i].ControlHumidityRatio)
                     {
                         zones[i].CurrentLatentHeatLoad = - MoistAir.LatentHeatOfVaporization * 1000
                             * (bbVector.GetValue(arbPerm[i]) - bVector.GetValue(arbPerm[i]));
@@ -395,8 +395,8 @@ namespace Popolo.ThermalLoad
                 //Bマトリクスを作成
                 //ゾーンの熱容量/時間間隔[W/K]を計算
                 double airSV = MoistAir.GetAirStateFromDBHR(zones[i].CurrentDrybulbTemperature,
-                            zones[i].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume);
-                double cpAir = MoistAir.GetSpecificHeat(zones[i].CurrentAbsoluteHumidity) * 1000;
+                            zones[i].CurrentHumidityRatio, MoistAir.Property.SpecificVolume);
+                double cpAir = MoistAir.GetSpecificHeat(zones[i].CurrentHumidityRatio) * 1000;
                 double zSH = (zones[i].Volume / airSV * cpAir + zones[i].SensibleHeatCapacity) / TimeStep;
                 double cgo = zones[i].VentilationVolume / airSV / 3600d * cpAir;
                 Dictionary<ImmutableZone, double> aFlow = airFlowToZone[zones[i]];
@@ -508,7 +508,7 @@ namespace Popolo.ThermalLoad
             Blas.DGemv(Blas.TransposeType.NoTranspose, 1, phi, surfaceTemperatures, 0, ref surfaceMRTs);
             for (uint i = 0; i < surfaces.Length; i++)
             {
-                surfaces[i].Radiation += surfaceMRTs.GetValue(i) * surfaces[i].OverallHeatTransferCoefficient;
+                surfaces[i].Radiation += surfaceMRTs.GetValue(i) * surfaces[i].FilmCoefficient;
             }
 
             //平均放射温度[C]を計算して設定
@@ -669,14 +669,14 @@ namespace Popolo.ThermalLoad
             uint freeFloatZones = 0;
             for (int i = 0; i < zones.Length; i++)
             {
-                if (!zones[i].ControlAbsoluteHumidity) freeFloatZones++;
+                if (!zones[i].ControlHumidityRatio) freeFloatZones++;
             }
 
             int ffNum = 0;
             int ccNum = 0;
             for (uint i = 0; i < zones.Length; i++)
             {
-                if (!zones[i].ControlAbsoluteHumidity)
+                if (!zones[i].ControlHumidityRatio)
                 {
                     arbPerm[i] = (uint)ffNum;
                     ffNum++;
@@ -722,13 +722,13 @@ namespace Popolo.ThermalLoad
                         ImmutableWindow win = ((WindowSurface)sf).WindowBody;
                         crxVector.SetValue(i, sf.FO * (sf2.GetSolAirTemperature() +
                             win.AbsorbedHeatGain / win.HeatTransmissionCoefficient / win.SurfaceArea) + sf.CF
-                                               + sf.FI * sf.Radiation / sf.OverallHeatTransferCoefficient + sf.FPT);
+                                               + sf.FI * sf.Radiation / sf.FilmCoefficient + sf.FPT);
                     }
                     //壁体の場合
                     else
                     {
                         crxVector.SetValue(i, sf.FO * sf2.GetSolAirTemperature() + sf.CF
-                           + sf.FI * sf.Radiation / sf.OverallHeatTransferCoefficient + sf.FPT);
+                           + sf.FI * sf.Radiation / sf.FilmCoefficient + sf.FPT);
                     }
                 }
                 //逆側の空間の乾球温度が状態変数の場合
@@ -736,14 +736,14 @@ namespace Popolo.ThermalLoad
                 {
                     rxVector[zn2].SetValue(i, sf.FO * sf2.ConvectiveRate);
                     crxVector.SetValue(i, sf.CF
-                        + sf.FI * sf.Radiation / sf.OverallHeatTransferCoefficient
-                        + sf.FO * sf2.Radiation / sf2.OverallHeatTransferCoefficient + sf.FPT);
+                        + sf.FI * sf.Radiation / sf.FilmCoefficient
+                        + sf.FO * sf2.Radiation / sf2.FilmCoefficient + sf.FPT);
                 }
                 //逆側の空間の乾球温度が境界条件の場合
                 else
                 {
                     crxVector.SetValue(i, sf.FO * sf2.GetSolAirTemperature() + sf.CF
-                           + sf.FI * sf.Radiation / sf.OverallHeatTransferCoefficient + sf.FPT);
+                           + sf.FI * sf.Radiation / sf.FilmCoefficient + sf.FPT);
                 }
             }
             
@@ -771,7 +771,7 @@ namespace Popolo.ThermalLoad
                     {
                         for (uint k = 0; k < sfs.Length; k++)
                         {
-                            arMatrix[i, j] += sfs[k].Area * sfs[k].OverallHeatTransferCoefficient * sfs[k].ConvectiveRate
+                            arMatrix[i, j] += sfs[k].Area * sfs[k].FilmCoefficient * sfs[k].ConvectiveRate
                                 * (1d - raVector[zones[i]].GetValue(stIndex + k));
                         }
                     }
@@ -780,7 +780,7 @@ namespace Popolo.ThermalLoad
                     {
                         for (uint k = 0; k < sfs.Length; k++)
                         {
-                            arMatrix[i, j] += sfs[k].Area * sfs[k].OverallHeatTransferCoefficient * sfs[k].ConvectiveRate
+                            arMatrix[i, j] += sfs[k].Area * sfs[k].FilmCoefficient * sfs[k].ConvectiveRate
                                 * raVector[zones[j]].GetValue(stIndex + k);
                         }
                     }
@@ -790,7 +790,7 @@ namespace Popolo.ThermalLoad
                 caVector[i] = 0;
                 for (uint j = 0; j < sfs.Length; j++)
                 {
-                    caVector[i] += sfs[j].Area * sfs[j].OverallHeatTransferCoefficient * sfs[j].ConvectiveRate
+                    caVector[i] += sfs[j].Area * sfs[j].FilmCoefficient * sfs[j].ConvectiveRate
                                * craVector.GetValue(stIndex + j);
                 }
             }

@@ -339,7 +339,7 @@ namespace Popolo.Utility
             else rooms[0].AtmosphericPressure = 101.325d;
             rooms[0].TimeStep = 3600;
             rooms[0].InitializeAirState(20, 0.01);
-            rooms[0].HeatTransferCoefficient = ai;
+            rooms[0].FilmCoefficient = ai;
             //対流成分
             rooms[0].SetConvectiveRate(3.16 / ai);
             //漏気量
@@ -370,8 +370,8 @@ namespace Popolo.Utility
             walls[0].Name = "屋根";
             walls[0].SurfaceArea = 48;
             walls[0].SetIncline(new Incline(Incline.Orientation.N, 0), false);
-            walls[0].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[0].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[0].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[0].GetSurface(true);
@@ -386,8 +386,8 @@ namespace Popolo.Utility
             walls[1].Name = "床";
             walls[1].SurfaceArea = 48;
             walls[1].SetIncline(new Incline(Incline.Orientation.N, Math.PI), false);
-            walls[1].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[1].SetOverallHeatTransferCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
+            walls[1].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[1].SetFilmCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
             walls[1].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[1].GetSurface(true);
@@ -400,8 +400,8 @@ namespace Popolo.Utility
             walls[2].Name = "北外壁";
             walls[2].SurfaceArea = 8 * 2.7;
             walls[2].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), false);
-            walls[2].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[2].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[2].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[2].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[2].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[2].GetSurface(true);
@@ -418,8 +418,8 @@ namespace Popolo.Utility
             if (hasEWWindow) walls[3].SurfaceArea = 6 * 2.7 - 6;
             else walls[3].SurfaceArea = 6 * 2.7;
             walls[3].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), false);
-            walls[3].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[3].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[3].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[3].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[3].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[3].GetSurface(true);
@@ -436,8 +436,8 @@ namespace Popolo.Utility
             if (hasEWWindow) walls[4].SurfaceArea = 6 * 2.7 - 6;
             else walls[4].SurfaceArea = 6 * 2.7;
             walls[4].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), false);
-            walls[4].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[4].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[4].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[4].GetSurface(true);
@@ -454,8 +454,8 @@ namespace Popolo.Utility
             if (noWindow || hasEWWindow) walls[5].SurfaceArea = 8 * 2.7;
             else walls[5].SurfaceArea = 8 * 2.7 - 6d - 6d;
             walls[5].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), false);
-            walls[5].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[5].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[5].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[5].GetSurface(true);
@@ -479,19 +479,19 @@ namespace Popolo.Utility
                 WindowSurface ws;
                 ws = window1.GetSurface(true);
                 ws.LongWaveEmissivity = extlwEmissivity;
-                ws.OverallHeatTransferCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
+                ws.FilmCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
                 ws.Albedo = 0.2;
                 ws = window2.GetSurface(true);
                 ws.LongWaveEmissivity = extlwEmissivity;
-                ws.OverallHeatTransferCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
+                ws.FilmCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
                 ws.Albedo = 0.2;
                 //対流・放射成分
                 ws = window1.GetSurface(false);
                 ws.ConvectiveRate = 3.16 / ai;
-                ws.OverallHeatTransferCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
+                ws.FilmCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
                 ws = window2.GetSurface(false);
                 ws.ConvectiveRate = 3.16 / ai;
-                ws.OverallHeatTransferCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
+                ws.FilmCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
                 //窓面積
                 window1.SurfaceArea = 6;
                 window2.SurfaceArea = 6;
@@ -531,8 +531,8 @@ namespace Popolo.Utility
                 walls[6] = new Wall(makeHighConductanceWall());
                 walls[6].SurfaceArea = 12;
                 walls[6].SetIncline(new Incline(Incline.Orientation.S, 0), false);
-                walls[6].SetOverallHeatTransferCoefficient(ai, true);
-                walls[6].SetOverallHeatTransferCoefficient(aowin, false);
+                walls[6].SetFilmCoefficient(ai, true);
+                walls[6].SetFilmCoefficient(aowin, false);
                 walls[6].InitializeTemperature(25);
                 //壁表面の設定
                 iws = walls[6].GetSurface(true);
@@ -652,7 +652,7 @@ namespace Popolo.Utility
             else rooms[0].AtmosphericPressure = 101.325d;
             rooms[0].TimeStep = 3600;
             rooms[0].InitializeAirState(20, 0.01);
-            rooms[0].HeatTransferCoefficient = ai;
+            rooms[0].FilmCoefficient = ai;
             //対流成分
             rooms[0].SetConvectiveRate(3.16 / ai);
             //漏気量
@@ -666,7 +666,7 @@ namespace Popolo.Utility
             else rooms[1].AtmosphericPressure = 101.325d;
             rooms[1].TimeStep = 3600;
             rooms[1].InitializeAirState(20, 0.01);
-            rooms[1].HeatTransferCoefficient = ai;
+            rooms[1].FilmCoefficient = ai;
             //対流成分
             rooms[1].SetConvectiveRate(3.16 / ai);
             //漏気量
@@ -696,8 +696,8 @@ namespace Popolo.Utility
             walls[0].Name = "屋根";
             walls[0].SurfaceArea = 48;
             walls[0].SetIncline(new Incline(Incline.Orientation.N, 0), false);
-            walls[0].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[0].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[0].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[0].GetSurface(true);
@@ -712,8 +712,8 @@ namespace Popolo.Utility
             walls[1].Name = "屋根";
             walls[1].SurfaceArea = 16;
             walls[1].SetIncline(new Incline(Incline.Orientation.N, 0), false);
-            walls[1].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[1].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[1].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[1].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[1].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[1].GetSurface(true);
@@ -728,8 +728,8 @@ namespace Popolo.Utility
             walls[2].Name = "床";
             walls[2].SurfaceArea = 48;
             walls[2].SetIncline(new Incline(Incline.Orientation.N, Math.PI), false);
-            walls[2].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[2].SetOverallHeatTransferCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
+            walls[2].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[2].SetFilmCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
             walls[2].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[2].GetSurface(true);
@@ -742,8 +742,8 @@ namespace Popolo.Utility
             walls[3].Name = "床";
             walls[3].SurfaceArea = 8 * 2;
             walls[3].SetIncline(new Incline(Incline.Orientation.N, Math.PI), false);
-            walls[3].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[3].SetOverallHeatTransferCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
+            walls[3].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[3].SetFilmCoefficient(0.04, false);//外表面総合熱伝達率[W/(m2K)]//地面絶縁体
             walls[3].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[3].GetSurface(true);
@@ -756,8 +756,8 @@ namespace Popolo.Utility
             walls[4].Name = "北外壁";
             walls[4].SurfaceArea = 8 * 2.7;
             walls[4].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), false);
-            walls[4].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[4].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[4].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[4].GetSurface(true);
@@ -773,8 +773,8 @@ namespace Popolo.Utility
             walls[5].Name = "南外壁";
             walls[5].SurfaceArea = 8 * 2.7 - 6d - 6d;
             walls[5].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), false);
-            walls[5].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[5].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[5].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[5].GetSurface(true);
@@ -790,8 +790,8 @@ namespace Popolo.Utility
             walls[6].Name = "東外壁";
             walls[6].SurfaceArea = 6 * 2.7;
             walls[6].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), false);
-            walls[6].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[6].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[6].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[6].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[6].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[6].GetSurface(true);
@@ -807,8 +807,8 @@ namespace Popolo.Utility
             walls[7].Name = "東外壁";
             walls[7].SurfaceArea = 2 * 2.7;
             walls[7].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), false);
-            walls[7].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[7].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[7].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[7].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[7].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[7].GetSurface(true);
@@ -824,8 +824,8 @@ namespace Popolo.Utility
             walls[8].Name = "西外壁";
             walls[8].SurfaceArea = 6 * 2.7;
             walls[8].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), false);
-            walls[8].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[8].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[8].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[8].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[8].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[8].GetSurface(true);
@@ -841,8 +841,8 @@ namespace Popolo.Utility
             walls[9].Name = "西外壁";
             walls[9].SurfaceArea = 2 * 2.7;
             walls[9].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), false);
-            walls[9].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[9].SetOverallHeatTransferCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
+            walls[9].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[9].SetFilmCoefficient(ao, false);//外表面総合熱伝達率[W/(m2K)]
             walls[9].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[9].GetSurface(true);
@@ -861,8 +861,8 @@ namespace Popolo.Utility
             walls[10].Name = "共用壁";
             walls[10].SurfaceArea = 8 * 2.7;
             walls[10].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), false);
-            walls[10].SetOverallHeatTransferCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
-            walls[10].SetOverallHeatTransferCoefficient(ai, false);//内表面総合熱伝達率[W/(m2K)]
+            walls[10].SetFilmCoefficient(ai, true); //内表面総合熱伝達率[W/(m2K)]
+            walls[10].SetFilmCoefficient(ai, false);//内表面総合熱伝達率[W/(m2K)]
             walls[10].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[10].GetSurface(true);
@@ -881,19 +881,19 @@ namespace Popolo.Utility
             WindowSurface ws;
             ws = window1.GetSurface(true);
             ws.LongWaveEmissivity = extlwEmissivity;
-            ws.OverallHeatTransferCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
             ws.Albedo = 0.2;
             ws = window2.GetSurface(true);
             ws.LongWaveEmissivity = extlwEmissivity;
-            ws.OverallHeatTransferCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = aowin;//表面総合熱伝達率[W/(m2K)]
             ws.Albedo = 0.2;
             //対流・放射成分
             ws = window1.GetSurface(false);
             ws.ConvectiveRate = 3.16 / ai;
-            ws.OverallHeatTransferCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
             ws = window2.GetSurface(false);
             ws.ConvectiveRate = 3.16 / ai;
-            ws.OverallHeatTransferCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = ai;//表面総合熱伝達率[W/(m2K)]
             //窓面積
             window1.SurfaceArea = 6;
             window2.SurfaceArea = 6;            
@@ -946,7 +946,7 @@ namespace Popolo.Utility
             else rooms[0].AtmosphericPressure = 101.325d;
             rooms[0].TimeStep = 3600;
             rooms[0].InitializeAirState(20, 0.01);
-            rooms[0].HeatTransferCoefficient = ai;
+            rooms[0].FilmCoefficient = ai;
             //対流成分
             rooms[0].SetConvectiveRate(3.16 / ai);
             //漏気量
@@ -975,8 +975,8 @@ namespace Popolo.Utility
             walls[0].Name = "屋根";
             walls[0].SurfaceArea = 48;
             walls[0].SetIncline(new Incline(Incline.Orientation.N, 0), false);
-            walls[0].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[0].SetOverallHeatTransferCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[0].SetFilmCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
             walls[0].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[0].GetSurface(true);
@@ -991,8 +991,8 @@ namespace Popolo.Utility
             walls[1].Name = "床";
             walls[1].SurfaceArea = 48;
             walls[1].SetIncline(new Incline(Incline.Orientation.N, Math.PI), false);
-            walls[1].SetOverallHeatTransferCoefficient(ai, true);       //内表面総合熱伝達率[W/(m2K)]
-            walls[1].SetOverallHeatTransferCoefficient(ago, false);    //外表面総合熱伝達率[W/(m2K)]//地面絶縁体
+            walls[1].SetFilmCoefficient(ai, true);       //内表面総合熱伝達率[W/(m2K)]
+            walls[1].SetFilmCoefficient(ago, false);    //外表面総合熱伝達率[W/(m2K)]//地面絶縁体
             walls[1].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[1].GetSurface(true);
@@ -1005,8 +1005,8 @@ namespace Popolo.Utility
             walls[2].Name = "北外壁";
             walls[2].SurfaceArea = 8 * 1.35;
             walls[2].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), false);
-            walls[2].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[2].SetOverallHeatTransferCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
+            walls[2].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[2].SetFilmCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
             walls[2].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[2].GetSurface(true);
@@ -1022,8 +1022,8 @@ namespace Popolo.Utility
             walls[3].Name = "北外壁（土中）";
             walls[3].SurfaceArea = 8 * 1.35;
             walls[3].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), false);
-            walls[3].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[3].SetOverallHeatTransferCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
+            walls[3].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[3].SetFilmCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
             walls[3].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[3].GetSurface(true);
@@ -1036,8 +1036,8 @@ namespace Popolo.Utility
             walls[4].Name = "東外壁";
             walls[4].SurfaceArea = 6 * 1.35;
             walls[4].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), false);
-            walls[4].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[4].SetOverallHeatTransferCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[4].SetFilmCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
             walls[4].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[4].GetSurface(true);
@@ -1053,8 +1053,8 @@ namespace Popolo.Utility
             walls[5].Name = "東外壁（土中）";
             walls[5].SurfaceArea = 6 * 1.35;
             walls[5].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), false);
-            walls[5].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[5].SetOverallHeatTransferCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[5].SetFilmCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
             walls[5].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[5].GetSurface(true);
@@ -1067,8 +1067,8 @@ namespace Popolo.Utility
             walls[6].Name = "西外壁";
             walls[6].SurfaceArea = 6 * 1.35;
             walls[6].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), false);
-            walls[6].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[6].SetOverallHeatTransferCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
+            walls[6].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[6].SetFilmCoefficient(ao, false);  //外表面総合熱伝達率[W/(m2K)]
             walls[6].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[6].GetSurface(true);
@@ -1084,8 +1084,8 @@ namespace Popolo.Utility
             walls[7].Name = "西外壁（土中）";
             walls[7].SurfaceArea = 6 * 1.35;
             walls[7].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), false);
-            walls[7].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[7].SetOverallHeatTransferCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
+            walls[7].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[7].SetFilmCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
             walls[7].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[7].GetSurface(true);
@@ -1098,8 +1098,8 @@ namespace Popolo.Utility
             walls[8].Name = "南外壁（土中）";
             walls[8].SurfaceArea = 8 * 1.35;
             walls[8].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), false);
-            walls[8].SetOverallHeatTransferCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
-            walls[8].SetOverallHeatTransferCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
+            walls[8].SetFilmCoefficient(ai, true);   //内表面総合熱伝達率[W/(m2K)]
+            walls[8].SetFilmCoefficient(ago, false); //外表面総合熱伝達率[W/(m2K)]
             walls[8].InitializeTemperature(25);
             //壁表面の設定
             iws = walls[8].GetSurface(true);
@@ -1118,18 +1118,18 @@ namespace Popolo.Utility
             WindowSurface ws;
             ws = window1.GetSurface(true);
             ws.LongWaveEmissivity = extlwEmissivity;
-            ws.OverallHeatTransferCoefficient = aowin; //表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = aowin; //表面総合熱伝達率[W/(m2K)]
             ws.Albedo = 0.2;
             ws = window2.GetSurface(true);
             ws.LongWaveEmissivity = extlwEmissivity;
-            ws.OverallHeatTransferCoefficient = aowin; //表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = aowin; //表面総合熱伝達率[W/(m2K)]
             ws.Albedo = 0.2;
             //対流・放射成分
             ws = window1.GetSurface(false);
-            ws.OverallHeatTransferCoefficient = ai; //表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = ai; //表面総合熱伝達率[W/(m2K)]
             ws.ConvectiveRate = 3.16 / ai;
             ws = window2.GetSurface(false);
-            ws.OverallHeatTransferCoefficient = ai; //表面総合熱伝達率[W/(m2K)]
+            ws.FilmCoefficient = ai; //表面総合熱伝達率[W/(m2K)]
             ws.ConvectiveRate = 3.16 / ai;
             //窓面積
             window1.SurfaceArea = 5.4;

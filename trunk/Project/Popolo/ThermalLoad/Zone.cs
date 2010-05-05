@@ -35,7 +35,7 @@ namespace Popolo.ThermalLoad
         private double drybulbTemperature = 26;
 
         /// <summary>現在の絶対湿度[kg/kg(DA)]</summary>
-        private double absoluteHumidity = 0.012;
+        private double humidityRatio = 0.012;
 
         /// <summary>計算時間間隔[sec]</summary>
         private double timeStep = 60;
@@ -200,7 +200,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>壁面の総合熱伝達率[W/m2-K]を設定・取得する</summary>
-        public double HeatTransferCoefficient
+        public double FilmCoefficient
         {
             get
             {
@@ -254,7 +254,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>絶対湿度[kg/kg(DA)]を制御するか否かを設定・取得する</summary>
-        public bool ControlAbsoluteHumidity
+        public bool ControlHumidityRatio
         {
             get;
             set;
@@ -268,7 +268,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>絶対湿度設定値[kg/kg(DA)]を設定・取得する</summary>
-        public double AbsoluteHumiditySetPoint
+        public double HumidityRatioSetPoint
         {
             get;
             set;
@@ -309,11 +309,11 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>現在の絶対湿度[kg/kg]を取得する</summary>
-        public double CurrentAbsoluteHumidity
+        public double CurrentHumidityRatio
         {
             get
             {
-                return absoluteHumidity;
+                return humidityRatio;
             }
         }
 
@@ -353,9 +353,9 @@ namespace Popolo.ThermalLoad
         public Zone()
         {
             AtmosphericPressure = 101.325;
-            ControlAbsoluteHumidity = false;
+            ControlHumidityRatio = false;
             ControlDrybulbTemperature = false;
-            AbsoluteHumiditySetPoint = 0.018;
+            HumidityRatioSetPoint = 0.018;
             DrybulbTemperatureSetPoint = 26;
         }
 
@@ -366,9 +366,9 @@ namespace Popolo.ThermalLoad
             this.Name = name;
 
             AtmosphericPressure = 101.325;
-            ControlAbsoluteHumidity = false;
+            ControlHumidityRatio = false;
             ControlDrybulbTemperature = false;
-            AbsoluteHumiditySetPoint = 0.018;
+            HumidityRatioSetPoint = 0.018;
             DrybulbTemperatureSetPoint = 26;
         }
 
@@ -474,11 +474,11 @@ namespace Popolo.ThermalLoad
 
         /// <summary>温湿度を初期化する</summary>
         /// <param name="drybulbTemperature">乾球温度[C]</param>
-        /// <param name="absoluteHumidity">絶対湿度[kg/kg(DA)]</param>
-        public void InitializeAirState(double drybulbTemperature, double absoluteHumidity)
+        /// <param name="humidityRatio">絶対湿度[kg/kg(DA)]</param>
+        public void InitializeAirState(double drybulbTemperature, double humidityRatio)
         {
             this.drybulbTemperature = drybulbTemperature;
-            this.absoluteHumidity = absoluteHumidity;
+            this.humidityRatio = humidityRatio;
         }
 
         /// <summary>計算用の各種パラメータを初期化する</summary>
@@ -678,9 +678,9 @@ namespace Popolo.ThermalLoad
         /// <summary>絶対湿度[kg/kg(DA)]を取得する</summary>
         /// <param name="latentHeatSupply">潜熱供給[W]（加湿を正とする）</param>
         /// <returns>室の絶対湿度[kg/kg(DA)]</returns>
-        public double GetNextAbsoluteHumidity(double latentHeatSupply)
+        public double GetNextHumidityRatio(double latentHeatSupply)
         {
-            if (firstCalculation) return absoluteHumidity;
+            if (firstCalculation) return humidityRatio;
 
             preprocess();
             return (brcx + latentHeatSupply / MoistAir.LatentHeatOfVaporization / 1000) / brmx;
@@ -710,14 +710,14 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>潜熱負荷[W]を計算する</summary>
-        /// <param name="absoluteHumiditySetPoint">絶対湿度設定値[kg/kg]</param>
+        /// <param name="humidityRatioSetPoint">絶対湿度設定値[kg/kg]</param>
         /// <returns>潜熱負荷[W]</returns>
-        public double GetNextLatentHeatLoad(double absoluteHumiditySetPoint)
+        public double GetNextLatentHeatLoad(double humidityRatioSetPoint)
         {
             if (firstCalculation) return 0;
 
             preprocess();
-            return MoistAir.LatentHeatOfVaporization * 1000 * (brcx - brmx * absoluteHumiditySetPoint);
+            return MoistAir.LatentHeatOfVaporization * 1000 * (brcx - brmx * humidityRatioSetPoint);
         }
 
         /// <summary>前処理を行う</summary>
@@ -762,14 +762,14 @@ namespace Popolo.ThermalLoad
                 drybulbTemperature = GetNextDrybulbTemperature(SensibleHeatSupply);
                 CurrentSensibleHeatLoad = - SensibleHeatSupply;
             }
-            if (ControlAbsoluteHumidity)
+            if (ControlHumidityRatio)
             {
-                absoluteHumidity = AbsoluteHumiditySetPoint;
-                CurrentLatentHeatLoad = GetNextLatentHeatLoad(absoluteHumidity);
+                humidityRatio = HumidityRatioSetPoint;
+                CurrentLatentHeatLoad = GetNextLatentHeatLoad(humidityRatio);
             }
             else
             {
-                absoluteHumidity = GetNextAbsoluteHumidity(LatentHeatSupply);
+                humidityRatio = GetNextHumidityRatio(LatentHeatSupply);
                 CurrentLatentHeatLoad = - LatentHeatSupply;
             }
             CurrentMeanRadiantTemperature = GetNextMeanRadiantTemperature();
@@ -787,9 +787,9 @@ namespace Popolo.ThermalLoad
                 surfaces[i].AirTemperature = surfaces[i].ConvectiveRate * drybulbTemperature;
                 //放射[W/m2]を設定
                 if (surfaces[i] is WallSurface) surfaces[i].Radiation = (hGainRS * shortWaveRadiationRate[i] + hGainRL * longWaveRadiationRate[i]) / sa
-                    + CurrentMeanRadiantTemperature * surfaces[i].RadiativeRate * surfaces[i].OverallHeatTransferCoefficient;
+                    + CurrentMeanRadiantTemperature * surfaces[i].RadiativeRate * surfaces[i].FilmCoefficient;
                 else if (surfaces[i] is WindowSurface) surfaces[i].Radiation = (hGainRL * longWaveRadiationRate[i]) / sa
-                    + CurrentMeanRadiantTemperature * surfaces[i].RadiativeRate * surfaces[i].OverallHeatTransferCoefficient;   //短波長成分は透過
+                    + CurrentMeanRadiantTemperature * surfaces[i].RadiativeRate * surfaces[i].FilmCoefficient;   //短波長成分は透過
             }
 
             //時刻を更新
@@ -802,10 +802,10 @@ namespace Popolo.ThermalLoad
         private void updateBRCandBRM()
         {
             //室空気の湿り空気比熱[J/(kg-K)]を計算
-            double cpAir = MoistAir.GetSpecificHeat(absoluteHumidity) * 1000;
+            double cpAir = MoistAir.GetSpecificHeat(humidityRatio) * 1000;
 
             //室の熱容量[J/K]を更新
-            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
+            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, humidityRatio, MoistAir.Property.SpecificVolume, AtmosphericPressure);
             double rSH = volume / airSV * cpAir + sensibleHeatCapacity;
 
             //熱取得[W]を積算
@@ -855,9 +855,9 @@ namespace Popolo.ThermalLoad
             double le = integrateLatentHeatGain();
 
             double vVol = ventilationVolume / ventilationAirState.SpecificVolume / 3600;
-            double br = (volume / MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume) + latentHeatCapacity) / timeStep;
+            double br = (volume / MoistAir.GetAirStateFromDBHR(drybulbTemperature, humidityRatio, MoistAir.Property.SpecificVolume) + latentHeatCapacity) / timeStep;
             brmx = br + vVol;
-            brcx = br * absoluteHumidity + vVol * ventilationAirState.HumidityRatio + le / (MoistAir.LatentHeatOfVaporization * 1000);
+            brcx = br * humidityRatio + vVol * ventilationAirState.HumidityRatio + le / (MoistAir.LatentHeatOfVaporization * 1000);
         }
 
         #endregion
@@ -912,8 +912,8 @@ namespace Popolo.ThermalLoad
         public double GetHeatStorage(double initialTemperature)
         {
             //室の熱容量[kJ/K]を計算
-            double cpAir = MoistAir.GetSpecificHeat(absoluteHumidity);            
-            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, absoluteHumidity, MoistAir.Property.SpecificVolume, AtmosphericPressure);
+            double cpAir = MoistAir.GetSpecificHeat(humidityRatio);            
+            double airSV = MoistAir.GetAirStateFromDBHR(drybulbTemperature, humidityRatio, MoistAir.Property.SpecificVolume, AtmosphericPressure);
             double rSH = volume / airSV * cpAir +sensibleHeatCapacity / 1000d;
 
             //温度差[K]と熱容量[kJ/K]から蓄熱量[kJ]を計算
@@ -933,9 +933,9 @@ namespace Popolo.ThermalLoad
 
         /// <summary>絶対湿度[kg/kg(DA)]を設定する</summary>
         /// <param name="aHumid">絶対湿度[kg/kg(DA)]</param>
-        internal void setAbsoluteHumidity(double aHumid)
+        internal void setHumidityRatio(double aHumid)
         {
-            this.absoluteHumidity = aHumid;
+            this.humidityRatio = aHumid;
         }
 
         /// <summary>平均放射温度[C]を設定する</summary>
@@ -1010,7 +1010,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>壁面の総合熱伝達率[W/m2-K]を取得する</summary>
-        double HeatTransferCoefficient
+        double FilmCoefficient
         {
             get;
         }
@@ -1034,7 +1034,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>絶対湿度[kg/kg(DA)]を制御するか否かを取得する</summary>
-        bool ControlAbsoluteHumidity
+        bool ControlHumidityRatio
         {
             get;
         }
@@ -1046,7 +1046,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>絶対湿度設定値[kg/kg(DA)]を取得する</summary>
-        double AbsoluteHumiditySetPoint
+        double HumidityRatioSetPoint
         {
             get;
         }
@@ -1076,7 +1076,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>現在の絶対湿度[kg/kg]を取得する</summary>
-        double CurrentAbsoluteHumidity
+        double CurrentHumidityRatio
         {
             get;
         }

@@ -323,8 +323,8 @@ namespace Popolo.ThermalLoad
             initialize();
 
             //表面の総合熱伝達率変更イベントに登録
-            wallSurface1.OverallHeatTransferCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
-            wallSurface2.OverallHeatTransferCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
         }
 
         /// <summary>コンストラクタ</summary>
@@ -338,8 +338,8 @@ namespace Popolo.ThermalLoad
             initialize();
 
             //表面の総合熱伝達率変更イベントに登録
-            wallSurface1.OverallHeatTransferCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
-            wallSurface2.OverallHeatTransferCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
         }
 
         /// <summary>壁表面の総合熱伝達率変更イベント発生時の処理</summary>
@@ -433,16 +433,16 @@ namespace Popolo.ThermalLoad
 
         /// <summary>熱貫流率[W/(m^2K)]を計算する</summary>
         /// <returns>熱貫流率[W/(m^2K)]</returns>
-        public double GetOverallHeatTransferCoefficient()
+        public double GetFilmCoefficient()
         {
-            return Layers.GetOverallHeatTransferCoefficient(wallSurface1.OverallHeatTransferCoefficient, wallSurface2.OverallHeatTransferCoefficient);
+            return Layers.GetThermalTransmission(wallSurface1.FilmCoefficient, wallSurface2.FilmCoefficient);
         }
 
         /// <summary>定常状態において壁を通過して表面1から表面2へと向かう熱移動量[W]を計算する</summary>
         /// <returns>定常状態において壁を通過して表面1から表面2へと向かう熱移動量[W]</returns>
         public double GetStaticHeatTransfer()
         {
-            return GetOverallHeatTransferCoefficient() * SurfaceArea *
+            return GetFilmCoefficient() * SurfaceArea *
                 (wallSurface1.GetSolAirTemperature() - wallSurface2.GetSolAirTemperature());
         }
 
@@ -500,28 +500,28 @@ namespace Popolo.ThermalLoad
         /// <summary>表面熱伝達率[W/(m^2K)]を設定する</summary>
         /// <param name="hCoef">表面熱伝達率[W/(m^2K)]</param>
         /// <param name="isSide1">1側か否か</param>
-        public void SetOverallHeatTransferCoefficient(double hCoef, bool isSide1)
+        public void SetFilmCoefficient(double hCoef, bool isSide1)
         {
-            if (isSide1) wallSurface1.OverallHeatTransferCoefficient = hCoef;
-            else wallSurface2.OverallHeatTransferCoefficient = hCoef;
+            if (isSide1) wallSurface1.FilmCoefficient = hCoef;
+            else wallSurface2.FilmCoefficient = hCoef;
         }
 
         /// <summary>表面熱伝達率[W/(m^2K)]を設定する</summary>
         /// <param name="hCoef1">1側表面熱伝達率[W/(m^2K)]</param>
         /// <param name="hCoef2">2側表面熱伝達率[W/(m^2K)]</param>
-        public void SetOverallHeatTransferCoefficient(double hCoef1, double hCoef2)
+        public void SetFilmCoefficient(double hCoef1, double hCoef2)
         {
-            wallSurface1.OverallHeatTransferCoefficient = hCoef1;
-            wallSurface2.OverallHeatTransferCoefficient = hCoef2;
+            wallSurface1.FilmCoefficient = hCoef1;
+            wallSurface2.FilmCoefficient = hCoef2;
         }
 
         /// <summary>表面熱伝達率[W/(m^2K)]を取得する</summary>
         /// <param name="isSide1">1側か否か</param>
         /// <returns>表面熱伝達率[W/(m^2K)]</returns>
-        public double GetOverallHeatTransferCoefficient(bool isSide1)
+        public double GetFilmCoefficient(bool isSide1)
         {
-            if (isSide1) return wallSurface1.OverallHeatTransferCoefficient;
-            else return wallSurface2.OverallHeatTransferCoefficient;
+            if (isSide1) return wallSurface1.FilmCoefficient;
+            else return wallSurface2.FilmCoefficient;
         }
 
         /// <summary>総合熱伝達率[W/m2-K]のうち、対流熱伝達の割合[-]を設定する</summary>
@@ -753,9 +753,9 @@ namespace Popolo.ThermalLoad
             res = new double[mNumber];
             cap = new double[mNumber];
 
-            res[0] = 1d / wallSurface1.OverallHeatTransferCoefficient;
+            res[0] = 1d / wallSurface1.FilmCoefficient;
             cap[0] = 0;
-            res[res.Length - 1] = 1d / wallSurface2.OverallHeatTransferCoefficient;
+            res[res.Length - 1] = 1d / wallSurface2.FilmCoefficient;
             cap[cap.Length - 1] = 0;
             for (uint i = 0; i < layers.Length; i++)
             {
@@ -1064,11 +1064,11 @@ namespace Popolo.ThermalLoad
         /// <summary>表面熱伝達率[W/(m^2K)]を取得する</summary>
         /// <param name="isSide1">1側か否か</param>
         /// <returns>表面熱伝達率[W/(m^2K)]</returns>
-        double GetOverallHeatTransferCoefficient(bool isSide1);
+        double GetFilmCoefficient(bool isSide1);
 
         /// <summary>熱貫流率[W/(m^2K)]を取得する</summary>
         /// <returns>熱貫流率[W/(m^2K)]</returns>
-        double GetOverallHeatTransferCoefficient();
+        double GetFilmCoefficient();
 
         /// <summary>壁面温度[℃]を取得する</summary>
         /// <param name="isSide1">1側か否か</param>

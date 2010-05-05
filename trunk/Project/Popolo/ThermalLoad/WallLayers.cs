@@ -122,7 +122,7 @@ namespace Popolo.ThermalLoad
         /// <summary>壁層を設定する</summary>
         /// <param name="layerIndex">壁層番号</param>
         /// <param name="layer">壁層オブジェクト</param>
-        public void SetLayer(int layerIndex, Layer layer)
+        public void ReplaceLayer(int layerIndex, Layer layer)
         {
             uint dvNum = layer.divisionNumber;
             if (dvNum != 1)
@@ -186,19 +186,19 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>壁表面の総合熱伝達率[W/(m^2K)]を指定して熱貫流率[W/(m^2K)]を計算する</summary>
-        /// <param name="surfaceAlpha1">壁表面の総合熱伝達率1[W/(m^2K)]</param>
-        /// <param name="surfaceAlpha2">壁表面の総合熱伝達率2[W/(m^2K)]</param>
+        /// <param name="filmCoefficient1">壁表面の総合熱伝達率1[W/(m^2K)]</param>
+        /// <param name="filmCoefficient2">壁表面の総合熱伝達率2[W/(m^2K)]</param>
         /// <returns>熱貫流率[W/(m^2K)]</returns>
-        public double GetOverallHeatTransferCoefficient(double surfaceAlpha1, double surfaceAlpha2)
+        public double GetThermalTransmission(double filmCoefficient1, double filmCoefficient2)
         {
-            double rSum = 1 / surfaceAlpha1 + 1 / surfaceAlpha2 + 1 / overallHeatTransferCoefficient;
+            double rSum = 1 / filmCoefficient1 + 1 / filmCoefficient2 + 1 / overallHeatTransferCoefficient;
             return 1 / rSum;
         }
 
         /// <summary>熱貫流率[W/(m^2K)]を計算する</summary>
         /// <returns>熱貫流率[W/(m^2K)]</returns>
         /// <remarks>壁表面の総合熱伝達率は含まない</remarks>
-        public double GetOverallHeatTransferCoefficient()
+        public double GetThermalTransmission()
         {
             return overallHeatTransferCoefficient;
         }
@@ -544,7 +544,7 @@ namespace Popolo.ThermalLoad
         /// <param name="surfaceAlpha1">外表面総合熱伝達率1[W/(m^2K)]</param>
         /// <param name="surfaceAlpha2">外表面総合熱伝達率2[W/(m^2K)]</param>
         /// <returns>熱貫流率[W/(m^2K)]</returns>
-        double GetOverallHeatTransferCoefficient(double surfaceAlpha1, double surfaceAlpha2);
+        double GetThermalTransmission(double surfaceAlpha1, double surfaceAlpha2);
 
         #endregion
 

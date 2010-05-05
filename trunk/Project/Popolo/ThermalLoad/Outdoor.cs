@@ -282,7 +282,7 @@ namespace Popolo.ThermalLoad
         {
             foreach (WallSurface ws in wallSurfaces)
             {
-                ws.OverallHeatTransferCoefficient = overallHeatTransferCoefficient;
+                ws.FilmCoefficient = overallHeatTransferCoefficient;
                 ws.ConvectiveRate = convectiveRate;
             }
         }

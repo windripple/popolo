@@ -64,7 +64,6 @@
     <Compile Include="ThermalLoad\ISurface.cs" />
     <Compile Include="ThermalLoad\LatentHeatStorageMaterial.cs" />
     <Compile Include="ThermalLoad\MultiRoom.cs" />
-    <Compile Include="ThermalLoad\MultiZone.cs" />
     <Compile Include="ThermalLoad\Outdoor.cs" />
     <Compile Include="ThermalLoad\Room.cs" />
     <Compile Include="ThermalLoad\SunShade.cs" />

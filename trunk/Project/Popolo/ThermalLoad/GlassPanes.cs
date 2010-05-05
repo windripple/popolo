@@ -76,14 +76,14 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>ガラスの熱貫流率[W/(m2-K)]を取得する</summary>
-        public double HeatTransferCoefficientOfGlass
+        public double ThermalTransmittanceOfGlass
         {
             get;
             private set;
         }
 
         /// <summary>熱貫流率[W/(m2-K)]を取得する</summary>
-        public double HeatTransmissionCoefficient
+        public double ThermalTransmittance
         {
             get;
             private set;
@@ -97,7 +97,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>外表面総合熱伝達率[W/m2-K]を取得する</summary>
-        public double OutsideOverallHeatTransferCoefficient
+        public double OutsideFilmCoefficient
         {
             get
             {
@@ -106,7 +106,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を取得する</summary>
-        public double InsideOverallHeatTransferCoefficient
+        public double InsideFilmCoefficient
         {
             get
             {
@@ -115,7 +115,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>空隙の総合熱伝達率[W/(m2-K)]を取得する</summary>
-        public double[] HeatTransferCoefficientsOfAirGaps
+        public double[] HeatTransferCoefficientsOfGaps
         {
             get {
                 return heatTransferCoefficientsOfAirGaps.ToArray();
@@ -152,7 +152,7 @@ namespace Popolo.ThermalLoad
 
             this.OverallTransmissivity = overallTransmittance;
             this.OverallAbsorptivity = overallAbsorptance;
-            this.HeatTransferCoefficientOfGlass = heatTransferCoefficient;
+            this.ThermalTransmittanceOfGlass = heatTransferCoefficient;
 
             initialize();
         }
@@ -204,13 +204,13 @@ namespace Popolo.ThermalLoad
                 double[] absorptance = new double[Panes.Length];
 
                 //熱貫流率[W/(m2K)]を計算
-                HeatTransferCoefficientOfGlass = 0;
-                for (int i = 0; i < heatTransferCoefficientsOfAirGaps.Count; i++) HeatTransferCoefficientOfGlass += 1d / heatTransferCoefficientsOfAirGaps[i];
-                for (int i = 0; i < Panes.Length; i++) HeatTransferCoefficientOfGlass += 1d / Panes[i].HeatTransferCoefficient;
-                HeatTransmissionCoefficient = HeatTransferCoefficientOfGlass;
-                HeatTransferCoefficientOfGlass = 1d / HeatTransferCoefficientOfGlass;
-                HeatTransmissionCoefficient += 1 / outsideOverallHeatTransferCoefficient + 1 / insideOverallHeatTransferCoefficient;
-                HeatTransmissionCoefficient = 1d / HeatTransmissionCoefficient;
+                ThermalTransmittanceOfGlass = 0;
+                for (int i = 0; i < heatTransferCoefficientsOfAirGaps.Count; i++) ThermalTransmittanceOfGlass += 1d / heatTransferCoefficientsOfAirGaps[i];
+                for (int i = 0; i < Panes.Length; i++) ThermalTransmittanceOfGlass += 1d / Panes[i].HeatTransferCoefficient;
+                ThermalTransmittance = ThermalTransmittanceOfGlass;
+                ThermalTransmittanceOfGlass = 1d / ThermalTransmittanceOfGlass;
+                ThermalTransmittance += 1 / outsideOverallHeatTransferCoefficient + 1 / insideOverallHeatTransferCoefficient;
+                ThermalTransmittance = 1d / ThermalTransmittance;
 
                 //総合透過率[-]を計算
                 OverallTransmissivity = Panes[0].OuterSideTransmissivity;
@@ -230,16 +230,16 @@ namespace Popolo.ThermalLoad
                 double rSum = 1d / insideOverallHeatTransferCoefficient + 1d / Panes[0].HeatTransferCoefficient;
                 for (int i = 0; i < Panes.Length; i++)
                 {
-                    OverallAbsorptivity += (1d - HeatTransmissionCoefficient * rSum) * absorptance[i];
+                    OverallAbsorptivity += (1d - ThermalTransmittance * rSum) * absorptance[i];
                     if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i] + 1d / Panes[i].HeatTransferCoefficient;
                 }
             }
             //簡易の場合
             else
             {
-                HeatTransmissionCoefficient = 1d / HeatTransferCoefficientOfGlass + 
+                ThermalTransmittance = 1d / ThermalTransmittanceOfGlass + 
                     1d / outsideOverallHeatTransferCoefficient + 1d / insideOverallHeatTransferCoefficient;
-                HeatTransmissionCoefficient = 1d / HeatTransmissionCoefficient;
+                ThermalTransmittance = 1d / ThermalTransmittance;
             }
         }
 
@@ -249,7 +249,7 @@ namespace Popolo.ThermalLoad
 
         /// <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
         /// <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
-        public void SetOutsideOverallHeatTransferCoefficient(double outsideOverallHeatTransferCoefficient)
+        public void SetOutsideFilmCoefficient(double outsideOverallHeatTransferCoefficient)
         {
             if (outsideOverallHeatTransferCoefficient <= 0) return;
             if (this.outsideOverallHeatTransferCoefficient == outsideOverallHeatTransferCoefficient) return;
@@ -262,7 +262,7 @@ namespace Popolo.ThermalLoad
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
         /// <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
-        public void SetInsideOverallHeatTransferCoefficient(double insideOverallHeatTransferCoefficient)
+        public void SetInsideFilmCoefficient(double insideOverallHeatTransferCoefficient)
         {
             if (insideOverallHeatTransferCoefficient <= 0) return;
             if (this.insideOverallHeatTransferCoefficient == insideOverallHeatTransferCoefficient) return;
@@ -321,14 +321,14 @@ namespace Popolo.ThermalLoad
         {
             this.OverallAbsorptivity = glassPanes.OverallAbsorptivity;
             this.OverallTransmissivity = glassPanes.OverallTransmissivity;
-            this.HeatTransferCoefficientOfGlass = glassPanes.HeatTransferCoefficientOfGlass;
+            this.ThermalTransmittanceOfGlass = glassPanes.ThermalTransmittanceOfGlass;
 
             if (Panes != null)
             {
                 this.Panes = new Pane[glassPanes.Panes.Length];
                 for (int i = 0; i < this.Panes.Length; i++) this.Panes[i] = new Pane(glassPanes.Panes[i]);
                 this.heatTransferCoefficientsOfAirGaps.Clear();
-                double[] aGap = glassPanes.HeatTransferCoefficientsOfAirGaps;
+                double[] aGap = glassPanes.HeatTransferCoefficientsOfGaps;
                 for (int i = 0; i < aGap.Length; i++)
                 {
                     this.heatTransferCoefficientsOfAirGaps.Add(aGap[i]);
@@ -340,8 +340,8 @@ namespace Popolo.ThermalLoad
             {
                 angularDependenceCoefficients.Add(ac[i]);
             }
-            SetOutsideOverallHeatTransferCoefficient(glassPanes.OutsideOverallHeatTransferCoefficient);
-            SetInsideOverallHeatTransferCoefficient(glassPanes.InsideOverallHeatTransferCoefficient);
+            SetOutsideFilmCoefficient(glassPanes.OutsideFilmCoefficient);
+            SetInsideFilmCoefficient(glassPanes.InsideFilmCoefficient);
 
             initialize();
         }
@@ -561,13 +561,13 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>ガラスの熱貫流率[W/m2-K]を取得する</summary>
-        double HeatTransferCoefficientOfGlass
+        double ThermalTransmittanceOfGlass
         {
             get;
         }
 
         /// <summary>熱貫流率[W/(m2-K)]を取得する</summary>
-        double HeatTransmissionCoefficient
+        double ThermalTransmittance
         {
             get;
         }
@@ -597,19 +597,19 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>外表面総合熱伝達率[W/m2-K]を取得する</summary>
-        double OutsideOverallHeatTransferCoefficient
+        double OutsideFilmCoefficient
         {
             get;
         }
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を取得する</summary>
-        double InsideOverallHeatTransferCoefficient
+        double InsideFilmCoefficient
         {
             get;
         }
 
         /// <summary>空隙の総合熱伝達率[W/(m2-K)]を取得する</summary>
-        double[] HeatTransferCoefficientsOfAirGaps
+        double[] HeatTransferCoefficientsOfGaps
         {
             get;
         }

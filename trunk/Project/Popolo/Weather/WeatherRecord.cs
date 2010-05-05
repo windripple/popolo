@@ -45,7 +45,7 @@ namespace Popolo.Weather
             /// <summary>乾球温度[C(DB)]</summary>
             DryBulbTemperature,
             /// <summary>絶対湿度[kg/kg(DA)]</summary>
-            AbsoluteHumidity,
+            HumidityRatio,
             /// <summary>露点温度[C(DB)]</summary>
             DewPointTemperature,
             /// <summary>相対湿度[%]</summary>

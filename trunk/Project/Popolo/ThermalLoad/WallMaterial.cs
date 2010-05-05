@@ -41,7 +41,7 @@ namespace Popolo.ThermalLoad
         private int id = 0;
 
         /// <summary>素材名称</summary>
-        private string name = "セメント・モルタル";
+        private string name = "Mortar";
 
         /// <summary>熱伝導率[W/mK]</summary>
         private double thermalConductivity = 1.512d;
@@ -182,7 +182,7 @@ namespace Popolo.ThermalLoad
             /// <summary>硬質ウレタンフォーム保温版2種3号</summary>
             RigidUrethaneFoam_2_3,
             /// <summary>硬質ウレタンフォーム（現場発泡品）</summary>
-            RigidUrethaneFoam_InSite,
+            RigidUrethaneFoam_OnSite,
             /// <summary>ポリエチレンフォーム A</summary>
             PolyethyleneFoam_A,
             /// <summary>ポリエチレンフォーム B</summary>
@@ -391,286 +391,286 @@ namespace Popolo.ThermalLoad
             switch (mType)
             {
                 case PredefinedMaterials.Mortar:
-                    initialize("セメント・モルタル", 1.512, 1591.0, mType);
+                    initialize("Mortar", 1.512, 1591.0, mType);
                     break;
                 case PredefinedMaterials.ReinforcedConcrete:
-                    initialize("コンクリート", 1.600, 1896.0, mType);
+                    initialize("Reinforced Concrete", 1.600, 1896.0, mType);
                     break;
                 case PredefinedMaterials.LightweightAggregateConcrete1:
-                    initialize("軽量骨材コンクリート1種", 0.810, 1900.0, mType);
+                    initialize("Lightweight Aggregate Concrete 1", 0.810, 1900.0, mType);
                     break;
                 case PredefinedMaterials.LightweightAggregateConcrete2:
-                    initialize("軽量骨材コンクリート2種", 0.580, 1599.0, mType);
+                    initialize("Lightweight Aggregate Concrete 2", 0.580, 1599.0, mType);
                     break;
                 case PredefinedMaterials.AutomaticLevelControl:
-                    initialize("軽量気泡コンクリートパネル（ALCパネル）", 0.170, 661.4, mType);
+                    initialize("Automatic Level Control", 0.170, 661.4, mType);
                     break;
                 case PredefinedMaterials.Brick:
-                    initialize("普通れんが", 0.620, 1386.0, mType);
+                    initialize("Brick", 0.620, 1386.0, mType);
                     break;
                 case PredefinedMaterials.FireBrick:
-                    initialize("耐火れんが", 0.990, 1553.0, mType);
+                    initialize("FireBrick", 0.990, 1553.0, mType);
                     break;
                 case PredefinedMaterials.Copper:
-                    initialize("銅", 370.100, 3144.0, mType);
+                    initialize("Copper", 370.100, 3144.0, mType);
                     break;
                 case PredefinedMaterials.Aluminum:
-                    initialize("アルミニウム合金", 200.000, 2428.0, mType);
+                    initialize("Aluminum", 200.000, 2428.0, mType);
                     break;
                 case PredefinedMaterials.Steel:
-                    initialize("鋼材", 53.010, 3759.0, mType);
+                    initialize("Steel", 53.010, 3759.0, mType);
                     break;
                 case PredefinedMaterials.Lead:
-                    initialize("鉛", 35.010, 1469.0, mType);
+                    initialize("Lead", 35.010, 1469.0, mType);
                     break;
                 case PredefinedMaterials.StainlessSteel:
-                    initialize("ステンレス鋼", 15.000, 3479.0, mType);
+                    initialize("Stainless Steel", 15.000, 3479.0, mType);
                     break;
                 case PredefinedMaterials.FloatGlass:
-                    initialize("フロートガラス(窓ガラスではない）", 1.000, 1914.0, mType);
+                    initialize("Float Glass", 1.000, 1914.0, mType);
                     break;
                 case PredefinedMaterials.PolyvinylChloride:
-                    initialize("PVC(塩化ビニル)", 0.170, 1023.0, mType);
+                    initialize("Polyvinyl Chloride", 0.170, 1023.0, mType);
                     break;
                 case PredefinedMaterials.Wood1:
-                    initialize("天然木材1類（桧、杉、えぞ松等）", 0.120, 519.1, mType);
+                    initialize("Wood (Cedar)", 0.120, 519.1, mType);
                     break;
                 case PredefinedMaterials.Wood2:
-                    initialize("天然木材2類（松、ラワン等）", 0.150, 648.8, mType);
+                    initialize("Wood (Pine, Lauan)", 0.150, 648.8, mType);
                     break;
                 case PredefinedMaterials.Wood3:
-                    initialize("天然木材3類（ナラ、サクラ、ブナ等）", 0.190, 845.6, mType);
+                    initialize("Wood (Cherry, Fagaceae)", 0.190, 845.6, mType);
                     break;
                 case PredefinedMaterials.Plywood:
-                    initialize("合板", 0.190, 716.0, mType);
+                    initialize("Plywood", 0.190, 716.0, mType);
                     break;
                 case PredefinedMaterials.WoodWoolCement:
-                    initialize("断熱木毛セメント板", 0.100, 841.4, mType);
+                    initialize("Wood Wool Cement", 0.100, 841.4, mType);
                     break;
                 case PredefinedMaterials.WoodChipCement:
-                    initialize("木片セメント板", 0.170, 1679.0, mType);
+                    initialize("Wood Chip Cement", 0.170, 1679.0, mType);
                     break;
                 case PredefinedMaterials.HardBoard:
-                    initialize("ハードボード", 0.170, 1233.0, mType);
+                    initialize("Hard Board", 0.170, 1233.0, mType);
                     break;
                 case PredefinedMaterials.ParticleBoard:
-                    initialize("パーティクルボード", 0.150, 715.8, mType);
+                    initialize("Particle Board", 0.150, 715.8, mType);
                     break;
                 case PredefinedMaterials.PlasterBoard:
-                    initialize("せっこうボード", 0.170, 1030.0, mType);
+                    initialize("Plaster Board", 0.170, 1030.0, mType);
                     break;
                 case PredefinedMaterials.GypsumPlaster:
-                    initialize("せっこうプラスター", 0.600, 1637.0, mType);
+                    initialize("Gypsum Plaster", 0.600, 1637.0, mType);
                     break;
                 case PredefinedMaterials.WhiteWash:
-                    initialize("漆喰", 0.700, 1093.0, mType);
+                    initialize("White Wash", 0.700, 1093.0, mType);
                     break;
                 case PredefinedMaterials.SoilWall:
-                    initialize("土壁", 0.690, 1126.0, mType);
+                    initialize("Soil Wall", 0.690, 1126.0, mType);
                     break;
                 case PredefinedMaterials.FiberCoating:
-                    initialize("繊維質上塗材", 0.120, 4.2, mType);
+                    initialize("Fiber Coating", 0.120, 4.2, mType);
                     break;
                 case PredefinedMaterials.Tatami:
-                    initialize("畳床", 0.110, 527.4, mType);
+                    initialize("Tatami", 0.110, 527.4, mType);
                     break;
                 case PredefinedMaterials.Tile:
-                    initialize("タイル", 1.300, 2018.0, mType);
+                    initialize("Tile", 1.300, 2018.0, mType);
                     break;
                 case PredefinedMaterials.PlasticTile:
-                    initialize("プラスチック（P）タイル", 0.190, 4.2, mType);
+                    initialize("Plastic Tile", 0.190, 4.2, mType);
                     break;
                 case PredefinedMaterials.GlassWoolInsulation_10K:
-                    initialize("住宅用グラスウール断熱材 10K相当", 0.050, 8.4, mType);
+                    initialize("Glass Wool Insulation 10kg/m3", 0.050, 8.4, mType);
                     break;
                 case PredefinedMaterials.GlassWoolInsulation_16K:
-                    initialize("住宅用グラスウール断熱材 16K相当", 0.045, 13.4, mType);
+                    initialize("Glass Wool Insulation 16kg/m3", 0.045, 13.4, mType);
                     break;
                 case PredefinedMaterials.GlassWoolInsulation_24K:
-                    initialize("住宅用グラスウール断熱材 24K相当", 0.038, 20.1, mType);
+                    initialize("Glass Wool Insulation 24kg/m3", 0.038, 20.1, mType);
                     break;
                 case PredefinedMaterials.GlassWoolInsulation_34K:
-                    initialize("住宅用グラスウール断熱材 32K相当", 0.036, 26.8, mType);
+                    initialize("Glass Wool Insulation 32kg/m3", 0.036, 26.8, mType);
                     break;
                 case PredefinedMaterials.HighGradeGlassWoolInsulation_16K:
-                    initialize("高性能グラスウール断熱材 16K相当", 0.038, 13.4, mType);
+                    initialize("High Grade Glass Wool Insulation 16kg/m3", 0.038, 13.4, mType);
                     break;
                 case PredefinedMaterials.HighGradeGlassWoolInsulation_24K:
-                    initialize("高性能グラスウール断熱材 24K相当", 0.036, 20.1, mType);
+                    initialize("High Grade Glass Wool Insulation 24kg/m3", 0.036, 20.1, mType);
                     break;
                 case PredefinedMaterials.BlowingGlassWoolInsulation_13K:
-                    initialize("吹込用グラスウール断熱材1種 13K相当", 0.052, 10.9, mType);
+                    initialize("Blowing Glass Wool Insulation 13kg/m3", 0.052, 10.9, mType);
                     break;
                 case PredefinedMaterials.BlowingGlassWoolInsulation_18K:
-                    initialize("吹込用グラスウール断熱材2種 18K相当", 0.052, 16.7, mType);
+                    initialize("Blowing Glass Wool Insulation 18kg/m3", 0.052, 16.7, mType);
                     break;
                 case PredefinedMaterials.BlowingGlassWoolInsulation_30K:
-                    initialize("吹込用グラスウール断熱材2種 30K相当", 0.040, 29.3, mType);
+                    initialize("Blowing Glass Wool Insulation 30kg/m3", 0.040, 29.3, mType);
                     break;
                 case PredefinedMaterials.BlowingGlassWoolInsulation_35K:
-                    initialize("吹込用グラスウール断熱材2種 35K相当", 0.040, 37.7, mType);
+                    initialize("Blowing Glass Wool Insulation 35kg/m3", 0.040, 37.7, mType);
                     break;
                 case PredefinedMaterials.RockWoolInsulationMat:
-                    initialize("住宅用ロックウール断熱材 マット", 0.038, 33.5, mType);
+                    initialize("Rock Wool Insulation Mat", 0.038, 33.5, mType);
                     break;
                 case PredefinedMaterials.RockWoolInsulationFelt:
-                    initialize("住宅用ロックウール断熱材 フェルト", 0.038, 41.9, mType);
+                    initialize("Rock Wool Insulation Felt", 0.038, 41.9, mType);
                     break;
                 case PredefinedMaterials.RockWoolInsulationBoard:
-                    initialize("住宅用ロックウール断熱材 ボード", 0.036, 58.6, mType);
+                    initialize("Rock Wool Insulation Board", 0.036, 58.6, mType);
                     break;
                 case PredefinedMaterials.BlowingRockWoolInsulation_25K:
-                    initialize("吹込用ロックウール断熱材 25K", 0.047, 20.9, mType);
+                    initialize("Blowing Rock Wool Insulation 25kg/m3", 0.047, 20.9, mType);
                     break;
                 case PredefinedMaterials.BlowingRockWoolInsulation_35K:
-                    initialize("吹込用ロックウール断熱材 35K", 0.051, 29.3, mType);
+                    initialize("Blowing Rock Wool Insulation 35kg/m3", 0.051, 29.3, mType);
                     break;
                 case PredefinedMaterials.RockWoolAcousticBoard:
-                    initialize("ロックウール化粧吸音板", 0.058, 293.9, mType);
+                    initialize("Rock Wool Acoustic Board", 0.058, 293.9, mType);
                     break;
                 case PredefinedMaterials.SprayedRockWool:
-                    initialize("吹付けロックウール", 0.047, 167.9, mType);
+                    initialize("Sprayed Rock Wool", 0.047, 167.9, mType);
                     break;
                 case PredefinedMaterials.BeadMethodPolystyreneFoam_S:
-                    initialize("ビーズ法ポリスチレンフォーム特号", 0.034, 33.9, mType);
+                    initialize("Bead Method Polystyrene Foam S", 0.034, 33.9, mType);
                     break;
                 case PredefinedMaterials.BeadMethodPolystyreneFoam_1:
-                    initialize("ビーズ法ポリスチレンフォーム1号", 0.036, 37.7, mType);
+                    initialize("Bead Method Polystyrene Foam 1", 0.036, 37.7, mType);
                     break;
                 case PredefinedMaterials.BeadMethodPolystyreneFoam_2:
-                    initialize("ビーズ法ポリスチレンフォーム2号", 0.037, 31.4, mType);
+                    initialize("Bead Method Polystyrene Foam 2", 0.037, 31.4, mType);
                     break;
                 case PredefinedMaterials.BeadMethodPolystyreneFoam_3:
-                    initialize("ビーズ法ポリスチレンフォーム3号", 0.040, 25.1, mType);
+                    initialize("Bead Method Polystyrene Foam 3", 0.040, 25.1, mType);
                     break;
                 case PredefinedMaterials.BeadMethodPolystyreneFoam_4:
-                    initialize("ビーズ法ポリスチレンフォーム4号", 0.043, 18.8, mType);
+                    initialize("Bead Method Polystyrene Foam 4", 0.043, 18.8, mType);
                     break;
                 case PredefinedMaterials.ExtrudedPolystyreneFoam_1:
-                    initialize("押出法ポリスチレンフォーム1種", 0.040, 25.1, mType);
+                    initialize("Extruded Polystyrene Foam 1", 0.040, 25.1, mType);
                     break;
                 case PredefinedMaterials.ExtrudedPolystyreneFoam_2:
-                    initialize("押出法ポリスチレンフォーム2種", 0.034, 25.1, mType);
+                    initialize("Extruded Polystyrene Foam 2", 0.034, 25.1, mType);
                     break;
                 case PredefinedMaterials.ExtrudedPolystyreneFoam_3:
-                    initialize("押出法ポリスチレンフォーム3種", 0.028, 25.1, mType);
+                    initialize("Extruded Polystyrene Foam 3", 0.028, 25.1, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_1_1:
-                    initialize("硬質ウレタンフォーム保温版1種1号", 0.024, 56.1, mType);
+                    initialize("Rigid Urethane Foam 1_1", 0.024, 56.1, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_1_2:
-                    initialize("硬質ウレタンフォーム保温版1種2号", 0.024, 44.0, mType);
+                    initialize("Rigid Urethane Foam 1_2", 0.024, 44.0, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_1_3:
-                    initialize("硬質ウレタンフォーム保温版1種3号", 0.026, 31.4, mType);
+                    initialize("Rigid Urethane Foam 1_3", 0.026, 31.4, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_2_1:
-                    initialize("硬質ウレタンフォーム保温版2種1号", 0.023, 56.1, mType);
+                    initialize("Rigid Urethane Foam 2_1", 0.023, 56.1, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_2_2:
-                    initialize("硬質ウレタンフォーム保温版2種2号", 0.023, 44.0, mType);
+                    initialize("Rigid Urethane Foam 2_2", 0.023, 44.0, mType);
                     break;
                 case PredefinedMaterials.RigidUrethaneFoam_2_3:
-                    initialize("硬質ウレタンフォーム保温版2種3号", 0.024, 31.4, mType);
+                    initialize("Rigid Urethane Foam 2_3", 0.024, 31.4, mType);
                     break;
-                case PredefinedMaterials.RigidUrethaneFoam_InSite:
-                    initialize("硬質ウレタンフォーム（現場発泡品）", 0.026, 49.8, mType);
+                case PredefinedMaterials.RigidUrethaneFoam_OnSite:
+                    initialize("Rigid Urethane Foam (OnSite)", 0.026, 49.8, mType);
                     break;
                 case PredefinedMaterials.PolyethyleneFoam_A:
-                    initialize("ポリエチレンフォーム Ａ", 0.038, 62.8, mType);
+                    initialize("Polyethylene Foam A", 0.038, 62.8, mType);
                     break;
                 case PredefinedMaterials.PolyethyleneFoam_B:
-                    initialize("ポリエチレンフォーム Ｂ", 0.042, 62.8, mType);
+                    initialize("Polyethylene Foam B", 0.042, 62.8, mType);
                     break;
                 case PredefinedMaterials.PhenolicFoam_1_1:
-                    initialize("フェノールフォーム保温版 1種1号", 0.033, 37.7, mType);
+                    initialize("Phenolic Foam 1_1", 0.033, 37.7, mType);
                     break;
                 case PredefinedMaterials.PhenolicFoam_1_2:
-                    initialize("フェノールフォーム保温版 1種2号", 0.030, 37.7, mType);
+                    initialize("Phenolic Foam 1_2", 0.030, 37.7, mType);
                     break;
                 case PredefinedMaterials.PhenolicFoam_2_1:
-                    initialize("フェノールフォーム保温版 2種1号", 0.036, 56.5, mType);
+                    initialize("Phenolic Foam 2_1", 0.036, 56.5, mType);
                     break;
                 case PredefinedMaterials.PhenolicFoam_2_2:
-                    initialize("フェノールフォーム保温版 2種2号", 0.034, 56.5, mType);
+                    initialize("Phenolic Foam 2_2", 0.034, 56.5, mType);
                     break;
                 case PredefinedMaterials.InsulationBoard_A:
-                    initialize("A級インシュレーションボード", 0.049, 324.8, mType);
+                    initialize("Insulation Board A", 0.049, 324.8, mType);
                     break;
                 case PredefinedMaterials.TatamiBoard:
-                    initialize("タタミボード", 0.045, 15.1, mType);
+                    initialize("Tatami Board", 0.045, 15.1, mType);
                     break;
                 case PredefinedMaterials.SheathingInsulationBoard:
-                    initialize("シージングボード", 0.052, 390.1, mType);
+                    initialize("Sheathing Insulation Board", 0.052, 390.1, mType);
                     break;
                 case PredefinedMaterials.CelluloseFiberInsulation_1:
-                    initialize("吹込用セルローズファイバー断熱材1", 0.040, 37.7, mType);
+                    initialize("Cellulose Fiber Insulation 1", 0.040, 37.7, mType);
                     break;
                 case PredefinedMaterials.CelluloseFiberInsulation_2:
-                    initialize("吹込用セルローズファイバー断熱材2", 0.040, 62.8, mType);
+                    initialize("Cellulose Fiber Insulation 2", 0.040, 62.8, mType);
                     break;
                 case PredefinedMaterials.Soil:
-                    initialize("土壌（ローム質）", 1.047, 3340.0, mType);
+                    initialize("Soil", 1.047, 3340.0, mType);
                     break;
                 case PredefinedMaterials.ExpandedPolystyrene:
-                    initialize("EPS", 0.035, 300.0, mType);
+                    initialize("Expanded Polystyrene", 0.035, 300.0, mType);
                     break;
                 case PredefinedMaterials.CoveringMaterial:
-                    initialize("外装材", 0.140, 1680.0, mType);
+                    initialize("Covering Material", 0.140, 1680.0, mType);
                     break;
                 case PredefinedMaterials.Linoleum:
-                    initialize("合成樹脂・リノリウム", 0.190, 1470.0, mType);
+                    initialize("Linoleum", 0.190, 1470.0, mType);
                     break;
                 case PredefinedMaterials.Carpet:
-                    initialize("カーペット", 0.080, 318.0, mType);
+                    initialize("Carpet", 0.080, 318.0, mType);
                     break;
                 case PredefinedMaterials.AsbestosPlate:
-                    initialize("石綿スレート", 1.200, 1820.0, mType);
+                    initialize("Asbestos Plate", 1.200, 1820.0, mType);
                     break;
                 case PredefinedMaterials.SealedAirGap:
-                    initialize("密閉空気層", 5.800, 0.0, mType);
+                    initialize("Sealed AirGap", 5.800, 0.0, mType);
                     break;
                 case PredefinedMaterials.AirGap:
-                    initialize("非密閉空気層", 11.600, 0.0, mType);
+                    initialize("Air Gap", 11.600, 0.0, mType);
                     break;
                 case PredefinedMaterials.PolystyreneFoam:
-                    initialize("ポリスチレンフォーム", 0.035, 80.0, mType);
+                    initialize("Polystyrene Foam", 0.035, 80.0, mType);
                     break;
                 case PredefinedMaterials.StyreneFoam:
-                    initialize("スチレン発泡板", 0.035, 10.0, mType);
+                    initialize("Styrene Foam", 0.035, 10.0, mType);
                     break;
                 case PredefinedMaterials.RubberTile:
-                    initialize("ゴムタイル", 0.400, 784.0, mType);
+                    initialize("Rubber Tile", 0.400, 784.0, mType);
                     break;
                 case PredefinedMaterials.Kawara:
-                    initialize("瓦", 1.000, 1506.0, mType);
+                    initialize("Kawara", 1.000, 1506.0, mType);
                     break;
                 case PredefinedMaterials.LightweightConcrete:
-                    initialize("軽量コンクリート", 0.780, 1607.0, mType);
+                    initialize("Lightweight Concrete", 0.780, 1607.0, mType);
                     break;
                 case PredefinedMaterials.Asphalt:
-                    initialize("防水層（アスファルトルーフィング）", 0.110, 920.0, mType);
+                    initialize("Asphalt", 0.110, 920.0, mType);
                     break;
                 case PredefinedMaterials.FrexibleBoard:
-                    initialize("フレキシブルボード", 0.350, 1600.0, mType);
+                    initialize("Frexible Board", 0.350, 1600.0, mType);
                     break;
                 case PredefinedMaterials.CalciumSilicateBoard:
-                    initialize("珪酸カルシウム板", 0.130, 680.0, mType);
+                    initialize("Calcium Silicate Board", 0.130, 680.0, mType);
                     break;
                 case PredefinedMaterials.PhenolicFoam:
-                    initialize("高性能フェノールボード", 0.020, 37.7, mType);
+                    initialize("Phenolic Foam", 0.020, 37.7, mType);
                     break;
                 case PredefinedMaterials.Granite:
-                    initialize("花崗岩", 4.300, 2.9, mType);
+                    initialize("Granite", 4.300, 2.9, mType);
                     break;
                 case PredefinedMaterials.AcrylicResin:
-                    initialize("アクリル樹脂", 0.210, 1666.0, mType);
+                    initialize("Acrylic Resin", 0.210, 1666.0, mType);
                     break;
                 case PredefinedMaterials.Other:
-                    initialize("その他の材料", 0.0, 0.0, mType);
+                    initialize("Other materials", 0.0, 0.0, mType);
                     break;
                 default:
-                    throw new Exception("素材定義エラー");
+                    throw new Exception("wall material is not defined");
             }
         }
 

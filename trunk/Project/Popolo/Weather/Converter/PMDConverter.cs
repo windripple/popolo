@@ -371,7 +371,7 @@ namespace Popolo.Weather.Converter
                 {
                     wd.Value = MoistAir.GetAirStateFromDBRH(dbt, rhd, MoistAir.Property.HumidityRatio, atm);
                     wd.Source = WeatherData.DataSource.CalculatedValue;
-                    wr.SetData(WeatherRecord.RecordType.AbsoluteHumidity, wd);
+                    wr.SetData(WeatherRecord.RecordType.HumidityRatio, wd);
                 }
 
                 //直散分離

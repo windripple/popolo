@@ -327,7 +327,7 @@ namespace Popolo.Utility
                 zn.VentilationVolume = 10;  //換気量[CMH](ゾーン間換気もこのプロパティを援用する)
                 zn.TimeStep = 3600;
                 zn.DrybulbTemperatureSetPoint = 26;
-                zn.AbsoluteHumiditySetPoint = 0.01;
+                zn.HumidityRatioSetPoint = 0.01;
             }
 
             //東側インテリアに発熱体を設定
@@ -485,7 +485,7 @@ namespace Popolo.Utility
                     bool operating = (8 <= dTime.Hour && dTime.Hour <= 19);
                     foreach (Zone zn in zones)
                     {
-                        zn.ControlAbsoluteHumidity = operating;
+                        zn.ControlHumidityRatio = operating;
                         zn.ControlDrybulbTemperature = operating;
                     }
 
@@ -495,10 +495,10 @@ namespace Popolo.Utility
                     sun.SetGlobalHorizontalRadiation(drd[j], dnr[j]);
 
                     //換気の設定
-                    eiZone.VentilationAirState = new MoistAir(epZone.CurrentDrybulbTemperature, eiZone.CurrentAbsoluteHumidity);
-                    epZone.VentilationAirState = new MoistAir(eiZone.CurrentDrybulbTemperature, eiZone.CurrentAbsoluteHumidity);
+                    eiZone.VentilationAirState = new MoistAir(epZone.CurrentDrybulbTemperature, eiZone.CurrentHumidityRatio);
+                    epZone.VentilationAirState = new MoistAir(eiZone.CurrentDrybulbTemperature, eiZone.CurrentHumidityRatio);
                     wpZone.VentilationAirState = outdoor.AirState;
-                    wiZone.VentilationAirState = new MoistAir(wpZone.CurrentDrybulbTemperature, wpZone.CurrentAbsoluteHumidity);
+                    wiZone.VentilationAirState = new MoistAir(wpZone.CurrentDrybulbTemperature, wpZone.CurrentHumidityRatio);
 
                     //外壁表面の状態を設定
                     outdoor.SetWallSurfaceBoundaryState();
@@ -517,7 +517,7 @@ namespace Popolo.Utility
                     {
                         foreach (Zone zn in zones)
                         {
-                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentAbsoluteHumidity.ToString("F3") + ", " +
+                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentHumidityRatio.ToString("F3") + ", " +
                                 zn.CurrentSensibleHeatLoad.ToString("F0") + ", " + zn.CurrentLatentHeatLoad.ToString("F0") + ", ");
                         }
                         sWriter.WriteLine();
@@ -567,7 +567,7 @@ namespace Popolo.Utility
             {
                 zn.TimeStep = 3600;
                 zn.DrybulbTemperatureSetPoint = 26;
-                zn.AbsoluteHumiditySetPoint = 0.01;
+                zn.HumidityRatioSetPoint = 0.01;
             }
 
             //東側インテリアに発熱体を設定
@@ -749,7 +749,7 @@ namespace Popolo.Utility
                     bool operating = (8 <= dTime.Hour && dTime.Hour <= 19);
                     foreach (Zone zn in zones)
                     {
-                        zn.ControlAbsoluteHumidity = operating;
+                        zn.ControlHumidityRatio = operating;
                         zn.ControlDrybulbTemperature = operating;
                     }
 
@@ -779,7 +779,7 @@ namespace Popolo.Utility
                     {
                         foreach (Zone zn in zones)
                         {
-                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentAbsoluteHumidity.ToString("F3") + ", " +
+                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentHumidityRatio.ToString("F3") + ", " +
                                 zn.CurrentSensibleHeatLoad.ToString("F0") + ", " + zn.CurrentLatentHeatLoad.ToString("F0") + ", ");
                         }
                         sWriter.WriteLine();
@@ -830,8 +830,8 @@ namespace Popolo.Utility
             ews.LongWaveEmissivity = 0.9;
             ews.Albedo = 0.2;
             WallSurface iws = exWall.GetSurface(false);
-            ews.OverallHeatTransferCoefficient = 23;
-            iws.OverallHeatTransferCoefficient = 9.3;
+            ews.FilmCoefficient = 23;
+            iws.FilmCoefficient = 9.3;
             exWall.SetIncline(new Incline(Incline.Orientation.SW, 0.5 * Math.PI), true);
             room.AddSurface(iws);       //部屋に追加
             outdoor.AddWallSurface(ews);    //外界に追加
@@ -846,7 +846,7 @@ namespace Popolo.Utility
             inWall.SurfaceArea = 100.8;
             inWall.TimeStep = timeStep;
             iws = inWall.GetSurface(true);
-            iws.OverallHeatTransferCoefficient = 9.3;
+            iws.FilmCoefficient = 9.3;
             room.AddSurface(iws);
             room.SetShortWaveRadiationRate(iws, iws.Area);    //放射成分吸収比率を設定
             room.SetLongWaveRadiationRate(iws, iws.Area);    //放射成分吸収比率を設定
@@ -866,7 +866,7 @@ namespace Popolo.Utility
             floor.SurfaceArea = 98;
             floor.TimeStep = timeStep;
             iws = floor.GetSurface(true);
-            iws.OverallHeatTransferCoefficient = 9.3;
+            iws.FilmCoefficient = 9.3;
             room.AddSurface(iws);
             room.SetShortWaveRadiationRate(iws, iws.Area * 2.0);    //放射成分吸収比率を設定**多め
             room.SetLongWaveRadiationRate(iws, iws.Area * 2.0);    //放射成分吸収比率を設定**多め
@@ -875,7 +875,7 @@ namespace Popolo.Utility
             ceiling.SurfaceArea = 98;
             ceiling.TimeStep = timeStep;
             iws = ceiling.GetSurface(false);
-            iws.OverallHeatTransferCoefficient = 9.3;
+            iws.FilmCoefficient = 9.3;
             room.AddSurface(iws);
             room.SetShortWaveRadiationRate(iws, iws.Area);    //放射成分吸収比率を設定
             room.SetLongWaveRadiationRate(iws, iws.Area);    //放射成分吸収比率を設定
@@ -887,12 +887,12 @@ namespace Popolo.Utility
             GlassPanes glassPanes = new GlassPanes(0.79, 0.04, 190);
             Window window = new Window(glassPanes);
             WindowSurface ws = window.GetSurface(true);
-            ws.OverallHeatTransferCoefficient = 23;
+            ws.FilmCoefficient = 23;
             ws.Albedo = 0.2;
             window.SurfaceArea = 28;
             window.OutSideIncline = new Incline(Incline.Orientation.SW, 0.5 * Math.PI);
             ws = window.GetSurface(false);
-            ws.OverallHeatTransferCoefficient = 9.3;
+            ws.FilmCoefficient = 9.3;
            
             room.AddWindow(window);
             outdoor.AddWindow(window);
@@ -939,7 +939,7 @@ namespace Popolo.Utility
                 wdAhd = new double[] { 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018 };
                 wdRN = new double[] { 24, 24, 24, 24, 24, 24, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 25, 25, 25, 25, 24, 24, 24 };
                 room.DrybulbTemperatureSetPoint = 26;
-                room.AbsoluteHumiditySetPoint = 0.0105;
+                room.HumidityRatioSetPoint = 0.0105;
             }
             else
             {
@@ -950,7 +950,7 @@ namespace Popolo.Utility
                 //wdRN = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                 wdRN = new double[] { 124, 123, 123, 123, 123, 122, 123, 124, 125, 127, 128, 128, 129, 129, 130, 129, 129, 128, 127, 126, 126, 125, 124, 124 };
                 room.DrybulbTemperatureSetPoint = 22;
-                room.AbsoluteHumiditySetPoint = 0.0082;
+                room.HumidityRatioSetPoint = 0.0082;
             }
             
             using (StreamWriter sWriter = new StreamWriter("test.csv", false, Encoding.GetEncoding("Shift_JIS")))
@@ -986,7 +986,7 @@ namespace Popolo.Utility
                     
                     //室温制御を更新
                     room.ControlDrybulbTemperature = (8 <= dt.Hour && dt.Hour <= 18);
-                    room.ControlAbsoluteHumidity = (8 <= dt.Hour && dt.Hour <= 18);
+                    room.ControlHumidityRatio = (8 <= dt.Hour && dt.Hour <= 18);
 
                     //相当外気温度を更新
                     oDoor.SetWallSurfaceBoundaryState();
@@ -1000,7 +1000,7 @@ namespace Popolo.Utility
 
                     //書き出し
                     sWriter.WriteLine(dt.ToShortTimeString() + "," + room.CurrentDrybulbTemperature + ", " +
-                        room.CurrentSensibleHeatLoad + "," + room.CurrentAbsoluteHumidity + ", " + room.CurrentLatentHeatLoad + "," + room.CurrentMeanRadiantTemperature);
+                        room.CurrentSensibleHeatLoad + "," + room.CurrentHumidityRatio + ", " + room.CurrentLatentHeatLoad + "," + room.CurrentMeanRadiantTemperature);
 
                     dt = dt.AddSeconds(TIME_STEP);
                     if (i == 24 * 60 * 60 / TIME_STEP)
@@ -1077,12 +1077,12 @@ namespace Popolo.Utility
                 {
                     wrs = houlyWDTable.GetWeatherRecord(i);
                     //夜間放射量[W/m2]を推定する
-                    double wvp = MoistAir.GetWaterVaporPressure(wrs.GetData(WeatherRecord.RecordType.AbsoluteHumidity).Value, wrs.GetData(WeatherRecord.RecordType.AtmosphericPressure).Value);
+                    double wvp = MoistAir.GetWaterVaporPressure(wrs.GetData(WeatherRecord.RecordType.HumidityRatio).Value, wrs.GetData(WeatherRecord.RecordType.AtmosphericPressure).Value);
                     double nrd = Sky.GetNocturnalRadiation(wrs.GetData(WeatherRecord.RecordType.DryBulbTemperature).Value, wrs.GetData(WeatherRecord.RecordType.TotalSkyCover).Value * 10, wvp);
 
                     sWriter.WriteLine(wrs.DataDTime.ToString() + ","
                         + wrs.GetData(WeatherRecord.RecordType.DryBulbTemperature).Value.ToString("F1") + ","
-                        + wrs.GetData(WeatherRecord.RecordType.AbsoluteHumidity).Value.ToString("F5") + ","
+                        + wrs.GetData(WeatherRecord.RecordType.HumidityRatio).Value.ToString("F5") + ","
                         + wrs.GetData(WeatherRecord.RecordType.DirectNormalRadiation).Value.ToString("F1") + ","
                         + wrs.GetData(WeatherRecord.RecordType.DiffuseHorizontalRadiation).Value.ToString("F1") + ","
                         + nrd.ToString("F1") + ","
@@ -1326,9 +1326,9 @@ namespace Popolo.Utility
             
             //表面総合熱伝達率を設定
             WindowSurface ws = window.GetSurface(true);
-            ws.OverallHeatTransferCoefficient = 23d;
+            ws.FilmCoefficient = 23d;
             ws = window.GetSurface(false);
-            ws.OverallHeatTransferCoefficient = 9.3;
+            ws.FilmCoefficient = 9.3;
 
             //屋外面の傾斜を設定//南向き垂直壁
             Incline incline = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
@@ -1825,8 +1825,8 @@ namespace Popolo.Utility
             walls[0].SurfaceArea = 7 * 3;
             WallSurface ews = walls[0].GetSurface(true);
             WallSurface iws = walls[0].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = W_AO;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = W_AO;
+            iws.FilmCoefficient = W_AI;
             walls[0].SetIncline(new Incline(Incline.Orientation.W, 0.5 * Math.PI), true);
             znW.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1836,8 +1836,8 @@ namespace Popolo.Utility
             walls[1].SurfaceArea = 3.5 * 3;
             ews = walls[1].GetSurface(true);
             iws = walls[1].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[1].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), true);
             znE1.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1847,8 +1847,8 @@ namespace Popolo.Utility
             walls[2].SurfaceArea = 3.5 * 3;
             ews = walls[2].GetSurface(true);
             iws = walls[2].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[2].SetIncline(new Incline(Incline.Orientation.E, 0.5 * Math.PI), true);
             znE2.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1858,8 +1858,8 @@ namespace Popolo.Utility
             walls[3].SurfaceArea = 4 * 3;
             ews = walls[3].GetSurface(true);
             iws = walls[3].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = W_AO;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = W_AO;
+            iws.FilmCoefficient = W_AI;
             walls[3].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), true);
             znW.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1869,8 +1869,8 @@ namespace Popolo.Utility
             walls[4].SurfaceArea = 4 * 3;
             ews = walls[4].GetSurface(true);
             iws = walls[4].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[4].SetIncline(new Incline(Incline.Orientation.N, 0.5 * Math.PI), true);
             znE1.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1880,8 +1880,8 @@ namespace Popolo.Utility
             walls[5].SurfaceArea = 4 * 3;
             ews = walls[5].GetSurface(true);
             iws = walls[5].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = W_AO;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = W_AO;
+            iws.FilmCoefficient = W_AI;
             walls[5].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), true);
             znW.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1891,8 +1891,8 @@ namespace Popolo.Utility
             walls[6].SurfaceArea = 4 * 3;
             ews = walls[6].GetSurface(true);
             iws = walls[6].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[6].SetIncline(new Incline(Incline.Orientation.S, 0.5 * Math.PI), true);
             znE2.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1902,8 +1902,8 @@ namespace Popolo.Utility
             walls[7].SurfaceArea = 4 * 7;
             ews = walls[7].GetSurface(true);
             iws = walls[7].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = W_AO;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = W_AO;
+            iws.FilmCoefficient = W_AI;
             walls[7].SetIncline(new Incline(Incline.Orientation.N, 0), true);
             znW.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1913,8 +1913,8 @@ namespace Popolo.Utility
             walls[8].SurfaceArea = 4 * 3.5;
             ews = walls[8].GetSurface(true);
             iws = walls[8].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[8].SetIncline(new Incline(Incline.Orientation.N, 0), true);
             znE1.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1924,8 +1924,8 @@ namespace Popolo.Utility
             walls[9].SurfaceArea = 4 * 3.5;
             ews = walls[9].GetSurface(true);
             iws = walls[9].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AO;
-            iws.OverallHeatTransferCoefficient = E_AI;
+            ews.FilmCoefficient = E_AO;
+            iws.FilmCoefficient = E_AI;
             walls[9].SetIncline(new Incline(Incline.Orientation.N, 0), true);
             znE2.AddSurface(iws);
             outDoor.AddWallSurface(ews);
@@ -1935,8 +1935,8 @@ namespace Popolo.Utility
             walls[10].SurfaceArea = 7 * 3.5;
             ews = walls[10].GetSurface(true);
             iws = walls[10].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AI;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = E_AI;
+            iws.FilmCoefficient = W_AI;
             znW.AddSurface(iws);
             znE1.AddSurface(ews);
 
@@ -1945,8 +1945,8 @@ namespace Popolo.Utility
             walls[11].SurfaceArea = 7 * 3.5;
             ews = walls[11].GetSurface(true);
             iws = walls[11].GetSurface(false);
-            ews.OverallHeatTransferCoefficient = E_AI;
-            iws.OverallHeatTransferCoefficient = W_AI;
+            ews.FilmCoefficient = E_AI;
+            iws.FilmCoefficient = W_AI;
             znW.AddSurface(iws);
             znE2.AddSurface(ews);
 
@@ -1966,8 +1966,8 @@ namespace Popolo.Utility
             WindowSurface ws1 = window.GetSurface(true);
             WindowSurface ws2 = window.GetSurface(false);
             ws1.LongWaveEmissivity = 0.7;
-            ws1.OverallHeatTransferCoefficient = W_AO;
-            ws2.OverallHeatTransferCoefficient = W_AI;
+            ws1.FilmCoefficient = W_AO;
+            ws2.FilmCoefficient = W_AI;
             znW.AddWindow(window);
             outDoor.AddWindow(window);
 
@@ -2090,8 +2090,8 @@ namespace Popolo.Utility
                 {
                     if (zns[j].VentilationVolume != 0)
                     {
-                        double airDS = 1d / (MoistAir.GetAirStateFromDBHR(zns[j].CurrentDrybulbTemperature, zns[j].CurrentAbsoluteHumidity, MoistAir.Property.SpecificVolume));
-                        double cpAir = MoistAir.GetSpecificHeat(zns[j].CurrentAbsoluteHumidity);
+                        double airDS = 1d / (MoistAir.GetAirStateFromDBHR(zns[j].CurrentDrybulbTemperature, zns[j].CurrentHumidityRatio, MoistAir.Property.SpecificVolume));
+                        double cpAir = MoistAir.GetSpecificHeat(zns[j].CurrentHumidityRatio);
                         oaLoad += zns[j].VentilationVolume * airDS * cpAir * (zns[j].VentilationAirState.DryBulbTemperature - zns[j].CurrentDrybulbTemperature);
                     }
                 }
@@ -2165,11 +2165,11 @@ namespace Popolo.Utility
                 WallLayers.Layer layer = wLayers.GetLayer(i);
                 Console.WriteLine("第" + (i + 1) + "層：" + layer.Material.Name + "(" + layer.Thickness + "m)");
             }
-            Console.WriteLine("熱貫流率=" + wLayers.GetOverallHeatTransferCoefficient().ToString("F1") + " W/(m2-K)");
+            Console.WriteLine("熱貫流率=" + wLayers.GetThermalTransmission().ToString("F1") + " W/(m2-K)");
             Console.WriteLine();
 
             //軽量コンクリートに変えてみる
-            wLayers.SetLayer(2, new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.LightweightConcrete), 0.15));
+            wLayers.ReplaceLayer(2, new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.LightweightConcrete), 0.15));
 
             //結果書き出し
             Console.WriteLine("壁層の構成");
@@ -2178,7 +2178,7 @@ namespace Popolo.Utility
                 WallLayers.Layer layer = wLayers.GetLayer(i);
                 Console.WriteLine("第" + (i + 1) + "層：" + layer.Material.Name + "(" + layer.Thickness + "m)");
             }
-            Console.WriteLine("熱貫流率=" + wLayers.GetOverallHeatTransferCoefficient().ToString("F1") + " W/(m2-K)");
+            Console.WriteLine("熱貫流率=" + wLayers.GetThermalTransmission().ToString("F1") + " W/(m2-K)");
 
             Console.Read();
         }

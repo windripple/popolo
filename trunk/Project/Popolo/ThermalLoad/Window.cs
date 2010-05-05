@@ -319,7 +319,7 @@ namespace Popolo.ThermalLoad
         {
             get
             {
-                return glassPanes.HeatTransmissionCoefficient;
+                return glassPanes.ThermalTransmittance;
             }
         }
 
@@ -386,8 +386,8 @@ namespace Popolo.ThermalLoad
         private void initialize(ImmutableGlassPanes glassPanes, ImmutableIncline incline, ImmutableSunShade sunShade, string name)
         {
             this.glassPanes.Copy(glassPanes);
-            FO = glassPanes.HeatTransmissionCoefficient /
-                    glassPanes.InsideOverallHeatTransferCoefficient;
+            FO = glassPanes.ThermalTransmittance /
+                    glassPanes.InsideFilmCoefficient;
             if(incline != null) this.incline.Copy(incline);
             if (sunShade != null)
             {
@@ -406,8 +406,8 @@ namespace Popolo.ThermalLoad
             outsideSurface = new WindowSurface(this, true);
             insideSurface = new WindowSurface(this, false);
 
-            outsideSurface.OverallHeatTransferCoefficient = glassPanes.OutsideOverallHeatTransferCoefficient;
-            insideSurface.OverallHeatTransferCoefficient = glassPanes.InsideOverallHeatTransferCoefficient;
+            outsideSurface.FilmCoefficient = glassPanes.OutsideFilmCoefficient;
+            insideSurface.FilmCoefficient = glassPanes.InsideFilmCoefficient;
         }
 
         #endregion
@@ -419,8 +419,8 @@ namespace Popolo.ThermalLoad
         public void Initialize(ImmutableGlassPanes glassPanes)
         {
             this.glassPanes.Copy(glassPanes);
-            FO = glassPanes.HeatTransmissionCoefficient /
-                    glassPanes.InsideOverallHeatTransferCoefficient;
+            FO = glassPanes.ThermalTransmittance /
+                    glassPanes.InsideFilmCoefficient;
 
             if (FIOChangeEvent != null) FIOChangeEvent(this, new EventArgs());
         }
@@ -446,18 +446,18 @@ namespace Popolo.ThermalLoad
         /// <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
         internal void setOutsideOverallHeatTransferCoefficient(double outsideOverallHeatTransferCoefficient)
         {
-            glassPanes.SetOutsideOverallHeatTransferCoefficient(outsideOverallHeatTransferCoefficient);
-            FO = glassPanes.HeatTransmissionCoefficient /
-                    glassPanes.InsideOverallHeatTransferCoefficient;
+            glassPanes.SetOutsideFilmCoefficient(outsideOverallHeatTransferCoefficient);
+            FO = glassPanes.ThermalTransmittance /
+                    glassPanes.InsideFilmCoefficient;
         }
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
         /// <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
         internal void setInsideOverallHeatTransferCoefficient(double insideOverallHeatTransferCoefficient)
         {
-            glassPanes.SetInsideOverallHeatTransferCoefficient(insideOverallHeatTransferCoefficient);
-            FO = glassPanes.HeatTransmissionCoefficient /
-                    glassPanes.InsideOverallHeatTransferCoefficient;
+            glassPanes.SetInsideFilmCoefficient(insideOverallHeatTransferCoefficient);
+            FO = glassPanes.ThermalTransmittance /
+                    glassPanes.InsideFilmCoefficient;
         }
 
         /// <summary>放射[W/m2]を考慮した相当温度[C]を計算する</summary>
@@ -501,13 +501,13 @@ namespace Popolo.ThermalLoad
             absorbedHeatGain = glassPanes.OverallAbsorptivity * buff;
 
             //外表面の放射を設定
-            outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.HeatTransmissionCoefficient * outsideSurface.OverallHeatTransferCoefficient
+            outsideSurface.Radiation = absorbedHeatGain / surfaceArea / glassPanes.ThermalTransmittance * outsideSurface.FilmCoefficient
                 - outsideSurface.LongWaveEmissivity * incline.ConfigurationFactorToSky * NocturnalRadiation;
 
             //温度差による貫流熱取得[W]を計算
             double insideSAT = GetSolAirTemperature(false);
             double outsideSAT = GetSolAirTemperature(true);
-            transferHeatGain = surfaceArea * glassPanes.HeatTransmissionCoefficient * (outsideSAT - insideSAT);
+            transferHeatGain = surfaceArea * glassPanes.ThermalTransmittance * (outsideSAT - insideSAT);
 
             //対流・放射成分に分ける
             double at = absorbedHeatGain + transferHeatGain;

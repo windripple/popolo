@@ -37,7 +37,7 @@ namespace Popolo.ThermalLoad
         public event EventHandler AreaChangeEvent;
 
         /// <summary>総合熱伝達率変更イベント</summary>
-        public event EventHandler OverallHeatTransferCoefficientChangeEvent;
+        public event EventHandler FilmCoefficientChangeEvent;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Popolo.ThermalLoad
         private bool isSide1 = true;
 
         /// <summary>表面熱伝達率[W/m2-K]</summary>
-        private double overallHeatTransferCoefficient = 9.3;
+        private double filmCoefficient = 9.3;
 
         /// <summary>アルベド[-]</summary>
         private double albedo = 0.2;
@@ -196,18 +196,18 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>表面総合熱伝達率[W/(m^2K)]を設定・取得する</summary>
-        public double OverallHeatTransferCoefficient
+        public double FilmCoefficient
         {
             get
             {
-                return overallHeatTransferCoefficient;
+                return filmCoefficient;
             }
             set
             {
-                if (overallHeatTransferCoefficient != value)
+                if (filmCoefficient != value)
                 {
-                    overallHeatTransferCoefficient = value;
-                    if (OverallHeatTransferCoefficientChangeEvent != null) OverallHeatTransferCoefficientChangeEvent(this, new EventArgs());
+                    filmCoefficient = value;
+                    if (FilmCoefficientChangeEvent != null) FilmCoefficientChangeEvent(this, new EventArgs());
                 }
             }
         }
@@ -325,14 +325,14 @@ namespace Popolo.ThermalLoad
         /// <returns>周辺の空気から壁への熱移動量[W]</returns>
         public double GetHeatTransfer()
         {
-            return (GetSolAirTemperature() - Temperature) * OverallHeatTransferCoefficient * Area;
+            return (GetSolAirTemperature() - Temperature) * FilmCoefficient * Area;
         }
 
         /// <summary>放射を考慮した相当温度[C]を計算する</summary>
         /// <returns>相当温度[C]</returns>
         public double GetSolAirTemperature()
         {
-            return AirTemperature + Radiation / OverallHeatTransferCoefficient;
+            return AirTemperature + Radiation / FilmCoefficient;
         }
 
         /// <summary>表面素材</summary>

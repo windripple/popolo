@@ -2511,7 +2511,7 @@
         <member name="F:Popolo.Weather.WeatherRecord.RecordType.DryBulbTemperature">
             <summary>乾球温度[C(DB)]</summary>
         </member>
-        <member name="F:Popolo.Weather.WeatherRecord.RecordType.AbsoluteHumidity">
+        <member name="F:Popolo.Weather.WeatherRecord.RecordType.HumidityRatio">
             <summary>絶対湿度[kg/kg(DA)]</summary>
         </member>
         <member name="F:Popolo.Weather.WeatherRecord.RecordType.DewPointTemperature">
@@ -2594,28 +2594,6 @@
         </member>
         <member name="F:Popolo.Weather.WeatherRecord.RecordType.NocturnalRadiation">
             <summary>夜間放射量[W/m2]</summary>
-        </member>
-        <member name="T:Popolo.ThermalLoad.MultiZone">
-            <summary></summary>
-        </member>
-        <member name="F:Popolo.ThermalLoad.MultiZone.phi">
-            <summary>放射熱伝達比率[-]</summary>
-        </member>
-        <member name="M:Popolo.ThermalLoad.MultiZone.#ctor(Popolo.ThermalLoad.Zone[])">
-            <summary>コンストラクタ</summary>
-            <param name="zones">ゾーンリスト</param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.MultiZone.GetRadiativeHeatTransferRate(Popolo.ThermalLoad.ISurface,Popolo.ThermalLoad.ISurface)">
-            <summary>表面1から表面2への放射熱伝達比率[-]を取得する</summary>
-            <param name="surface1">表面1</param>
-            <param name="surface2">表面2</param>
-            <returns>表面1から表面2への放射熱伝達比率[-]</returns>
-        </member>
-        <member name="M:Popolo.ThermalLoad.MultiZone.SetRadiativeHeatTransferRate(Popolo.ThermalLoad.ISurface,Popolo.ThermalLoad.ISurface,System.Double)">
-            <summary>表面1から表面2への放射熱伝達比率[-]を取得する</summary>
-            <param name="surface1">表面1</param>
-            <param name="surface2">表面2</param>
-            <param name="rate">表面1から表面2への放射熱伝達比率[-]</param>
         </member>
         <member name="T:Popolo.Schedule.Scheduler`1">
             <summary>季節や時間帯などの期間のスケジュールを管理するクラス</summary>
@@ -3043,7 +3021,7 @@
             <summary>壁層情報を取得する</summary>
             <returns>壁層情報</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.ImmutableWallLayers.GetOverallHeatTransferCoefficient(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.ImmutableWallLayers.GetThermalTransmission(System.Double,System.Double)">
             <summary>外表面総合熱伝達率[W/(m^2K)]を指定して熱貫流率[W/(m^2K)]を計算する</summary>
             <param name="surfaceAlpha1">外表面総合熱伝達率1[W/(m^2K)]</param>
             <param name="surfaceAlpha2">外表面総合熱伝達率2[W/(m^2K)]</param>
@@ -3089,7 +3067,7 @@
             <summary>壁層を取得する</summary>
             <returns>壁層オブジェクト</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.WallLayers.SetLayer(System.Int32,Popolo.ThermalLoad.WallLayers.Layer)">
+        <member name="M:Popolo.ThermalLoad.WallLayers.ReplaceLayer(System.Int32,Popolo.ThermalLoad.WallLayers.Layer)">
             <summary>壁層を設定する</summary>
             <param name="layerIndex">壁層番号</param>
             <param name="layer">壁層オブジェクト</param>
@@ -3107,13 +3085,13 @@
             <param name="material">壁素材</param>
             <returns>使っている場合は真</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.WallLayers.GetOverallHeatTransferCoefficient(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.WallLayers.GetThermalTransmission(System.Double,System.Double)">
             <summary>壁表面の総合熱伝達率[W/(m^2K)]を指定して熱貫流率[W/(m^2K)]を計算する</summary>
-            <param name="surfaceAlpha1">壁表面の総合熱伝達率1[W/(m^2K)]</param>
-            <param name="surfaceAlpha2">壁表面の総合熱伝達率2[W/(m^2K)]</param>
+            <param name="filmCoefficient1">壁表面の総合熱伝達率1[W/(m^2K)]</param>
+            <param name="filmCoefficient2">壁表面の総合熱伝達率2[W/(m^2K)]</param>
             <returns>熱貫流率[W/(m^2K)]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.WallLayers.GetOverallHeatTransferCoefficient">
+        <member name="M:Popolo.ThermalLoad.WallLayers.GetThermalTransmission">
             <summary>熱貫流率[W/(m^2K)]を計算する</summary>
             <returns>熱貫流率[W/(m^2K)]</returns>
             <remarks>壁表面の総合熱伝達率は含まない</remarks>
@@ -3810,7 +3788,7 @@
         <member name="P:Popolo.ThermalLoad.ImmutableSurface.Radiation">
             <summary>壁近傍の放射量[W/m2]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableSurface.OverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableSurface.FilmCoefficient">
             <summary>表面熱伝達率[W/m2-K]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableSurface.ConvectiveRate">
@@ -3858,22 +3836,22 @@
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OverallAbsorptivity">
             <summary>総合吸収率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransferCoefficientOfGlass">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.ThermalTransmittanceOfGlass">
             <summary>ガラスの熱貫流率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransmissionCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.ThermalTransmittance">
             <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.Panes">
             <summary>ガラスを取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OutsideOverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.OutsideFilmCoefficient">
             <summary>外表面総合熱伝達率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.InsideOverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.InsideFilmCoefficient">
             <summary>内表面総合熱伝達率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransferCoefficientsOfAirGaps">
+        <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.HeatTransferCoefficientsOfGaps">
             <summary>空隙の総合熱伝達率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableGlassPanes.AngularDependenceCoefficients">
@@ -3912,11 +3890,11 @@
         <member name="M:Popolo.ThermalLoad.GlassPanes.initialize">
             <summary>初期化する</summary>
         </member>
-        <member name="M:Popolo.ThermalLoad.GlassPanes.SetOutsideOverallHeatTransferCoefficient(System.Double)">
+        <member name="M:Popolo.ThermalLoad.GlassPanes.SetOutsideFilmCoefficient(System.Double)">
             <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
             <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.GlassPanes.SetInsideOverallHeatTransferCoefficient(System.Double)">
+        <member name="M:Popolo.ThermalLoad.GlassPanes.SetInsideFilmCoefficient(System.Double)">
             <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
             <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
         </member>
@@ -3945,22 +3923,22 @@
         <member name="P:Popolo.ThermalLoad.GlassPanes.OverallAbsorptivity">
             <summary>総合吸収率[-]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransferCoefficientOfGlass">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.ThermalTransmittanceOfGlass">
             <summary>ガラスの熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransmissionCoefficient">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.ThermalTransmittance">
             <summary>熱貫流率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.Panes">
             <summary>ガラスを取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.OutsideOverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.OutsideFilmCoefficient">
             <summary>外表面総合熱伝達率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.InsideOverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.InsideFilmCoefficient">
             <summary>内表面総合熱伝達率[W/m2-K]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransferCoefficientsOfAirGaps">
+        <member name="P:Popolo.ThermalLoad.GlassPanes.HeatTransferCoefficientsOfGaps">
             <summary>空隙の総合熱伝達率[W/(m2-K)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.GlassPanes.AngularDependenceCoefficients">
@@ -5286,7 +5264,7 @@
         <member name="P:Popolo.ThermalLoad.WindowSurface.Radiation">
             <summary>壁近傍の放射量[W/m2]を設定・取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.WindowSurface.OverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.WindowSurface.FilmCoefficient">
             <summary>表面総合熱伝達率[W/(m^2K)]を設定・取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.WindowSurface.ShortWaveEmissivity">
@@ -6932,7 +6910,7 @@
         <member name="P:Popolo.ThermalLoad.ImmutableZone.LatentHeatSupply">
             <summary>潜熱供給[W]（加湿を正とする）を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableZone.HeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.ImmutableZone.FilmCoefficient">
             <summary>壁面の総合熱伝達率[W/m2-K]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableZone.VentilationVolume">
@@ -6944,13 +6922,13 @@
         <member name="P:Popolo.ThermalLoad.ImmutableZone.ControlDrybulbTemperature">
             <summary>乾球温度[C]を制御するか否かを取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableZone.ControlAbsoluteHumidity">
+        <member name="P:Popolo.ThermalLoad.ImmutableZone.ControlHumidityRatio">
             <summary>絶対湿度[kg/kg(DA)]を制御するか否かを取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableZone.DrybulbTemperatureSetPoint">
             <summary>乾球温度設定値[C]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableZone.AbsoluteHumiditySetPoint">
+        <member name="P:Popolo.ThermalLoad.ImmutableZone.HumidityRatioSetPoint">
             <summary>絶対湿度設定値[kg/kg(DA)]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableZone.Surfaces">
@@ -6965,7 +6943,7 @@
         <member name="P:Popolo.ThermalLoad.ImmutableZone.CurrentDrybulbTemperature">
             <summary>現在の乾球温度[C]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableZone.CurrentAbsoluteHumidity">
+        <member name="P:Popolo.ThermalLoad.ImmutableZone.CurrentHumidityRatio">
             <summary>現在の絶対湿度[kg/kg]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableZone.CurrentSensibleHeatLoad">
@@ -6983,7 +6961,7 @@
         <member name="F:Popolo.ThermalLoad.Zone.drybulbTemperature">
             <summary>現在の乾球温度[C]</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.Zone.absoluteHumidity">
+        <member name="F:Popolo.ThermalLoad.Zone.humidityRatio">
             <summary>現在の絶対湿度[kg/kg(DA)]</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.Zone.timeStep">
@@ -7116,7 +7094,7 @@
         <member name="M:Popolo.ThermalLoad.Zone.InitializeAirState(System.Double,System.Double)">
             <summary>温湿度を初期化する</summary>
             <param name="drybulbTemperature">乾球温度[C]</param>
-            <param name="absoluteHumidity">絶対湿度[kg/kg(DA)]</param>
+            <param name="humidityRatio">絶対湿度[kg/kg(DA)]</param>
         </member>
         <member name="M:Popolo.ThermalLoad.Zone.initializeParameters">
             <summary>計算用の各種パラメータを初期化する</summary>
@@ -7191,7 +7169,7 @@
             <param name="sensibleHeatSupply">顕熱供給[W]（暖房を正とする）</param>
             <returns>室の乾球温度[C]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Zone.GetNextAbsoluteHumidity(System.Double)">
+        <member name="M:Popolo.ThermalLoad.Zone.GetNextHumidityRatio(System.Double)">
             <summary>絶対湿度[kg/kg(DA)]を取得する</summary>
             <param name="latentHeatSupply">潜熱供給[W]（加湿を正とする）</param>
             <returns>室の絶対湿度[kg/kg(DA)]</returns>
@@ -7207,7 +7185,7 @@
         </member>
         <member name="M:Popolo.ThermalLoad.Zone.GetNextLatentHeatLoad(System.Double)">
             <summary>潜熱負荷[W]を計算する</summary>
-            <param name="absoluteHumiditySetPoint">絶対湿度設定値[kg/kg]</param>
+            <param name="humidityRatioSetPoint">絶対湿度設定値[kg/kg]</param>
             <returns>潜熱負荷[W]</returns>
         </member>
         <member name="M:Popolo.ThermalLoad.Zone.preprocess">
@@ -7252,7 +7230,7 @@
             <summary>乾球温度[C]を設定する</summary>
             <param name="dbTemp">乾球温度[C]</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.Zone.setAbsoluteHumidity(System.Double)">
+        <member name="M:Popolo.ThermalLoad.Zone.setHumidityRatio(System.Double)">
             <summary>絶対湿度[kg/kg(DA)]を設定する</summary>
             <param name="aHumid">絶対湿度[kg/kg(DA)]</param>
         </member>
@@ -7286,7 +7264,7 @@
         <member name="P:Popolo.ThermalLoad.Zone.LatentHeatSupply">
             <summary>潜熱供給[W]（加湿を正とする）を設定・取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.Zone.HeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.Zone.FilmCoefficient">
             <summary>壁面の総合熱伝達率[W/m2-K]を設定・取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.Zone.VentilationVolume">
@@ -7298,13 +7276,13 @@
         <member name="P:Popolo.ThermalLoad.Zone.ControlDrybulbTemperature">
             <summary>乾球温度[C]を制御するか否かを設定・取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.Zone.ControlAbsoluteHumidity">
+        <member name="P:Popolo.ThermalLoad.Zone.ControlHumidityRatio">
             <summary>絶対湿度[kg/kg(DA)]を制御するか否かを設定・取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.Zone.DrybulbTemperatureSetPoint">
             <summary>乾球温度設定値[C]を設定・取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.Zone.AbsoluteHumiditySetPoint">
+        <member name="P:Popolo.ThermalLoad.Zone.HumidityRatioSetPoint">
             <summary>絶対湿度設定値[kg/kg(DA)]を設定・取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.Zone.Surfaces">
@@ -7319,7 +7297,7 @@
         <member name="P:Popolo.ThermalLoad.Zone.CurrentDrybulbTemperature">
             <summary>現在の乾球温度[C]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.Zone.CurrentAbsoluteHumidity">
+        <member name="P:Popolo.ThermalLoad.Zone.CurrentHumidityRatio">
             <summary>現在の絶対湿度[kg/kg]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.Zone.CurrentSensibleHeatLoad">
@@ -7388,7 +7366,7 @@
         <member name="F:Popolo.ThermalLoad.WallSurface.isSide1">
             <summary>壁面1か否か</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.WallSurface.overallHeatTransferCoefficient">
+        <member name="F:Popolo.ThermalLoad.WallSurface.filmCoefficient">
             <summary>表面熱伝達率[W/m2-K]</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.WallSurface.albedo">
@@ -7437,7 +7415,7 @@
         <member name="E:Popolo.ThermalLoad.WallSurface.AreaChangeEvent">
             <summary>面積変更イベント</summary>
         </member>
-        <member name="E:Popolo.ThermalLoad.WallSurface.OverallHeatTransferCoefficientChangeEvent">
+        <member name="E:Popolo.ThermalLoad.WallSurface.FilmCoefficientChangeEvent">
             <summary>総合熱伝達率変更イベント</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.WallSurface.FacingZone">
@@ -7476,7 +7454,7 @@
         <member name="P:Popolo.ThermalLoad.WallSurface.Radiation">
             <summary>壁近傍の放射量[W/m2]を設定・取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.WallSurface.OverallHeatTransferCoefficient">
+        <member name="P:Popolo.ThermalLoad.WallSurface.FilmCoefficient">
             <summary>表面総合熱伝達率[W/(m^2K)]を設定・取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.WallSurface.SolarAbsorptance">
@@ -7857,7 +7835,7 @@
         <member name="F:Popolo.ThermalLoad.WallMaterial.PredefinedMaterials.RigidUrethaneFoam_2_3">
             <summary>硬質ウレタンフォーム保温版2種3号</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.WallMaterial.PredefinedMaterials.RigidUrethaneFoam_InSite">
+        <member name="F:Popolo.ThermalLoad.WallMaterial.PredefinedMaterials.RigidUrethaneFoam_OnSite">
             <summary>硬質ウレタンフォーム（現場発泡品）</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.WallMaterial.PredefinedMaterials.PolyethyleneFoam_A">
@@ -8112,12 +8090,12 @@
         <member name="T:Popolo.ThermalLoad.ImmutableWall">
             <summary>読み取り専用の壁体</summary>
         </member>
-        <member name="M:Popolo.ThermalLoad.ImmutableWall.GetOverallHeatTransferCoefficient(System.Boolean)">
+        <member name="M:Popolo.ThermalLoad.ImmutableWall.GetFilmCoefficient(System.Boolean)">
             <summary>表面熱伝達率[W/(m^2K)]を取得する</summary>
             <param name="isSide1">1側か否か</param>
             <returns>表面熱伝達率[W/(m^2K)]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.ImmutableWall.GetOverallHeatTransferCoefficient">
+        <member name="M:Popolo.ThermalLoad.ImmutableWall.GetFilmCoefficient">
             <summary>熱貫流率[W/(m^2K)]を取得する</summary>
             <returns>熱貫流率[W/(m^2K)]</returns>
         </member>
@@ -8278,7 +8256,7 @@
             <param name="isSide1">1側か否か</param>
             <returns>相当温度[C]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Wall.GetOverallHeatTransferCoefficient">
+        <member name="M:Popolo.ThermalLoad.Wall.GetFilmCoefficient">
             <summary>熱貫流率[W/(m^2K)]を計算する</summary>
             <returns>熱貫流率[W/(m^2K)]</returns>
         </member>
@@ -8302,17 +8280,17 @@
             <param name="isSide1">壁面1か否か</param>
             <returns>壁表面オブジェクト</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Wall.SetOverallHeatTransferCoefficient(System.Double,System.Boolean)">
+        <member name="M:Popolo.ThermalLoad.Wall.SetFilmCoefficient(System.Double,System.Boolean)">
             <summary>表面熱伝達率[W/(m^2K)]を設定する</summary>
             <param name="hCoef">表面熱伝達率[W/(m^2K)]</param>
             <param name="isSide1">1側か否か</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.Wall.SetOverallHeatTransferCoefficient(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.Wall.SetFilmCoefficient(System.Double,System.Double)">
             <summary>表面熱伝達率[W/(m^2K)]を設定する</summary>
             <param name="hCoef1">1側表面熱伝達率[W/(m^2K)]</param>
             <param name="hCoef2">2側表面熱伝達率[W/(m^2K)]</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.Wall.GetOverallHeatTransferCoefficient(System.Boolean)">
+        <member name="M:Popolo.ThermalLoad.Wall.GetFilmCoefficient(System.Boolean)">
             <summary>表面熱伝達率[W/(m^2K)]を取得する</summary>
             <param name="isSide1">1側か否か</param>
             <returns>表面熱伝達率[W/(m^2K)]</returns>
