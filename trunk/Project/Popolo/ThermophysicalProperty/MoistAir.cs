@@ -1,4 +1,4 @@
-﻿/* MoistAir.cs
+/* MoistAir.cs
  * 
  * Copyright (C) 2007 E.Togashi
  * 
@@ -41,19 +41,19 @@ namespace Popolo.ThermophysicalProperty
         private const double CP_AIR = 1.005d;
         
         /// <summary>水蒸気の定圧比熱[kJ/kg-K]</summary>
-        private const double CP_VAPOR = 1.846d;
+        private const double CP_VAPOR = 1.86d;
 
         /// <summary>水比熱[kJ/kg-K]</summary>
-        private const double CP_WATER = 4.187d;
+        private const double CP_WATER = 4.186d;
         
         /// <summary>水の蒸発潜熱[kJ/kg]</summary>
-        private const double HFG = 2501.0d;
+        private const double HFG = 2501d;
 
         /// <summary>1気圧=101.325[kPa]</summary>
         private const double ATM = 101.325d;
 
         /// <summary>乾き空気のガス定数[kJ/(kg K)]</summary>
-        private const double GAS_CONSTANT_DRY_AIR = 0.287055;
+        private const double GAS_CONSTANT_DRY_AIR = 0.287042;
 
         #endregion
 
