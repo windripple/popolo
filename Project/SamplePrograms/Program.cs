@@ -13,107 +13,11 @@ namespace SamplePrograms
 {
     class Program
     {
+        /// <summary></summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            wallTest3();
-
-            AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
-                new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
-            Sun sun = new Sun(Sun.City.Tokyo);
-            afWindow.InteriorSideOverallHeatTransferCoefficient = 15 * 4.186 / 3.6;
-            afWindow.ExteriorSideOverallHeatTransferCoefficient = 8 * 4.186 / 3.6;
-            afWindow.Sun = sun;
-
-            using (StreamReader sReader = new StreamReader("bnd.csv"))
-            using (StreamWriter sWriter = new StreamWriter("out.csv"))
-            {
-                sun.Update(new DateTime(1985, 11, 21, 0, 30, 0));
-                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600 * 0.5, 0.22 * 0.032 * 3600 * 0.5);
-                afWindow.SetBlind(0.05, 0.45);
-                for (int i = 0; i < 24; i++)
-                {
-                    string buff = sReader.ReadLine();
-                    string[] sb = buff.Split(',');
-                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
-                    afWindow.IndoorTemperature = double.Parse(sb[6]);
-                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
-                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
-                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
-                    sWriter.WriteLine(
-                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
-                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
-
-                    sun.Update(sun.CurrentDateTime.AddHours(1));
-                }
-
-                sun.Update(new DateTime(1985, 11, 19, 0, 30, 0));
-                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600, 0.22 * 0.032 * 3600);
-                afWindow.SetBlind(0.05, 0.45);
-                for (int i = 0; i < 24; i++)
-                {
-                    string buff = sReader.ReadLine();
-                    string[] sb = buff.Split(',');
-                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
-                    afWindow.IndoorTemperature = double.Parse(sb[6]);
-                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
-                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
-                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
-                    sWriter.WriteLine(
-                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
-                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
-
-                    sun.Update(sun.CurrentDateTime.AddHours(1));
-                }
-
-                sun.Update(new DateTime(1985, 12, 3, 0, 30, 0));
-                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600 * 2, 0.22 * 0.032 * 3600 * 2);
-                afWindow.SetBlind(0.05, 0.45);
-                for (int i = 0; i < 24; i++)
-                {
-                    string buff = sReader.ReadLine();
-                    string[] sb = buff.Split(',');
-                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
-                    afWindow.IndoorTemperature = double.Parse(sb[6]);
-                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
-                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
-                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
-                    sWriter.WriteLine(
-                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
-                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
-
-                    sun.Update(sun.CurrentDateTime.AddHours(1));
-                }
-
-                sun.Update(new DateTime(1985, 10, 2, 0, 30, 0));
-                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600, 0.22 * 0.032 * 3600);
-                afWindow.SetBlind(0.027, 0.243);
-                for (int i = 0; i < 24; i++)
-                {
-                    string buff = sReader.ReadLine();
-                    string[] sb = buff.Split(',');
-                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
-                    afWindow.IndoorTemperature = double.Parse(sb[6]);
-                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
-                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
-                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
-                    sWriter.WriteLine(
-                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
-                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
-
-                    sun.Update(sun.CurrentDateTime.AddHours(1));
-                }
-            }
-
-            /*sun.Update(new DateTime(1985, 10, 2, 0, 30, 0));
-            Incline sinc = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
-            Console.WriteLine(sun.GetExtraterrestrialRadiation());
-            Console.WriteLine(sun.Altitude);
-            for (int i = 0; i < 24; i++)
-            {
-                sun.Update(sun.CurrentDateTime.AddHours(1));
-                //Console.WriteLine(sun.Altitude);
-                Console.WriteLine(sinc.GetDirectSolarRadiationRate(sun));
-            }*/
+            
         }
 
         #region Chapter 1
@@ -368,7 +272,7 @@ namespace SamplePrograms
 
         #endregion
 
-        #region Chapter 6
+        #region Chapter 6_1
 
         /// <summary>Sample program calculating the charateristics of a glass panes</summary>
         private static void glassPanesTest()
@@ -491,6 +395,108 @@ namespace SamplePrograms
             }
 
             Console.Read();
+        }
+
+        /// <summary>Sample program calculating the heat gain from the air flow window</summary>
+        private static void airFlowWindowTest()
+        {
+            AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
+                    new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
+            Sun sun = new Sun(Sun.City.Tokyo);
+            afWindow.InteriorSideOverallHeatTransferCoefficient = 15 * 4.186 / 3.6;
+            afWindow.ExteriorSideOverallHeatTransferCoefficient = 8 * 4.186 / 3.6;
+            afWindow.Sun = sun;
+
+            using (StreamReader sReader = new StreamReader("bnd.csv"))
+            using (StreamWriter sWriter = new StreamWriter("out.csv"))
+            {
+                sun.Update(new DateTime(1985, 11, 21, 0, 30, 0));
+                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600 * 0.5, 0.22 * 0.032 * 3600 * 0.5);
+                afWindow.SetBlind(0.05, 0.45);
+                for (int i = 0; i < 24; i++)
+                {
+                    string buff = sReader.ReadLine();
+                    string[] sb = buff.Split(',');
+                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
+                    afWindow.IndoorTemperature = double.Parse(sb[6]);
+                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
+                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
+                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
+                    sWriter.WriteLine(
+                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
+                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
+
+                    sun.Update(sun.CurrentDateTime.AddHours(1));
+                }
+
+                sun.Update(new DateTime(1985, 11, 19, 0, 30, 0));
+                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600, 0.22 * 0.032 * 3600);
+                afWindow.SetBlind(0.05, 0.45);
+                for (int i = 0; i < 24; i++)
+                {
+                    string buff = sReader.ReadLine();
+                    string[] sb = buff.Split(',');
+                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
+                    afWindow.IndoorTemperature = double.Parse(sb[6]);
+                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
+                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
+                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
+                    sWriter.WriteLine(
+                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
+                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
+
+                    sun.Update(sun.CurrentDateTime.AddHours(1));
+                }
+
+                sun.Update(new DateTime(1985, 12, 3, 0, 30, 0));
+                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600 * 2, 0.22 * 0.032 * 3600 * 2);
+                afWindow.SetBlind(0.05, 0.45);
+                for (int i = 0; i < 24; i++)
+                {
+                    string buff = sReader.ReadLine();
+                    string[] sb = buff.Split(',');
+                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
+                    afWindow.IndoorTemperature = double.Parse(sb[6]);
+                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
+                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
+                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
+                    sWriter.WriteLine(
+                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
+                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
+
+                    sun.Update(sun.CurrentDateTime.AddHours(1));
+                }
+
+                sun.Update(new DateTime(1985, 10, 2, 0, 30, 0));
+                afWindow.SetAirFlowVolume(0.22 * 0.032 * 3600, 0.22 * 0.032 * 3600);
+                afWindow.SetBlind(0.027, 0.243);
+                for (int i = 0; i < 24; i++)
+                {
+                    string buff = sReader.ReadLine();
+                    string[] sb = buff.Split(',');
+                    afWindow.OutdoorTemperature = double.Parse(sb[2]);
+                    afWindow.IndoorTemperature = double.Parse(sb[6]);
+                    afWindow.SetInletAirTemperature(afWindow.IndoorTemperature);
+                    afWindow.SetNocturnalRadiation(double.Parse(sb[7]));
+                    sun.SetGlobalHorizontalRadiation(double.Parse(sb[9]), double.Parse(sb[8]));
+                    sWriter.WriteLine(
+                        afWindow.GetExteriorGlassTemperature() + "," + afWindow.GetBlindTemperature() + "," +
+                        afWindow.GetInteriorGlassTemperature() + "," + afWindow.GetHeatRemovalByAirFlow());
+
+                    sun.Update(sun.CurrentDateTime.AddHours(1));
+                }
+            }
+
+            /*sun.Update(new DateTime(1985, 10, 2, 0, 30, 0));
+            Incline sinc = new Incline(Incline.Orientation.S, 0.5 * Math.PI);
+            Console.WriteLine(sun.GetExtraterrestrialRadiation());
+            Console.WriteLine(sun.Altitude);
+            for (int i = 0; i < 24; i++)
+            {
+                sun.Update(sun.CurrentDateTime.AddHours(1));
+                //Console.WriteLine(sun.Altitude);
+                Console.WriteLine(sinc.GetDirectSolarRadiationRate(sun));
+            }*/
         }
 
         /// <summary>Sample program calculating the thermal transimission of the wall layers</summary>
@@ -699,6 +705,530 @@ namespace SamplePrograms
                 Console.WriteLine();
             }
             Console.Read();
+        }
+
+        #endregion
+
+        #region Chapter 6_2
+
+        /// <summary>Sample program calculating the air state and heat load of the building (Zone class)</summary>
+        private static void AirStateAndHeatLoadTest1()
+        {
+            //A sample weather data
+            //Drybulb temperature [C]
+            double[] dbt = new double[] { 24.2, 24.1, 24.1, 24.2, 24.3, 24.2, 24.4, 25.1, 26.1, 27.1, 28.8, 29.9,
+                30.7, 31.2, 31.6, 31.4, 31.3, 30.8, 29.4, 28.1, 27.5, 27.1, 26.6, 26.3 };
+            //Humidity ratio [kg/kg(DA)]
+            double[] hum = new double[] { 0.0134, 0.0136, 0.0134, 0.0133, 0.0131, 0.0134, 0.0138, 0.0142, 0.0142, 0.0140, 0.0147, 0.0149,
+                0.0142, 0.0146, 0.0140, 0.0145, 0.0144, 0.0146, 0.0142, 0.0136, 0.0136, 0.0135, 0.0136, 0.0140 };
+            //Nocturnal radiation [W/m2]
+            double[] nrd = new double[] { 32, 30, 30, 29, 26, 24, 24, 25, 25, 25, 24, 24, 24, 23, 24, 24, 24, 24, 23, 23, 24, 26, 25, 23 };
+            //Direct normal radiation [W/m2]
+            double[] dnr = new double[] { 0, 0, 0, 0, 0, 0, 106, 185, 202, 369, 427, 499, 557, 522, 517, 480, 398, 255, 142, 2, 0, 0, 0, 0 };
+            //Diffuse horizontal radiation [W/m2]
+            double[] drd = new double[] { 0, 0, 0, 0, 0, 0, 36, 115, 198, 259, 314, 340, 340, 349, 319, 277, 228, 167, 87, 16, 0, 0, 0, 0 };
+
+            //Create an instance of the Outdoor class
+            Outdoor outdoor = new Outdoor();
+            Sun sun = new Sun(Sun.City.Tokyo);  //Located in Tokyo
+            outdoor.Sun = sun;
+            outdoor.GroundTemperature = 25;     //Ground temperature is assumed to be constant
+
+            //Create an instance of the Incline class
+            Incline nIn = new Incline(Incline.Orientation.N, 0.5 * Math.PI); //North, Vertical
+            Incline eIn = new Incline(Incline.Orientation.E, 0.5 * Math.PI); //East, Vertical
+            Incline wIn = new Incline(Incline.Orientation.W, 0.5 * Math.PI); //West, Vertical
+            Incline sIn = new Incline(Incline.Orientation.S, 0.5 * Math.PI); //South, Vertical
+            Incline hIn = new Incline(Incline.Orientation.S, 0);  //Horizontal
+
+            //Create an instance of the Zone class
+            Zone[] zones = new Zone[4];
+            Zone wpZone = zones[0] = new Zone("West perimeter zone");
+            wpZone.Volume = 3 * 5 * 3;  //Ceiling height is 3m
+            Zone wiZone = zones[1] = new Zone("West interior zone");
+            wiZone.Volume = 4 * 5 * 3;
+            Zone epZone = zones[2] = new Zone("East perimeter zone");
+            epZone.Volume = 3 * 5 * 3;
+            Zone eiZone = zones[3] = new Zone("East interior zone");
+            eiZone.Volume = 4 * 5 * 3;
+            foreach (Zone zn in zones)
+            {
+                zn.VentilationVolume = 10; //Ventilation volume[CMH]
+                zn.TimeStep = 3600;
+                zn.DrybulbTemperatureSetPoint = 26;
+                zn.HumidityRatioSetPoint = 0.01;
+            }
+
+            //Set a heat production element to the east interior zone
+            //Convective sensible heat=100W, Radiative sensible heat=100W, Latent heat=20W
+            eiZone.AddHeatGain(new ConstantHeatGain(100, 100, 20));
+
+            //Create an instance of the WallLayers class : Concrete,400mm
+            WallLayers wl = new WallLayers();
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.ReinforcedConcrete), 0.4));
+
+            //Create an instance of the GlassPanes class:Low-emissivity coating single glass
+            GlassPanes gPanes = new GlassPanes(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatReflectingGlass06mm));
+
+            //Set wall surfaces to the zone objects
+            Wall[] walls = new Wall[18];
+            List<WallSurface> outdoorSurfaces = new List<WallSurface>();
+            Wall wpwWall = walls[0] = new Wall(wl, "West wall in the west perimeter zone");
+            wpwWall.SurfaceArea = 3 * 3;
+            outdoorSurfaces.Add(wpwWall.GetSurface(true));
+            wpZone.AddSurface(wpwWall.GetSurface(false));
+            wpwWall.SetIncline(wIn, true);
+
+            Wall wpcWall = walls[1] = new Wall(wl, "Ceiling in the west perimeter zone");
+            wpcWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(wpcWall.GetSurface(true));
+            wpZone.AddSurface(wpcWall.GetSurface(false));
+            wpcWall.SetIncline(hIn, true);
+
+            Wall wpfWall = walls[2] = new Wall(wl, "Floor in the west perimeter zone");
+            wpfWall.SurfaceArea = 3 * 5;
+            outdoor.AddGroundWallSurface(wpfWall.GetSurface(true));
+            wpZone.AddSurface(wpfWall.GetSurface(false));
+
+            Wall winWall = walls[3] = new Wall(wl, "North wall in the west interior zone");
+            winWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(winWall.GetSurface(true));
+            wiZone.AddSurface(winWall.GetSurface(false));
+            winWall.SetIncline(nIn, true);
+
+            Wall wiwWall = walls[4] = new Wall(wl, "West wall in the west interior zone");
+            wiwWall.SurfaceArea = 3 * 4;
+            outdoorSurfaces.Add(wiwWall.GetSurface(true));
+            wiZone.AddSurface(wiwWall.GetSurface(false));
+            wiwWall.SetIncline(wIn, true);
+
+            Wall wicWall = walls[5] = new Wall(wl, "Ceiling in the west interior zone");
+            wicWall.SurfaceArea = 4 * 5;
+            outdoorSurfaces.Add(wicWall.GetSurface(true));
+            wiZone.AddSurface(wicWall.GetSurface(false));
+            wicWall.SetIncline(hIn, true);
+
+            Wall wifWall = walls[6] = new Wall(wl, "Floor in the west interior zone");
+            wifWall.SurfaceArea = 4 * 5;
+            outdoor.AddGroundWallSurface(wifWall.GetSurface(true));
+            wiZone.AddSurface(wifWall.GetSurface(false));
+
+            Wall epwWall = walls[7] = new Wall(wl, "East wall in the east perimeter zone");
+            epwWall.SurfaceArea = 3 * 3;
+            outdoorSurfaces.Add(epwWall.GetSurface(true));
+            epZone.AddSurface(epwWall.GetSurface(false));
+            epwWall.SetIncline(eIn, true);
+
+            Wall epcWall = walls[8] = new Wall(wl, "Ceiling in the east perimeter zone");
+            epcWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(epcWall.GetSurface(true));
+            epZone.AddSurface(epcWall.GetSurface(false));
+            epcWall.SetIncline(hIn, true);
+
+            Wall epfWall = walls[9] = new Wall(wl, "Floor in the east perimeter zone");
+            epfWall.SurfaceArea = 3 * 5;
+            outdoor.AddGroundWallSurface(epfWall.GetSurface(true));
+            epZone.AddSurface(epfWall.GetSurface(false));
+
+            Wall einWall = walls[10] = new Wall(wl, "North wall in the east interior zone");
+            einWall.SurfaceArea = 5 * 3;
+            outdoorSurfaces.Add(einWall.GetSurface(true));
+            eiZone.AddSurface(einWall.GetSurface(false));
+            einWall.SetIncline(nIn, true);
+
+            Wall eiwWall = walls[11] = new Wall(wl, "East wall in the east interior zone");
+            eiwWall.SurfaceArea = 4 * 3;
+            outdoorSurfaces.Add(eiwWall.GetSurface(true));
+            eiZone.AddSurface(eiwWall.GetSurface(false));
+            eiwWall.SetIncline(eIn, true);
+
+            Wall eicWall = walls[12] = new Wall(wl, "Ceiling in the east interior zone");
+            eicWall.SurfaceArea = 4 * 5;
+            outdoorSurfaces.Add(eicWall.GetSurface(true));
+            eiZone.AddSurface(eicWall.GetSurface(false));
+            eicWall.SetIncline(hIn, true);
+
+            Wall eifWall = walls[13] = new Wall(wl, "Floor in the east interior zone");
+            eifWall.SurfaceArea = 4 * 5;
+            outdoor.AddGroundWallSurface(eifWall.GetSurface(true));
+            eiZone.AddSurface(eifWall.GetSurface(false));
+
+            Wall cpWall = walls[14] = new Wall(wl, "Inner wall at perimeter");
+            cpWall.SurfaceArea = 3 * 3;
+            wpZone.AddSurface(cpWall.GetSurface(true));
+            epZone.AddSurface(cpWall.GetSurface(false));
+
+            Wall ciWall = walls[15] = new Wall(wl, "Inner wall at interior");
+            ciWall.SurfaceArea = 4 * 3;
+            wiZone.AddSurface(ciWall.GetSurface(true));
+            eiZone.AddSurface(ciWall.GetSurface(false));
+
+            Wall wpsWall = walls[16] = new Wall(wl, "South wall in the west perimeter zone");
+            wpsWall.SurfaceArea = 5 * 3 - 3 * 2;    //Reduce window surface area
+            outdoorSurfaces.Add(wpsWall.GetSurface(true));
+            wpZone.AddSurface(wpsWall.GetSurface(false));
+            wpsWall.SetIncline(sIn, true);
+
+            Wall epsWall = walls[17] = new Wall(wl, "South wall in the east perimeter zone");
+            epsWall.SurfaceArea = 5 * 3 - 3 * 2;    //Reduce window surface area
+            outdoorSurfaces.Add(epsWall.GetSurface(true));
+            epZone.AddSurface(epsWall.GetSurface(false));
+            epsWall.SetIncline(sIn, true);
+
+            //Initialize outdoor surfaces
+            foreach (WallSurface ws in outdoorSurfaces)
+            {
+                //Add wall surfaces to Outdoor object
+                outdoor.AddWallSurface(ws);
+                //Initialize emissivity of surface
+                ws.InitializeEmissivity(WallSurface.SurfaceMaterial.Concrete);
+            }
+
+            //Add windows to the west zone
+            Window wWind = new Window(gPanes, "Window in the west perimeter zone");
+            wWind.SurfaceArea = 3 * 2;
+            wpZone.AddWindow(wWind);
+            outdoor.AddWindow(wWind);
+            //Add windows to the east zone
+            Window eWind = new Window(gPanes, "Window in the east perimeter zone");
+            eWind.SurfaceArea = 3 * 2;
+            //Set horizontal sun shade.
+            eWind.Shade = SunShade.MakeHorizontalSunShade(3, 2, 1, 1, 1, 0.5, sIn);
+            wpZone.AddWindow(eWind);
+            outdoor.AddWindow(eWind);
+
+            //Output title wrine to standard output stream
+            StreamWriter sWriter = new StreamWriter("AirStateAndHeatLoadTest1.csv");
+            foreach (Zone zn in zones) sWriter.Write(zn.Name + "Drybulb temperature[C], " + zn.Name +
+                                      "Humidity ratio[kg/kgDA], " + zn.Name + "Sensible heat load[W], " + zn.Name + "Latent heat load[W], ");
+            sWriter.WriteLine();
+
+            //Update the state (Iterate 100 times to make state steady)
+            for (int i = 0; i < 100; i++)
+            {
+                DateTime dTime = new DateTime(2007, 8, 3, 0, 0, 0);
+                for (int j = 0; j < 24; j++)
+                {
+                    //Set date and time to Sun and Zone object.
+                    sun.Update(dTime);
+                    foreach (Zone zn in zones) zn.CurrentDateTime = dTime;
+
+                    //Operate HVAC system (8:00~19:00)
+                    bool operating = (8 <= dTime.Hour && dTime.Hour <= 19);
+                    foreach (Zone zn in zones)
+                    {
+                        zn.ControlHumidityRatio = operating;
+                        zn.ControlDrybulbTemperature = operating;
+                    }
+
+                    //Set weather state.
+                    outdoor.AirState = new MoistAir(dbt[j], hum[j]);
+                    outdoor.NocturnalRadiation = nrd[j];
+                    sun.SetGlobalHorizontalRadiation(drd[j], dnr[j]);
+
+                    //Set ventilation air state.
+                    eiZone.VentilationAirState = new MoistAir(epZone.CurrentDrybulbTemperature, eiZone.CurrentHumidityRatio);
+                    epZone.VentilationAirState = new MoistAir(eiZone.CurrentDrybulbTemperature, eiZone.CurrentHumidityRatio);
+                    wpZone.VentilationAirState = outdoor.AirState;
+                    wiZone.VentilationAirState = new MoistAir(wpZone.CurrentDrybulbTemperature, wpZone.CurrentHumidityRatio);
+
+                    //Update boundary state of outdoor facing surfaces.
+                    outdoor.SetWallSurfaceBoundaryState();
+
+                    //Update the walls.
+                    foreach (Wall wal in walls) wal.Update();
+
+                    //Update the zones.
+                    foreach (Zone zn in zones) zn.Update();
+
+                    //Update date and time
+                    dTime = dTime.AddHours(1);
+
+                    //If it is last iteration, output result to CSV text.
+                    if (i == 99)
+                    {
+                        foreach (Zone zn in zones)
+                        {
+                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentHumidityRatio.ToString("F3") + ", " +
+                            zn.CurrentSensibleHeatLoad.ToString("F0") + ", " + zn.CurrentLatentHeatLoad.ToString("F0") + ", ");
+                        }
+                        sWriter.WriteLine();
+                    }
+                }
+            }
+
+            sWriter.Close();
+        }
+
+        /// <summary>Sample program calculating the air state and heat load of the building (MultiRoom class)</summary>
+        private static void AirStateAndHeatLoadTest2()
+        {
+            //A sample weather data
+            //Drybulb temperature [C]
+            double[] dbt = new double[] { 24.2, 24.1, 24.1, 24.2, 24.3, 24.2, 24.4, 25.1, 26.1, 27.1, 28.8, 29.9,
+                30.7, 31.2, 31.6, 31.4, 31.3, 30.8, 29.4, 28.1, 27.5, 27.1, 26.6, 26.3 };
+            //Humidity ratio [kg/kg(DA)]
+            double[] hum = new double[] { 0.0134, 0.0136, 0.0134, 0.0133, 0.0131, 0.0134, 0.0138, 0.0142, 0.0142, 0.0140, 0.0147, 0.0149,
+                0.0142, 0.0146, 0.0140, 0.0145, 0.0144, 0.0146, 0.0142, 0.0136, 0.0136, 0.0135, 0.0136, 0.0140 };
+            //Nocturnal radiation [W/m2]
+            double[] nrd = new double[] { 32, 30, 30, 29, 26, 24, 24, 25, 25, 25, 24, 24, 24, 23, 24, 24, 24, 24, 23, 23, 24, 26, 25, 23 };
+            //Direct normal radiation [W/m2]
+            double[] dnr = new double[] { 0, 0, 0, 0, 0, 0, 106, 185, 202, 369, 427, 499, 557, 522, 517, 480, 398, 255, 142, 2, 0, 0, 0, 0 };
+            //Diffuse horizontal radiation [W/m2]
+            double[] drd = new double[] { 0, 0, 0, 0, 0, 0, 36, 115, 198, 259, 314, 340, 340, 349, 319, 277, 228, 167, 87, 16, 0, 0, 0, 0 };
+
+            //Create an instance of the Outdoor class
+            Outdoor outdoor = new Outdoor();
+            Sun sun = new Sun(Sun.City.Tokyo);  //Located in Tokyo
+            outdoor.Sun = sun;
+            outdoor.GroundTemperature = 25;     //Ground temperature is assumed to be constant
+
+            //Create an instance of the Incline class
+            Incline nIn = new Incline(Incline.Orientation.N, 0.5 * Math.PI); //North, Vertical
+            Incline eIn = new Incline(Incline.Orientation.E, 0.5 * Math.PI); //East, Vertical
+            Incline wIn = new Incline(Incline.Orientation.W, 0.5 * Math.PI); //West, Vertical
+            Incline sIn = new Incline(Incline.Orientation.S, 0.5 * Math.PI); //South, Vertical
+            Incline hIn = new Incline(Incline.Orientation.S, 0);  //Horizontal
+
+            //Create an instance of the Zone class
+            Zone[] zones = new Zone[4];
+            Zone wpZone = zones[0] = new Zone("West perimeter zone");
+            wpZone.Volume = 3 * 5 * 3;  //Ceiling height is 3m
+            Zone wiZone = zones[1] = new Zone("West interior zone");
+            wiZone.Volume = 4 * 5 * 3;
+            Zone epZone = zones[2] = new Zone("East perimeter zone");
+            epZone.Volume = 3 * 5 * 3;
+            Zone eiZone = zones[3] = new Zone("East interior zone");
+            eiZone.Volume = 4 * 5 * 3;
+            foreach (Zone zn in zones)
+            {
+                zn.VentilationVolume = 10; //Ventilation volume[CMH]
+                zn.TimeStep = 3600;
+                zn.DrybulbTemperatureSetPoint = 26;
+                zn.HumidityRatioSetPoint = 0.01;
+            }
+
+            //Set a heat production element to the east interior zone
+            //Convective sensible heat=100W, Radiative sensible heat=100W, Latent heat=20W
+            eiZone.AddHeatGain(new ConstantHeatGain(100, 100, 20));
+
+            //Create an instance of the WallLayers class : Concrete,400mm
+            WallLayers wl = new WallLayers();
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.ReinforcedConcrete), 0.4));
+
+            //Create an instance of the GlassPanes class:Low-emissivity coating single glass
+            GlassPanes gPanes = new GlassPanes(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatReflectingGlass06mm));
+
+            //Set wall surfaces to the zone objects
+            Wall[] walls = new Wall[18];
+            List<WallSurface> outdoorSurfaces = new List<WallSurface>();
+            Wall wpwWall = walls[0] = new Wall(wl, "West wall in the west perimeter zone");
+            wpwWall.SurfaceArea = 3 * 3;
+            outdoorSurfaces.Add(wpwWall.GetSurface(true));
+            wpZone.AddSurface(wpwWall.GetSurface(false));
+            wpwWall.SetIncline(wIn, true);
+
+            Wall wpcWall = walls[1] = new Wall(wl, "Ceiling in the west perimeter zone");
+            wpcWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(wpcWall.GetSurface(true));
+            wpZone.AddSurface(wpcWall.GetSurface(false));
+            wpcWall.SetIncline(hIn, true);
+
+            Wall wpfWall = walls[2] = new Wall(wl, "Floor in the west perimeter zone");
+            wpfWall.SurfaceArea = 3 * 5;
+            outdoor.AddGroundWallSurface(wpfWall.GetSurface(true));
+            wpZone.AddSurface(wpfWall.GetSurface(false));
+
+            Wall winWall = walls[3] = new Wall(wl, "North wall in the west interior zone");
+            winWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(winWall.GetSurface(true));
+            wiZone.AddSurface(winWall.GetSurface(false));
+            winWall.SetIncline(nIn, true);
+
+            Wall wiwWall = walls[4] = new Wall(wl, "West wall in the west interior zone");
+            wiwWall.SurfaceArea = 3 * 4;
+            outdoorSurfaces.Add(wiwWall.GetSurface(true));
+            wiZone.AddSurface(wiwWall.GetSurface(false));
+            wiwWall.SetIncline(wIn, true);
+
+            Wall wicWall = walls[5] = new Wall(wl, "Ceiling in the west interior zone");
+            wicWall.SurfaceArea = 4 * 5;
+            outdoorSurfaces.Add(wicWall.GetSurface(true));
+            wiZone.AddSurface(wicWall.GetSurface(false));
+            wicWall.SetIncline(hIn, true);
+
+            Wall wifWall = walls[6] = new Wall(wl, "Floor in the west interior zone");
+            wifWall.SurfaceArea = 4 * 5;
+            outdoor.AddGroundWallSurface(wifWall.GetSurface(true));
+            wiZone.AddSurface(wifWall.GetSurface(false));
+
+            Wall epwWall = walls[7] = new Wall(wl, "East wall in the east perimeter zone");
+            epwWall.SurfaceArea = 3 * 3;
+            outdoorSurfaces.Add(epwWall.GetSurface(true));
+            epZone.AddSurface(epwWall.GetSurface(false));
+            epwWall.SetIncline(eIn, true);
+
+            Wall epcWall = walls[8] = new Wall(wl, "Ceiling in the east perimeter zone");
+            epcWall.SurfaceArea = 3 * 5;
+            outdoorSurfaces.Add(epcWall.GetSurface(true));
+            epZone.AddSurface(epcWall.GetSurface(false));
+            epcWall.SetIncline(hIn, true);
+
+            Wall epfWall = walls[9] = new Wall(wl, "Floor in the east perimeter zone");
+            epfWall.SurfaceArea = 3 * 5;
+            outdoor.AddGroundWallSurface(epfWall.GetSurface(true));
+            epZone.AddSurface(epfWall.GetSurface(false));
+
+            Wall einWall = walls[10] = new Wall(wl, "North wall in the east interior zone");
+            einWall.SurfaceArea = 5 * 3;
+            outdoorSurfaces.Add(einWall.GetSurface(true));
+            eiZone.AddSurface(einWall.GetSurface(false));
+            einWall.SetIncline(nIn, true);
+
+            Wall eiwWall = walls[11] = new Wall(wl, "East wall in the east interior zone");
+            eiwWall.SurfaceArea = 4 * 3;
+            outdoorSurfaces.Add(eiwWall.GetSurface(true));
+            eiZone.AddSurface(eiwWall.GetSurface(false));
+            eiwWall.SetIncline(eIn, true);
+
+            Wall eicWall = walls[12] = new Wall(wl, "Ceiling in the east interior zone");
+            eicWall.SurfaceArea = 4 * 5;
+            outdoorSurfaces.Add(eicWall.GetSurface(true));
+            eiZone.AddSurface(eicWall.GetSurface(false));
+            eicWall.SetIncline(hIn, true);
+
+            Wall eifWall = walls[13] = new Wall(wl, "Floor in the east interior zone");
+            eifWall.SurfaceArea = 4 * 5;
+            outdoor.AddGroundWallSurface(eifWall.GetSurface(true));
+            eiZone.AddSurface(eifWall.GetSurface(false));
+
+            Wall cpWall = walls[14] = new Wall(wl, "Inner wall at perimeter");
+            cpWall.SurfaceArea = 3 * 3;
+            wpZone.AddSurface(cpWall.GetSurface(true));
+            epZone.AddSurface(cpWall.GetSurface(false));
+
+            Wall ciWall = walls[15] = new Wall(wl, "Inner wall at interior");
+            ciWall.SurfaceArea = 4 * 3;
+            wiZone.AddSurface(ciWall.GetSurface(true));
+            eiZone.AddSurface(ciWall.GetSurface(false));
+
+            Wall wpsWall = walls[16] = new Wall(wl, "South wall in the west perimeter zone");
+            wpsWall.SurfaceArea = 5 * 3 - 3 * 2;    //Reduce window surface area
+            outdoorSurfaces.Add(wpsWall.GetSurface(true));
+            wpZone.AddSurface(wpsWall.GetSurface(false));
+            wpsWall.SetIncline(sIn, true);
+
+            Wall epsWall = walls[17] = new Wall(wl, "South wall in the east perimeter zone");
+            epsWall.SurfaceArea = 5 * 3 - 3 * 2;    //Reduce window surface area
+            outdoorSurfaces.Add(epsWall.GetSurface(true));
+            epZone.AddSurface(epsWall.GetSurface(false));
+            epsWall.SetIncline(sIn, true);
+
+            //Initialize outdoor surfaces
+            foreach (WallSurface ws in outdoorSurfaces)
+            {
+                //Add wall surfaces to Outdoor object
+                outdoor.AddWallSurface(ws);
+                //Initialize emissivity of surface
+                ws.InitializeEmissivity(WallSurface.SurfaceMaterial.Concrete);
+            }
+
+            //Add windows to the west zone
+            Window wWind = new Window(gPanes, "Window in the west perimeter zone");
+            wWind.SurfaceArea = 3 * 2;
+            wpZone.AddWindow(wWind);
+            outdoor.AddWindow(wWind);
+            //Add windows to the east zone
+            Window eWind = new Window(gPanes, "Window in the east perimeter zone");
+            eWind.SurfaceArea = 3 * 2;
+            //Set horizontal sun shade.
+            eWind.Shade = SunShade.MakeHorizontalSunShade(3, 2, 1, 1, 1, 0.5, sIn);
+            wpZone.AddWindow(eWind);
+            outdoor.AddWindow(eWind);
+
+            //Creat an insances of the Room class and MultiRoom class
+            Room eRm = new Room(new Zone[] { epZone, eiZone }); //East room
+            Room wRm = new Room(new Zone[] { wpZone, wiZone }); //Weast room
+            MultiRoom mRoom = new MultiRoom(new Room[] { eRm, wRm }); //Multi room (east and west rooms)
+            mRoom.SetTimeStep(3600);
+
+            //Set ventilation volume
+            wpZone.VentilationVolume = 10; //Only west perimeter zone has outdoor air ventilation
+            mRoom.SetAirFlow(wpZone, wiZone, 10);
+            mRoom.SetAirFlow(epZone, eiZone, 10);
+            mRoom.SetAirFlow(eiZone, epZone, 10);
+
+            //Set short wave radiation distribution:60% of short wave is distributed to perimeter floor.
+            double sfSum = 0;
+            foreach (ISurface isf in eRm.GetSurface()) sfSum += isf.Area;
+            sfSum -= epfWall.SurfaceArea;
+            foreach (ISurface isf in eRm.GetSurface()) eRm.SetShortWaveRadiationRate(isf, isf.Area / sfSum * 0.4);
+            eRm.SetShortWaveRadiationRate(epfWall.GetSurface(false), 0.6);
+            sfSum = 0;
+            foreach (ISurface isf in wRm.GetSurface()) sfSum += isf.Area;
+            sfSum -= wpfWall.SurfaceArea;
+            foreach (ISurface isf in wRm.GetSurface()) wRm.SetShortWaveRadiationRate(isf, isf.Area / sfSum * 0.4);
+            wRm.SetShortWaveRadiationRate(wpfWall.GetSurface(false), 0.6);
+
+            //Output title wrine to standard output stream
+            StreamWriter sWriter = new StreamWriter("AirStateAndHeatLoadTest2.csv");
+            foreach (Zone zn in zones) sWriter.Write(zn.Name + "Drybulb temperature[C], " + zn.Name +
+                                      "Humidity ratio[kg/kgDA], " + zn.Name + "Sensible heat load[W], " + zn.Name + "Latent heat load[W], ");
+            sWriter.WriteLine();
+
+            //Update the state (Iterate 100 times to make state steady)
+            for (int i = 0; i < 100; i++)
+            {
+                DateTime dTime = new DateTime(2007, 8, 3, 0, 0, 0);
+                for (int j = 0; j < 24; j++)
+                {
+                    //Set date and time to Sun and Zone object.
+                    sun.Update(dTime);
+                    mRoom.SetCurrentDateTime(dTime);
+
+                    //Operate HVAC system (8:00~19:00)
+                    bool operating = (8 <= dTime.Hour && dTime.Hour <= 19);
+                    foreach (Zone zn in zones)
+                    {
+                        zn.ControlHumidityRatio = operating;
+                        zn.ControlDrybulbTemperature = operating;
+                    }
+
+                    //Set weather state.
+                    outdoor.AirState = new MoistAir(dbt[j], hum[j]);
+                    outdoor.NocturnalRadiation = nrd[j];
+                    sun.SetGlobalHorizontalRadiation(drd[j], dnr[j]);
+
+                    //Set ventilation air state.
+                    wpZone.VentilationAirState = outdoor.AirState;
+
+                    //Update boundary state of outdoor facing surfaces.
+                    outdoor.SetWallSurfaceBoundaryState();
+
+                    //Update the walls.
+                    foreach (Wall wal in walls) wal.Update();
+
+                    //Update the MultiRoom object.
+                    mRoom.UpdateRoomTemperatures();
+                    mRoom.UpdateRoomHumidities();
+
+                    //Update date and time
+                    dTime = dTime.AddHours(1);
+
+                    //If it is last iteration, output result to CSV text.
+                    if (i == 99)
+                    {
+                        foreach (Zone zn in zones)
+                        {
+                            sWriter.Write(zn.CurrentDrybulbTemperature.ToString("F1") + ", " + zn.CurrentHumidityRatio.ToString("F3") + ", " +
+                            zn.CurrentSensibleHeatLoad.ToString("F0") + ", " + zn.CurrentLatentHeatLoad.ToString("F0") + ", ");
+                        }
+                        sWriter.WriteLine();
+                    }
+                }
+            }
+
+            sWriter.Close();
         }
 
         #endregion
