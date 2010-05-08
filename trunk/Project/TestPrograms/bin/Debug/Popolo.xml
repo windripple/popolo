@@ -6078,7 +6078,7 @@
         <member name="P:Popolo.ThermalLoad.ImmutableSunShade.WindowWidth">
             <summary>窓幅[m]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.ImmutableSunShade.Pendent">
+        <member name="P:Popolo.ThermalLoad.ImmutableSunShade.Overhang">
             <summary>張り出し幅[m]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.ImmutableSunShade.TopMargin">
@@ -6108,7 +6108,7 @@
         <member name="F:Popolo.ThermalLoad.SunShade.windowWidth">
             <summary>窓幅[m]</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.SunShade.pendent">
+        <member name="F:Popolo.ThermalLoad.SunShade.overhang">
             <summary>張り出し幅[m]</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.SunShade.topMargin">
@@ -6139,7 +6139,7 @@
             <summary>水平庇を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="leftMargin">左側マージン[m]</param>
             <param name="rightMargin">右側マージン[m]</param>
             <param name="topMargin">上部マージン[m]</param>
@@ -6150,7 +6150,7 @@
             <summary>水平庇（無限大長）を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="topMargin">上部マージン[m]</param>
             <param name="incline">傾斜面</param>
             <returns>水平庇（無限大長）</returns>
@@ -6159,7 +6159,7 @@
             <summary>袖壁を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="sideMargin">横側マージン[m]</param>
             <param name="isLeftSide">左側か否か（右の場合はfalse）</param>
             <param name="topMargin">上部マージン[m]</param>
@@ -6171,7 +6171,7 @@
             <summary>袖壁（無限長）を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="sideMargin">横側マージン[m]</param>
             <param name="isLeftSide">左側か否か（右の場合はfalse）</param>
             <param name="incline">傾斜面</param>
@@ -6181,7 +6181,7 @@
             <summary>袖壁を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="sideMargin">横側マージン[m]</param>
             <param name="topMargin">上部マージン[m]</param>
             <param name="bottomMargin">下部マージン[m]</param>
@@ -6192,7 +6192,7 @@
             <summary>袖壁（無限長）を作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="sideMargin">横側マージン[m]</param>
             <param name="incline">傾斜面</param>
             <returns>袖壁（無限長）</returns>
@@ -6201,7 +6201,7 @@
             <summary>ルーバーを作成する</summary>
             <param name="windowWidth">窓幅[m]</param>
             <param name="windowHeight">窓高[m]</param>
-            <param name="pendent">張り出し幅[m]</param>
+            <param name="overhang">張り出し幅[m]</param>
             <param name="leftMargin">左側マージン[m]</param>
             <param name="rightMargin">右側マージン[m]</param>
             <param name="topMargin">上部マージン[m]</param>
@@ -6230,7 +6230,7 @@
         <member name="P:Popolo.ThermalLoad.SunShade.WindowWidth">
             <summary>窓幅[m]を取得する</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.SunShade.Pendent">
+        <member name="P:Popolo.ThermalLoad.SunShade.Overhang">
             <summary>張り出し幅[m]を取得する</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.SunShade.TopMargin">

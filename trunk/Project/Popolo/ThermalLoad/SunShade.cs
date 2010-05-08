@@ -74,7 +74,7 @@ namespace Popolo.ThermalLoad
         private double windowWidth;
 
         /// <summary>張り出し幅[m]</summary>
-        private double pendent;
+        private double overhang;
 
         /// <summary>上部マージン[m]</summary>
         private double topMargin;
@@ -160,11 +160,11 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>張り出し幅[m]を取得する</summary>
-        public double Pendent
+        public double Overhang
         {
             get
             {
-                return pendent;
+                return overhang;
             }
         }
 
@@ -231,7 +231,7 @@ namespace Popolo.ThermalLoad
             this.IsReverse = sunShade.IsReverse;
             this.leftMargin = sunShade.LeftMargin;
             this.Name = sunShade.Name;
-            this.pendent = sunShade.Pendent;
+            this.overhang = sunShade.Overhang;
             this.rightMargin = sunShade.RightMargin;
             this.ssShape = sunShade.SunShadeShape;
             this.topMargin = sunShade.TopMargin;
@@ -251,8 +251,8 @@ namespace Popolo.ThermalLoad
                 double tanGamma, tanPhi;
                 if (incline.GetDirectSolarRadiationRate(sun) <= 0) return 1;
                 incline.GetTanPhiAndGamma(sun, out tanPhi, out tanGamma);
-                double da = pendent * tanGamma;
-                double dp = pendent * tanPhi;
+                double da = overhang * tanGamma;
+                double dp = overhang * tanPhi;
 
                 switch (ssShape)
                 {
@@ -303,20 +303,20 @@ namespace Popolo.ThermalLoad
         /// <summary>水平庇を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="leftMargin">左側マージン[m]</param>
         /// <param name="rightMargin">右側マージン[m]</param>
         /// <param name="topMargin">上部マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>水平庇</returns>
-        public static SunShade MakeHorizontalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeHorizontalSunShade(double windowWidth, double windowHeight, double overhang,
             double leftMargin, double rightMargin, double topMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.ssShape = Shape.Horizontal;
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             ss.leftMargin = leftMargin;
             ss.rightMargin = rightMargin;
             ss.topMargin = topMargin;
@@ -327,18 +327,18 @@ namespace Popolo.ThermalLoad
         /// <summary>水平庇（無限大長）を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="topMargin">上部マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>水平庇（無限大長）</returns>
-        public static SunShade MakeHorizontalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeHorizontalSunShade(double windowWidth, double windowHeight, double overhang,
             double topMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.ssShape = Shape.LongHorizontal;
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             ss.topMargin = topMargin;
             ss.incline.Copy(incline);
             return ss;
@@ -347,20 +347,20 @@ namespace Popolo.ThermalLoad
         /// <summary>袖壁を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="sideMargin">横側マージン[m]</param>
         /// <param name="isLeftSide">左側か否か（右の場合はfalse）</param>
         /// <param name="topMargin">上部マージン[m]</param>
         /// <param name="bottomMargin">下部マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>袖壁</returns>
-        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double overhang,
             double sideMargin, bool isLeftSide, double topMargin, double bottomMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             if (isLeftSide)
             {
                 ss.ssShape = Shape.VerticalLeft;
@@ -380,18 +380,18 @@ namespace Popolo.ThermalLoad
         /// <summary>袖壁（無限長）を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="sideMargin">横側マージン[m]</param>
         /// <param name="isLeftSide">左側か否か（右の場合はfalse）</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>袖壁（無限長）</returns>
-        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double overhang,
             double sideMargin, bool isLeftSide, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             if (isLeftSide)
             {
                 ss.ssShape = Shape.LongVerticalLeft;
@@ -409,19 +409,19 @@ namespace Popolo.ThermalLoad
         /// <summary>袖壁を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="sideMargin">横側マージン[m]</param>
         /// <param name="topMargin">上部マージン[m]</param>
         /// <param name="bottomMargin">下部マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>袖壁</returns>
-        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double overhang,
             double sideMargin, double topMargin, double bottomMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             ss.ssShape = Shape.VerticalBoth;
             ss.leftMargin = sideMargin;
             ss.rightMargin = sideMargin;
@@ -434,17 +434,17 @@ namespace Popolo.ThermalLoad
         /// <summary>袖壁（無限長）を作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="sideMargin">横側マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>袖壁（無限長）</returns>
-        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeVerticalSunShade(double windowWidth, double windowHeight, double overhang,
             double sideMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             ss.ssShape = Shape.LongVerticalBoth;
             ss.leftMargin = sideMargin;
             ss.rightMargin = sideMargin;
@@ -455,21 +455,21 @@ namespace Popolo.ThermalLoad
         /// <summary>ルーバーを作成する</summary>
         /// <param name="windowWidth">窓幅[m]</param>
         /// <param name="windowHeight">窓高[m]</param>
-        /// <param name="pendent">張り出し幅[m]</param>
+        /// <param name="overhang">張り出し幅[m]</param>
         /// <param name="leftMargin">左側マージン[m]</param>
         /// <param name="rightMargin">右側マージン[m]</param>
         /// <param name="topMargin">上部マージン[m]</param>
         /// <param name="bottomMargin">下部マージン[m]</param>
         /// <param name="incline">傾斜面</param>
         /// <returns>ルーバー</returns>
-        public static SunShade MakeGridSunShade(double windowWidth, double windowHeight, double pendent,
+        public static SunShade MakeGridSunShade(double windowWidth, double windowHeight, double overhang,
             double leftMargin, double rightMargin, double topMargin, double bottomMargin, ImmutableIncline incline)
         {
             SunShade ss = new SunShade();
             ss.ssShape = Shape.Grid;
             ss.windowWidth = windowWidth;
             ss.windowHeight = windowHeight;
-            ss.pendent = pendent;
+            ss.overhang = overhang;
             ss.leftMargin = leftMargin;
             ss.rightMargin = rightMargin;
             ss.topMargin = topMargin;
@@ -578,7 +578,7 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>張り出し幅[m]を取得する</summary>
-        double Pendent
+        double Overhang
         {
             get;
         }
