@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 using Popolo.ThermophysicalProperty;
@@ -17,7 +16,65 @@ namespace SamplePrograms
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            
+
+            #region Chapter 1
+
+            //sample1();
+
+            #endregion
+
+            #region Chapter 2
+
+            //sample2_1();
+
+            //sample2_2();
+
+            #endregion
+
+            #region Chapter 3
+
+            //circuitTest1();
+
+            //circuitTest2();
+
+            //circuitTest3();
+
+            #endregion
+
+            #region Chapter 4
+
+            //humanBodyTest();
+
+            #endregion
+
+            #region Chapter 5
+
+            //weatherTest();
+
+            #endregion
+
+            #region Chapter 6
+
+            //glassPanesTest();
+
+            //windowTest();
+
+            //airFlowWindowTest();
+
+            //wallLayersTest();
+
+            //wallTest1();
+
+            //wallTest2();
+
+            //wallTest3();
+
+            //AirStateAndHeatLoadTest1();
+
+            //AirStateAndHeatLoadTest2();
+
+            #endregion
+
         }
 
         #region Chapter 1
