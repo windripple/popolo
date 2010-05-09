@@ -165,8 +165,8 @@ namespace Popolo.ThermalLoad
             }
             set
             {
-                if (isOutside) window.setOutsideOverallHeatTransferCoefficient(value);
-                else window.setInsideOverallHeatTransferCoefficient(value);
+                if (isOutside) window.setOutsideFilmCoefficient(value);
+                else window.setInsideFilmCoefficient(value);
             }
         }
 

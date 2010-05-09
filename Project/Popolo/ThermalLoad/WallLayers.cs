@@ -45,7 +45,7 @@ namespace Popolo.ThermalLoad
         private List<Layer> layers = new List<Layer>();
 
         /// <summary>熱貫流率[W/(m2-K)]</summary>
-        private double overallHeatTransferCoefficient;
+        private double thermalTransmission;
 
         /// <summary>単位面積当たりの熱容量[J/(m^2-K)]</summary>
         private double heatCapacityPerUnitArea;
@@ -136,7 +136,7 @@ namespace Popolo.ThermalLoad
             }
             else layers[layerIndex] = (Layer)layer.Clone();
 
-            updateOverallHeatTransferCoefficient();
+            updateThermalTransmission();
             updateHeatCapacityPerUnitArea();
         }
 
@@ -155,7 +155,7 @@ namespace Popolo.ThermalLoad
             }
             else layers.Add((Layer)layer.Clone());
 
-            updateOverallHeatTransferCoefficient();
+            updateThermalTransmission();
             updateHeatCapacityPerUnitArea();
         }
 
@@ -165,7 +165,7 @@ namespace Popolo.ThermalLoad
         {
             layers.RemoveAt(layerIndex);
 
-            updateOverallHeatTransferCoefficient();
+            updateThermalTransmission();
             updateHeatCapacityPerUnitArea();
         }
 
@@ -191,7 +191,7 @@ namespace Popolo.ThermalLoad
         /// <returns>熱貫流率[W/(m^2K)]</returns>
         public double GetThermalTransmission(double filmCoefficient1, double filmCoefficient2)
         {
-            double rSum = 1 / filmCoefficient1 + 1 / filmCoefficient2 + 1 / overallHeatTransferCoefficient;
+            double rSum = 1 / filmCoefficient1 + 1 / filmCoefficient2 + 1 / thermalTransmission;
             return 1 / rSum;
         }
 
@@ -200,7 +200,7 @@ namespace Popolo.ThermalLoad
         /// <remarks>壁表面の総合熱伝達率は含まない</remarks>
         public double GetThermalTransmission()
         {
-            return overallHeatTransferCoefficient;
+            return thermalTransmission;
         }
 
         /// <summary>単位面積当たりの熱容量[kJ/(m^2-K)]を計算する</summary>
@@ -215,9 +215,9 @@ namespace Popolo.ThermalLoad
         #region privateメソッド
 
         /// <summary>熱貫流率[W/(m2-K)]を更新する</summary>
-        private void updateOverallHeatTransferCoefficient()
+        private void updateThermalTransmission()
         {
-            overallHeatTransferCoefficient = 0;
+            thermalTransmission = 0;
             foreach (Layer ly in layers)
             {
                 //壁素材を特定
@@ -225,15 +225,15 @@ namespace Popolo.ThermalLoad
                 //空気層の場合
                 if (wm.VolumetricSpecificHeat == 0.0)
                 {
-                    overallHeatTransferCoefficient += 1.0 / wm.ThermalConductivity;
+                    thermalTransmission += 1.0 / wm.ThermalConductivity;
                 }
                 //一般の壁素材の場合
                 else
                 {
-                    overallHeatTransferCoefficient += ly.Thickness / wm.ThermalConductivity;
+                    thermalTransmission += ly.Thickness / wm.ThermalConductivity;
                 }
             }
-            overallHeatTransferCoefficient = 1d / overallHeatTransferCoefficient;
+            thermalTransmission = 1d / thermalTransmission;
         }
 
         /// <summary>単位面積当たりの熱容量[J/(m^2-K)]を更新する</summary>
@@ -265,7 +265,7 @@ namespace Popolo.ThermalLoad
             {
                 layers.Add((Layer)sInfo.GetValue("wallLayers" + i.ToString(), typeof(Layer)));
             }
-            updateOverallHeatTransferCoefficient();
+            updateThermalTransmission();
             updateHeatCapacityPerUnitArea();
         }
 

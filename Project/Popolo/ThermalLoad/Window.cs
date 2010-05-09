@@ -443,19 +443,19 @@ namespace Popolo.ThermalLoad
         }
         
         /// <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
-        /// <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
-        internal void setOutsideOverallHeatTransferCoefficient(double outsideOverallHeatTransferCoefficient)
+        /// <param name="outsideFilmCoefficient">外表面総合熱伝達率[W/m2-K]</param>
+        internal void setOutsideFilmCoefficient(double outsideFilmCoefficient)
         {
-            glassPanes.SetOutsideFilmCoefficient(outsideOverallHeatTransferCoefficient);
+            glassPanes.SetOutsideFilmCoefficient(outsideFilmCoefficient);
             FO = glassPanes.ThermalTransmittance /
                     glassPanes.InsideFilmCoefficient;
         }
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
-        /// <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
-        internal void setInsideOverallHeatTransferCoefficient(double insideOverallHeatTransferCoefficient)
+        /// <param name="insideFilmCoefficient">内表面総合熱伝達率[W/m2-K]</param>
+        internal void setInsideFilmCoefficient(double insideFilmCoefficient)
         {
-            glassPanes.SetInsideFilmCoefficient(insideOverallHeatTransferCoefficient);
+            glassPanes.SetInsideFilmCoefficient(insideFilmCoefficient);
             FO = glassPanes.ThermalTransmittance /
                     glassPanes.InsideFilmCoefficient;
         }

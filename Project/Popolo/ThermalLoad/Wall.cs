@@ -323,8 +323,8 @@ namespace Popolo.ThermalLoad
             initialize();
 
             //表面の総合熱伝達率変更イベントに登録
-            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
-            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_FilmCoefficientChangeEvent);
+            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_FilmCoefficientChangeEvent);
         }
 
         /// <summary>コンストラクタ</summary>
@@ -338,14 +338,14 @@ namespace Popolo.ThermalLoad
             initialize();
 
             //表面の総合熱伝達率変更イベントに登録
-            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
-            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_OverallHeatTransferCoefficientChangeEvent);
+            wallSurface1.FilmCoefficientChangeEvent += new EventHandler(wallSurface_FilmCoefficientChangeEvent);
+            wallSurface2.FilmCoefficientChangeEvent += new EventHandler(wallSurface_FilmCoefficientChangeEvent);
         }
 
         /// <summary>壁表面の総合熱伝達率変更イベント発生時の処理</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void wallSurface_OverallHeatTransferCoefficientChangeEvent(object sender, EventArgs e)
+        private void wallSurface_FilmCoefficientChangeEvent(object sender, EventArgs e)
         {
             initialize();
         }
