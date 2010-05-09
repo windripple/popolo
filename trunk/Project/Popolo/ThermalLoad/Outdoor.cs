@@ -276,13 +276,13 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>表面の総合熱伝達率[W/(m^2-K)]を設定する</summary>
-        /// <param name="overallHeatTransferCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
+        /// <param name="filmCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
         /// <param name="convectiveRate">対流熱伝達の割合(0.0～1.0)[-]</param>
-        public void SetOverallHeatTransferCoefficient(double overallHeatTransferCoefficient, double convectiveRate)
+        public void SetFilmCoefficient(double filmCoefficient, double convectiveRate)
         {
             foreach (WallSurface ws in wallSurfaces)
             {
-                ws.FilmCoefficient = overallHeatTransferCoefficient;
+                ws.FilmCoefficient = filmCoefficient;
                 ws.ConvectiveRate = convectiveRate;
             }
         }

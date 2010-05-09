@@ -52,10 +52,10 @@ namespace Popolo.ThermalLoad
         private List<double> heatTransferCoefficientsOfAirGaps;
 
         /// <summary>外表面総合熱伝達率[W/m2-K]</summary>
-        private double outsideOverallHeatTransferCoefficient = 1d / 0.043;
+        private double outsideFilmCoefficient = 1d / 0.043;
 
         /// <summary>内表面総合熱伝達率[W/m2-K]</summary>
-        private double insideOverallHeatTransferCoefficient = 1d / 0.108;
+        private double insideFilmCoefficient = 1d / 0.108;
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace Popolo.ThermalLoad
         {
             get
             {
-                return outsideOverallHeatTransferCoefficient;
+                return outsideFilmCoefficient;
             }
         }
 
@@ -110,7 +110,7 @@ namespace Popolo.ThermalLoad
         {
             get
             {
-                return insideOverallHeatTransferCoefficient;
+                return insideFilmCoefficient;
             }
         }
 
@@ -209,7 +209,7 @@ namespace Popolo.ThermalLoad
                 for (int i = 0; i < Panes.Length; i++) ThermalTransmittanceOfGlass += 1d / Panes[i].HeatTransferCoefficient;
                 ThermalTransmittance = ThermalTransmittanceOfGlass;
                 ThermalTransmittanceOfGlass = 1d / ThermalTransmittanceOfGlass;
-                ThermalTransmittance += 1 / outsideOverallHeatTransferCoefficient + 1 / insideOverallHeatTransferCoefficient;
+                ThermalTransmittance += 1 / outsideFilmCoefficient + 1 / insideFilmCoefficient;
                 ThermalTransmittance = 1d / ThermalTransmittance;
 
                 //総合透過率[-]を計算
@@ -227,7 +227,7 @@ namespace Popolo.ThermalLoad
 
                 //総合吸収率[-]を計算
                 OverallAbsorptivity = 0;
-                double rSum = 1d / insideOverallHeatTransferCoefficient + 1d / Panes[0].HeatTransferCoefficient;
+                double rSum = 1d / insideFilmCoefficient + 1d / Panes[0].HeatTransferCoefficient;
                 for (int i = 0; i < Panes.Length; i++)
                 {
                     OverallAbsorptivity += (1d - ThermalTransmittance * rSum) * absorptance[i];
@@ -238,7 +238,7 @@ namespace Popolo.ThermalLoad
             else
             {
                 ThermalTransmittance = 1d / ThermalTransmittanceOfGlass + 
-                    1d / outsideOverallHeatTransferCoefficient + 1d / insideOverallHeatTransferCoefficient;
+                    1d / outsideFilmCoefficient + 1d / insideFilmCoefficient;
                 ThermalTransmittance = 1d / ThermalTransmittance;
             }
         }
@@ -248,26 +248,26 @@ namespace Popolo.ThermalLoad
         #region publicメソッド
 
         /// <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
-        /// <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
-        public void SetOutsideFilmCoefficient(double outsideOverallHeatTransferCoefficient)
+        /// <param name="outsideFilmCoefficient">外表面総合熱伝達率[W/m2-K]</param>
+        public void SetOutsideFilmCoefficient(double outsideFilmCoefficient)
         {
-            if (outsideOverallHeatTransferCoefficient <= 0) return;
-            if (this.outsideOverallHeatTransferCoefficient == outsideOverallHeatTransferCoefficient) return;
+            if (outsideFilmCoefficient <= 0) return;
+            if (this.outsideFilmCoefficient == outsideFilmCoefficient) return;
 
-            this.outsideOverallHeatTransferCoefficient = outsideOverallHeatTransferCoefficient;
+            this.outsideFilmCoefficient = outsideFilmCoefficient;
 
             //特性を初期化
             initialize();
         }
 
         /// <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
-        /// <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
-        public void SetInsideFilmCoefficient(double insideOverallHeatTransferCoefficient)
+        /// <param name="insideFilmCoefficient">内表面総合熱伝達率[W/m2-K]</param>
+        public void SetInsideFilmCoefficient(double insideFilmCoefficient)
         {
-            if (insideOverallHeatTransferCoefficient <= 0) return;
-            if (this.insideOverallHeatTransferCoefficient == insideOverallHeatTransferCoefficient) return;
+            if (insideFilmCoefficient <= 0) return;
+            if (this.insideFilmCoefficient == insideFilmCoefficient) return;
 
-            this.insideOverallHeatTransferCoefficient = insideOverallHeatTransferCoefficient;
+            this.insideFilmCoefficient = insideFilmCoefficient;
 
             //特性を初期化
             initialize();

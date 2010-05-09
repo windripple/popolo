@@ -58,11 +58,11 @@ namespace Popolo.ThermalLoad
         /// <summary></summary>
         private double exteriorSideAverageTemperature = 25;
 
-        /// <summary>Interior side overall heat transfer coefficient [W/(m2K)]</summary>
-        private double interiorOverallHeatTransferCoefficient = 9.3d;
+        /// <summary>Interior side film coefficient [W/(m2K)]</summary>
+        private double interiorFilmCoefficient = 9.3d;
 
-        /// <summary>Exterior side overall heat transfer coefficient [W/(m2K)]</summary>
-        private double exteriorOverallHeatTransferCoefficient = 21.0d;
+        /// <summary>Exterior side film coefficient [W/(m2K)]</summary>
+        private double exteriorFilmCoefficient = 21.0d;
 
         /// <summary>Solar absorption [-] at exterior glass</summary>
         private double solarAbsorptionRateAtExteriorGlass = 0;
@@ -192,35 +192,35 @@ namespace Popolo.ThermalLoad
             get;
         }
 
-        /// <summary>Sets and Gets interior side overall heat transfer coefficient [W/(m2K)].</summary>
-        public double InteriorSideOverallHeatTransferCoefficient
+        /// <summary>Sets and Gets interior side film coefficient [W/(m2K)].</summary>
+        public double InteriorSideFilmCoefficient
         {
             get
             {
-                return interiorOverallHeatTransferCoefficient;
+                return interiorFilmCoefficient;
             }
             set
             {
                 if (0 < value)
                 {
-                    interiorOverallHeatTransferCoefficient = value;
+                    interiorFilmCoefficient = value;
                     hasMatrixBoundaryChanged = true;
                 }
             }
         }
 
-        /// <summary>Sets and Gets exterior side overall heat transfer coefficient [W/(m2K)].</summary>
-        public double ExteriorSideOverallHeatTransferCoefficient
+        /// <summary>Sets and Gets exterior side film coefficient [W/(m2K)].</summary>
+        public double ExteriorSideFilmCoefficient
         {
             get
             {
-                return exteriorOverallHeatTransferCoefficient;
+                return exteriorFilmCoefficient;
             }
             set
             {
                 if (0 < value)
                 {
-                    exteriorOverallHeatTransferCoefficient = value;
+                    exteriorFilmCoefficient = value;
                     hasMatrixBoundaryChanged = true;
                 }
             }
@@ -301,6 +301,8 @@ namespace Popolo.ThermalLoad
 
         #region public methods (Setting boundary conditions)
 
+        /// <summary>Set nocturnal radiation[W/m2] at window surface</summary>
+        /// <param name="nocturnalRadiation">nocturnal radiation[W/m2] at window surface</param>
         public void SetNocturnalRadiation(double nocturnalRadiation)
         {
             if (this.NocturnalRadiation != nocturnalRadiation)
@@ -370,24 +372,6 @@ namespace Popolo.ThermalLoad
             overallReflectance = exteriorGlassPane.OuterSideReflectivity + exteriorGlassPane.InnerSideTransmissivity * overallReflectance * xr;
             overallTransmittance *= xr;            
             
-            /*//calculate solar absorptance at exterior glass.
-            double overallTransmittance = exteriorGlassPane.OuterSideTransmittance;
-            double overallReflectance = exteriorGlassPane.OuterSideReflectance;
-            solarAbsorptionRateAtExteriorGlass = exteriorGlassPane.OuterSideAbsorptance;
-            xr = transmittance / (1d - reflectance * overallReflectance);
-            solarAbsorptionRateAtExteriorGlass *= xr;
-            solarAbsorptionRateAtBlind = absorptance + absorptance * overallReflectance * xr;
-            overallReflectance = reflectance + transmittance * overallReflectance * xr;
-            overallTransmittance *= xr;
-
-            //calculate solar absorptance at exterior blind.
-            xr = interiorGlassPane.OuterSideTransmittance / (1d - interiorGlassPane.InnerSideReflectance * overallReflectance);
-            solarAbsorptionRateAtExteriorGlass *= xr;
-            solarAbsorptionRateAtBlind *= xr;
-            solarAbsorptionRateAtInteriorGlass = interiorGlassPane.OuterSideAbsorptance + interiorGlassPane.InnerSideAbsorptance * overallReflectance * xr;
-            overallReflectance = interiorGlassPane.OuterSideReflectance + interiorGlassPane.InnerSideTransmittance * overallReflectance * xr;
-            overallTransmittance *= xr;*/
-
             hasMatrixBoundaryChanged = true;
         }
 
@@ -563,11 +547,11 @@ namespace Popolo.ThermalLoad
             double radiation = (1d - shadowRate) * idn * charac + 0.91 * id;
 
             //
-            double od = OutdoorTemperature - NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky / ExteriorSideOverallHeatTransferCoefficient;
+            double od = OutdoorTemperature - NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky / ExteriorSideFilmCoefficient;
 
             //Make zVector**********************************
-            double kiw = 1 / (1 / interiorGlassPane.HeatTransferCoefficient + 1 / interiorOverallHeatTransferCoefficient);
-            double kew = 1 / (1 / exteriorGlassPane.HeatTransferCoefficient + 1 / exteriorOverallHeatTransferCoefficient);
+            double kiw = 1 / (1 / interiorGlassPane.HeatTransferCoefficient + 1 / interiorFilmCoefficient);
+            double kew = 1 / (1 / exteriorGlassPane.HeatTransferCoefficient + 1 / exteriorFilmCoefficient);
             zVector.SetValue(0, solarAbsorptionRateAtExteriorGlass * radiation 
                 // - NocturnalRadiation * emissivity * OutSideIncline.ConfigurationFactorToSky +
                 +kew * od + exteriorAirGapConvectiveHeatTransferCoefficient * we3 * inletAirTemperature);
@@ -622,7 +606,7 @@ namespace Popolo.ThermalLoad
                 wi1 = (1 - epwi / whi) * 0.5;
                 wi3 = epwi / whi;
             }
-            double kiw = 1 / (1 / interiorGlassPane.HeatTransferCoefficient + 1 / interiorOverallHeatTransferCoefficient);
+            double kiw = 1 / (1 / interiorGlassPane.HeatTransferCoefficient + 1 / interiorFilmCoefficient);
             //exterior side
             double whe, epwe, we1;
             if (ExteriorSideAirFlowVolume <= 0)
@@ -639,7 +623,7 @@ namespace Popolo.ThermalLoad
                 we1 = (1 - epwe / whe) * 0.5;
                 we3 = epwe / whe;
             }
-            double kew = 1 / (1 / exteriorGlassPane.HeatTransferCoefficient + 1 / exteriorOverallHeatTransferCoefficient);
+            double kew = 1 / (1 / exteriorGlassPane.HeatTransferCoefficient + 1 / exteriorFilmCoefficient);
 
             //make matrix A
             aMatrix.SetValue(0, 0, exteriorAirGapConvectiveHeatTransferCoefficient * (1 - we1) + exteriorAirGapRadiativeHeatTransferCoefficient + kew);
