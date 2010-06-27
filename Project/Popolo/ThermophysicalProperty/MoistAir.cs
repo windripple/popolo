@@ -1523,7 +1523,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>水蒸気圧[kPa]</returns>
         public static double GetWaterVaporPressure(double humidityRatio, double atm)
         {
-            return (humidityRatio * atm) / (humidityRatio + 0.62198);
+            return (humidityRatio * atm) / (humidityRatio + 0.621945);
         }
 
         /// <summary>水蒸気圧[kPa]を取得する</summary>
@@ -1897,7 +1897,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>水蒸気分圧[kPa]</returns>
         private static double fpww(double w, double patm)
         {
-            return patm * w / (0.62198d + w);
+            return patm * w / (0.621945d + w);
         }
 
         /// <summary>水蒸気分圧[kPa]と大気圧[kPa]から絶対湿度[kg/kg]を求める</summary>
@@ -1906,7 +1906,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>絶対湿度[kg/kg]</returns>
         private static double fwpw(double pw, double patm)
         {
-            return 0.62198d * pw / (patm - pw);
+            return 0.621945d * pw / (patm - pw);
         }
 
         /// <summary>乾球温度[℃]と相対湿度[%]と大気圧[kPa]から絶対湿度[kg/kg]を求める</summary>
@@ -2136,7 +2136,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>比容積[m3/kg]</returns>
         private static double getSpecificVolumeFromDBHR(double dbTemp, double humidityRatio, double atm)
         {
-            return ((dbTemp + TCONV) * GAS_CONSTANT_DRY_AIR) / atm * (1.0d + 1.6078d * humidityRatio);
+            return ((dbTemp + TCONV) * GAS_CONSTANT_DRY_AIR) / atm * (1.0d + 1.607858d * humidityRatio);
         }
 
         /// <summary>比容積[m3/kg]および絶対湿度[kg/kg]から乾球温度[C]を求める</summary>
@@ -2146,7 +2146,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>乾球温度[C]</returns>
         private static double getDryBulbTemperatureFromSVHR(double specificVolume, double humidityRatio, double atm)
         {
-            return specificVolume / (1.0 + 1.6078d * humidityRatio) * atm / GAS_CONSTANT_DRY_AIR - TCONV;
+            return specificVolume / (1.0 + 1.607858d * humidityRatio) * atm / GAS_CONSTANT_DRY_AIR - TCONV;
         }
 
         /// <summary>乾球温度[C]および比容積[m3/kg]から絶対湿度[kg/kg]を求める</summary>
@@ -2156,7 +2156,7 @@ namespace Popolo.ThermophysicalProperty
         /// <returns>絶対湿度[kg/kg]</returns>
         private static double getHumidityRatioFromDBSV(double dryBulbTemperature, double specificVolume, double atm)
         {
-            return (specificVolume / (dryBulbTemperature + TCONV) / GAS_CONSTANT_DRY_AIR * atm - 1.0d) / 1.6078d;
+            return (specificVolume / (dryBulbTemperature + TCONV) / GAS_CONSTANT_DRY_AIR * atm - 1.0d) / 1.607858d;
         }
 
         /// <summary>水の温度から水の比エンタルピー[kJ/kg]を計算する</summary>
