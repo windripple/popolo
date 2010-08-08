@@ -460,8 +460,8 @@ namespace SamplePrograms
             AirFlowWindow afWindow = new AirFlowWindow(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04,
                     new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm), 0.04, 0.8, 1.59, new Incline(Incline.Orientation.S, 0.5 * Math.PI));
             Sun sun = new Sun(Sun.City.Tokyo);
-            afWindow.InteriorSideOverallHeatTransferCoefficient = 15 * 4.186 / 3.6;
-            afWindow.ExteriorSideOverallHeatTransferCoefficient = 8 * 4.186 / 3.6;
+            afWindow.InteriorSideFilmCoefficient = 15 * 4.186 / 3.6;
+            afWindow.ExteriorSideFilmCoefficient = 8 * 4.186 / 3.6;
             afWindow.Sun = sun;
 
             using (StreamReader sReader = new StreamReader("bnd.csv"))
@@ -944,6 +944,7 @@ namespace SamplePrograms
             //Add windows to the west zone
             Window wWind = new Window(gPanes, "Window in the west perimeter zone");
             wWind.SurfaceArea = 3 * 2;
+            wWind.OutSideIncline = wIn;
             wpZone.AddWindow(wWind);
             outdoor.AddWindow(wWind);
             //Add windows to the east zone
