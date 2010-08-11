@@ -14,9 +14,10 @@ namespace AIGStandardResidence
 
         #region 定数宣言
 
-        const double AO = 23.3;
-        const double AI = 9.3;
+        const double AO = 20 * 1.163;
+        const double AI = 8 * 1.163;
         const double TIME_STEP = 3600;
+        //const int ITER_NUM = 150;
 
         #endregion        
 
@@ -29,7 +30,7 @@ namespace AIGStandardResidence
             Outdoor outdoor = new Outdoor();
             Sun sun = new Sun(Sun.City.Tokyo);  //Located in Tokyo
             outdoor.Sun = sun;
-            outdoor.GroundTemperature = 10;     //Ground temperature is assumed to be constant
+            outdoor.GroundTemperature = 20;     //Ground temperature is assumed to be constant
 
             //Create an instance of the Incline class
             Dictionary<string, Incline> inclines = new Dictionary<string, Incline>();
@@ -38,11 +39,11 @@ namespace AIGStandardResidence
             inclines.Add("W", new Incline(Incline.Orientation.W, 0.5 * Math.PI)); //West, Vertical
             inclines.Add("S", new Incline(Incline.Orientation.S, 0.5 * Math.PI)); //South, Vertical
             inclines.Add("H", new Incline(Incline.Orientation.S, 0)); //Horizontal
-            
+
             //壁層を作成
             Dictionary<string, WallLayers> wallLayers;
             makeWallLayers(out wallLayers);
-            
+
             //室を作成
             Dictionary<string, Zone> zones;
             makeZones(out zones);
@@ -76,61 +77,82 @@ namespace AIGStandardResidence
             //換気経路を設定
             setAirFlow(mRoom, zones);
 
+            //空調制御OFF
+            foreach (string key in zones.Keys) zones[key].ControlDrybulbTemperature = false;
+
             //Output title wrine to standard output stream
-            using (StreamReader sReader = new StreamReader("weather.csv"))
             using (StreamWriter sWriter = new StreamWriter("out.csv", false, Encoding.GetEncoding("Shift_JIS")))
             {
-                //タイトル行
-                sReader.ReadLine();
                 sWriter.Write("日時,");
                 foreach (string key in zones.Keys) sWriter.Write(zones[key].Name + "室温[C], " + zones[key].Name + "顕熱負荷[W], ");
                 sWriter.WriteLine();
 
                 DateTime dTime = new DateTime(1999, 11, 1, 0, 0, 0);
-                foreach (string key in zones.Keys)
+
+                List<string[]> wData = new List<string[]>();
+                using (StreamReader sReader = new StreamReader("weather.csv"))
                 {
-                    zones[key].DrybulbTemperatureSetPoint = 20;
-                    zones[key].ControlDrybulbTemperature = false;
+                    //タイトル行
+                    sReader.ReadLine();
+                    string strBuff;
+                    while ((strBuff = sReader.ReadLine()) != null) wData.Add(strBuff.Split(','));
                 }
-                zones["屋根裏"].ControlDrybulbTemperature = false;
 
                 //反復計算
-                string strBuff;
-                while ((strBuff = sReader.ReadLine()) != null)
+                int iterNum = 0;
+                bool iter = true;
+                bool output = false;
+                double lastTemp = 9999;
+                while (iter)
                 {
-                    string[] strData = strBuff.Split(',');
+                    iterNum++;
 
-                    dTime = DateTime.Parse(strData[0]);
-                    sun.Update(dTime);
-                    mRoom.SetCurrentDateTime(dTime);
+                    if (output) iter = false;
+                    for (int j = 0; j < wData.Count; j++)
+                    {
+                        string[] strData = wData[j];
 
-                    //Set weather state.
-                    outdoor.AirState = new MoistAir(double.Parse(strData[1]), double.Parse(strData[2]));
-                    outdoor.NocturnalRadiation = double.Parse(strData[5]);
-                    outdoor.GroundTemperature = double.Parse(strData[1]);
-                    sun.SetGlobalHorizontalRadiation(double.Parse(strData[3]), double.Parse(strData[4]));
+                        dTime = DateTime.Parse(strData[0]);
+                        sun.Update(dTime);
+                        mRoom.SetCurrentDateTime(dTime);
 
-                    //Set ventilation air state.
-                    foreach (string key in zones.Keys) zones[key].VentilationAirState = outdoor.AirState;
+                        //Set weather state.
+                        outdoor.AirState = new MoistAir(double.Parse(strData[1]), double.Parse(strData[2]));
+                        outdoor.NocturnalRadiation = double.Parse(strData[5]);
+                        outdoor.GroundTemperature = double.Parse(strData[1]);
+                        sun.SetGlobalHorizontalRadiation(double.Parse(strData[3]), double.Parse(strData[4]));
 
-                    //Update boundary state of outdoor facing surfaces.
-                    outdoor.SetWallSurfaceBoundaryState();
+                        //Set ventilation air state.
+                        foreach (string key in zones.Keys) zones[key].VentilationAirState = outdoor.AirState;
 
-                    //Update the walls.
-                    foreach (string key in doors.Keys) doors[key].Update();
-                    foreach (string key in exWalls.Keys) exWalls[key].Update();
-                    foreach (string key in inWalls.Keys) inWalls[key].Update();
-                    foreach (string key in floors.Keys) floors[key].Update();
+                        //空調制御
+                        setHVACControl(dTime, zones);
 
-                    //Update the MultiRoom object.
-                    mRoom.UpdateRoomTemperatures();
-                    mRoom.UpdateRoomHumidities();
+                        //Update boundary state of outdoor facing surfaces.
+                        outdoor.SetWallSurfaceBoundaryState();
 
-                    sWriter.Write(dTime.ToString() + ",");
-                    foreach (string key in zones.Keys) sWriter.Write(zones[key].CurrentDrybulbTemperature + ", " + zones[key].CurrentSensibleHeatLoad + ", ");
-                    sWriter.WriteLine();
+                        //Update the walls.
+                        foreach (string key in doors.Keys) doors[key].Update();
+                        foreach (string key in exWalls.Keys) exWalls[key].Update();
+                        foreach (string key in inWalls.Keys) inWalls[key].Update();
+                        foreach (string key in floors.Keys) floors[key].Update();
+
+                        //Update the MultiRoom object.
+                        mRoom.UpdateRoomTemperatures();
+                        mRoom.UpdateRoomHumidities();
+
+                        if (output)
+                        {
+                            sWriter.Write(dTime.ToString() + ",");
+                            foreach (string key in zones.Keys) sWriter.Write(zones[key].CurrentDrybulbTemperature + ", " + zones[key].CurrentSensibleHeatLoad + ", ");
+                            sWriter.WriteLine();
+                        }
+                    }
+                    double err = Math.Abs(zones["床下"].CurrentDrybulbTemperature - lastTemp);
+                    if (err < 0.01) output = true;
+                    lastTemp = zones["床下"].CurrentDrybulbTemperature;
+                    Console.WriteLine(iterNum + ":" + err);
                 }
-
             }
 
         }
@@ -231,6 +253,7 @@ namespace AIGStandardResidence
                 if (zn.Name != "床下" && zn.Name != "屋根裏")
                 {
                     zn.SensibleHeatCapacity = 4186 * 4.5 * zn.Volume;
+                    //zn.SensibleHeatCapacity = 30000 * zn.Volume;
                 }
             }
         }
@@ -241,6 +264,9 @@ namespace AIGStandardResidence
 
         static void makeWallLayers(out Dictionary<string, WallLayers> wallLayers)
         {
+            bool iDoorEqualToiWall = false;
+            bool noIDoor = false;
+
             WallLayers wl;
             wallLayers = new Dictionary<string, WallLayers>();
 
@@ -253,9 +279,20 @@ namespace AIGStandardResidence
 
             //室内ドア
             wl = new WallLayers();
-            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.004));
-            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.SealedAirGap), 0.02));
-            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.004));
+            if (iDoorEqualToiWall)
+            {
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Carpet), 0.012));
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.012));
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.AirGap), 0.02));
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.PlasterBoard), 0.012));
+            }
+            else
+            {
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.004));
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.SealedAirGap), 0.02));
+                wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Plywood), 0.004));
+            }
+            if (noIDoor) wl.AddLayer(new WallLayers.Layer(new WallMaterial("完全断熱材", 0.00000001, 0.0001), 10)); //断熱性能完全にしてドアなしを模擬
             wallLayers.Add("室内ドア", wl);
 
             //屋根1
@@ -813,6 +850,7 @@ namespace AIGStandardResidence
              Dictionary<string, Zone> zones, Dictionary<string, WallLayers> wallLayers, Dictionary<string, Wall> doors,
             out Dictionary<string, Wall> inWalls)
         {
+
             inWalls = new Dictionary<string, Wall>();
             Wall inWall;
 
@@ -1065,14 +1103,14 @@ namespace AIGStandardResidence
 
             floor = new Wall(wallLayers["2F床"], "FL2-1");
             floor.SurfaceArea = 17.4;
-            zones["1F居間"].AddSurface(floor.GetSurface(true));
-            zones["2F主寝室"].AddSurface(floor.GetSurface(false));
+            zones["2F主寝室"].AddSurface(floor.GetSurface(true));
+            zones["1F居間"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-2");
             floor.SurfaceArea = 17.4;
-            zones["1F居間"].AddSurface(floor.GetSurface(true));
-            zones["2F押入1"].AddSurface(floor.GetSurface(false));
+            zones["2F押入1"].AddSurface(floor.GetSurface(true));
+            zones["1F居間"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-3");
@@ -1083,26 +1121,26 @@ namespace AIGStandardResidence
 
             floor = new Wall(wallLayers["2F床"], "FL2-4");
             floor.SurfaceArea = 0.91 * 0.91;
-            zones["1F押入"].AddSurface(floor.GetSurface(true));
-            zones["2F子供室1"].AddSurface(floor.GetSurface(false));
+            zones["2F子供室1"].AddSurface(floor.GetSurface(true));
+            zones["1F押入"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-5");
             floor.SurfaceArea = 0.8;
-            zones["1F和室"].AddSurface(floor.GetSurface(true));
-            zones["2F押入2"].AddSurface(floor.GetSurface(false));
+            zones["2F押入2"].AddSurface(floor.GetSurface(true));
+            zones["1F和室"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-6");
             floor.SurfaceArea = 0.8;
-            zones["1F和室"].AddSurface(floor.GetSurface(true));
-            zones["2F押入3"].AddSurface(floor.GetSurface(false));
+            zones["2F押入3"].AddSurface(floor.GetSurface(true));
+            zones["1F和室"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-7");
             floor.SurfaceArea = 0.8;
-            zones["1F押入"].AddSurface(floor.GetSurface(true));
-            zones["2F押入3"].AddSurface(floor.GetSurface(false));
+            zones["2F押入3"].AddSurface(floor.GetSurface(true));
+            zones["1F押入"].AddSurface(floor.GetSurface(false));
             floors.Add(floor.Name, floor);
 
             floor = new Wall(wallLayers["2F床"], "FL2-8");
@@ -1204,8 +1242,18 @@ namespace AIGStandardResidence
             //総合熱伝達率設定
             foreach (string key in floors.Keys)
             {
-                floors[key].GetSurface(true).FilmCoefficient = AI;
-                floors[key].GetSurface(false).FilmCoefficient = AI;
+                floors[key].GetSurface(true).FilmCoefficient = (4.6 + 1.5) / 2 + 4.7;
+                floors[key].GetSurface(true).ConvectiveRate = (4.6 + 1.5) / 2 / floors[key].GetSurface(true).FilmCoefficient;
+                floors[key].GetSurface(false).FilmCoefficient = (4.6 + 1.5) / 2 + 4.7;
+                floors[key].GetSurface(false).ConvectiveRate = (4.6 + 1.5) / 2 / floors[key].GetSurface(false).FilmCoefficient;
+
+                //DEBUG
+                floors[key].GetSurface(true).FilmCoefficient = 4.6 + 4.7;
+                floors[key].GetSurface(true).ConvectiveRate = 4.6 / (4.6 + 4.7);
+                floors[key].GetSurface(false).FilmCoefficient = 1.5 + 4.7;
+                floors[key].GetSurface(false).ConvectiveRate = 1.5 / (1.5 + 4.7);
+                //DEBUG
+
                 floors[key].TimeStep = TIME_STEP;
             }
         }
@@ -1216,34 +1264,94 @@ namespace AIGStandardResidence
 
         private static void setAirFlow(MultiRoom mRoom, Dictionary<string, Zone> zones)
         {
-            //外気
-            zones["床下"].VentilationVolume = zones["床下"].Volume * 2.0;
-            zones["屋根裏"].VentilationVolume = zones["屋根裏"].Volume * 2.0;
-            zones["1F台所"].VentilationVolume = 9;
-            zones["1F居間"].VentilationVolume = 25;
-            zones["1F和室"].VentilationVolume = 16;
-            zones["1F廊下"].VentilationVolume = 17;
-            zones["1F洗面所"].VentilationVolume = 10;
-            zones["2F主寝室"].VentilationVolume = 25;
-            zones["2F子供室1"].VentilationVolume = 16;
-            zones["2F子供室2"].VentilationVolume = 12;
-            zones["2F予備室"].VentilationVolume = 13;
-            zones["2F廊下"].VentilationVolume = 12;
+            bool setAirFlow = true;
 
-            //1F室間換気
-            mRoom.SetAirFlow(zones["1F居間"], zones["1F廊下"], 25);
-            mRoom.SetAirFlow(zones["1F台所"], zones["1F廊下"], 9);
-            mRoom.SetAirFlow(zones["1F和室"], zones["1F廊下"], 16);
-            mRoom.SetAirFlow(zones["1F廊下"], zones["1FWC"], 39);
-            mRoom.SetAirFlow(zones["1F廊下"], zones["1F洗面所"], 19);
-            mRoom.SetAirFlow(zones["1F洗面所"], zones["1F浴室"], 39);
+            if (setAirFlow)
+            {
+                //外気
+                zones["床下"].VentilationVolume = zones["床下"].Volume * 2.0;
+                zones["屋根裏"].VentilationVolume = zones["屋根裏"].Volume * 2.0;
+                zones["1F台所"].VentilationVolume = 9;
+                zones["1F居間"].VentilationVolume = 25;
+                zones["1F和室"].VentilationVolume = 15;
+                zones["1F廊下"].VentilationVolume = 9;
+                zones["1F洗面所"].VentilationVolume = 10;
+                zones["2F主寝室"].VentilationVolume = 23;
+                zones["2F子供室1"].VentilationVolume = 13;
+                zones["2F子供室2"].VentilationVolume = 13;
+                zones["2F予備室"].VentilationVolume = 13;
+                zones["2F廊下"].VentilationVolume = 7;
 
-            //2F室間換気
-            mRoom.SetAirFlow(zones["2F主寝室"], zones["2F廊下"], 25);
-            mRoom.SetAirFlow(zones["2F子供室1"], zones["2F廊下"], 16);
-            mRoom.SetAirFlow(zones["2F子供室2"], zones["2F廊下"], 12);
-            mRoom.SetAirFlow(zones["2F予備室"], zones["2F廊下"], 25);
-            mRoom.SetAirFlow(zones["2F廊下"], zones["2FWC"], 78);
+                //1F室間換気
+                mRoom.SetAirFlow(zones["1F居間"], zones["1F廊下"], 25);
+                mRoom.SetAirFlow(zones["1F台所"], zones["1F廊下"], 9);
+                mRoom.SetAirFlow(zones["1F和室"], zones["1F廊下"], 15);
+                mRoom.SetAirFlow(zones["1F廊下"], zones["1FWC"], 29);
+                mRoom.SetAirFlow(zones["1F廊下"], zones["1F洗面所"], 29);
+                mRoom.SetAirFlow(zones["1F洗面所"], zones["1F浴室"], 39);
+
+                //2F室間換気
+                mRoom.SetAirFlow(zones["階段室"], zones["2F廊下"], 7);
+                mRoom.SetAirFlow(zones["2F主寝室"], zones["2F廊下"], 23);
+                mRoom.SetAirFlow(zones["2F子供室1"], zones["2F廊下"], 13);
+                mRoom.SetAirFlow(zones["2F子供室2"], zones["2F廊下"], 13);
+                mRoom.SetAirFlow(zones["2F予備室"], zones["2F廊下"], 13);
+                mRoom.SetAirFlow(zones["2F廊下"], zones["2FWC"], 69);
+            }
+            else
+            {
+                foreach (string key in zones.Keys)
+                {
+                    Zone zn = zones[key];
+                    zn.VentilationVolume = zn.Volume * 0.3;
+                }
+                zones["1F台所"].VentilationVolume = zones["1F台所"].Volume * 0.5;
+                zones["1F居間"].VentilationVolume = zones["1F居間"].Volume * 0.5;
+                zones["1F和室"].VentilationVolume = zones["1F和室"].Volume * 0.5;
+                zones["2F主寝室"].VentilationVolume = zones["2F主寝室"].Volume * 0.5;
+                zones["2F子供室1"].VentilationVolume = zones["2F子供室1"].Volume * 0.5;
+                zones["2F子供室2"].VentilationVolume = zones["2F子供室2"].Volume * 0.5;
+                zones["2F予備室"].VentilationVolume = zones["2F予備室"].Volume * 0.5;
+            }
+        }
+
+        #endregion
+
+        #region 空調制御
+
+        private static void setHVACControl(DateTime dTime, Dictionary<string, Zone> zones)
+        {
+            //夏季
+            bool controlHour = dTime.Hour <= 21 && 7 <= dTime.Hour;
+            //冬季
+            //bool controlHour = (dTime.Hour < 9 && 6 <= dTime.Hour) || (dTime.Hour < 22 && 16 <= dTime.Hour);
+
+            bool controlOCZones = true;
+            bool controlStorage = false;
+            bool controlNonOCZones = false;
+
+            //非居室
+            foreach (string key in zones.Keys)
+            {
+                Zone zn = zones[key];
+                zn.ControlDrybulbTemperature = controlNonOCZones && controlHour;
+                zn.DrybulbTemperatureSetPoint = 26;
+            }
+
+            //押入
+            zones["1F押入"].ControlDrybulbTemperature = controlStorage && controlHour;
+            zones["2F押入1"].ControlDrybulbTemperature = controlStorage && controlHour;
+            zones["2F押入2"].ControlDrybulbTemperature = controlStorage && controlHour;
+            zones["2F押入3"].ControlDrybulbTemperature = controlStorage && controlHour;
+
+            //居室
+            zones["1F台所"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["1F居間"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["1F和室"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["2F主寝室"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["2F子供室1"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["2F子供室2"].ControlDrybulbTemperature = controlOCZones && controlHour;
+            zones["2F予備室"].ControlDrybulbTemperature = controlOCZones && controlHour;
         }
 
         #endregion
@@ -1252,7 +1360,7 @@ namespace AIGStandardResidence
 
         private static void makeWeatherData()
         {
-            using (StreamWriter sWriter = new StreamWriter("weather.csv", false, Encoding.GetEncoding("Shift_JIS")))
+            using (StreamWriter sWriter = new StreamWriter("weather2.csv", false, Encoding.GetEncoding("Shift_JIS")))
             {
                 sWriter.WriteLine("日時,乾球温度,絶対湿度,法線面直達日射量,天空日射,夜間放射");
                 bool suc;
