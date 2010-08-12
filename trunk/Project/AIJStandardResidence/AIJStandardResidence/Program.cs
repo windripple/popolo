@@ -17,7 +17,6 @@ namespace AIGStandardResidence
         const double AO = 20 * 1.163;
         const double AI = 8 * 1.163;
         const double TIME_STEP = 3600;
-        //const int ITER_NUM = 150;
 
         #endregion        
 
@@ -50,7 +49,8 @@ namespace AIGStandardResidence
 
             //窓を作成
             Dictionary<string, Window> windows;
-            makeWindows(zones, inclines, outdoor, out windows);
+            Dictionary<string, Wall> frames;
+            makeWindows(zones, inclines, outdoor, wallLayers, out windows, out frames);
 
             //建具を作成
             Dictionary<string, Wall> doors;
@@ -58,7 +58,7 @@ namespace AIGStandardResidence
 
             //外壁を作成
             Dictionary<string, Wall> exWalls;
-            makeExWalls(zones, wallLayers, inclines, windows, doors, outdoor, out exWalls);
+            makeExWalls(zones, wallLayers, inclines, windows, frames, doors, outdoor, out exWalls);
 
             //内壁を作成
             Dictionary<string, Wall> inWalls;
@@ -132,6 +132,7 @@ namespace AIGStandardResidence
                         outdoor.SetWallSurfaceBoundaryState();
 
                         //Update the walls.
+                        foreach (string key in frames.Keys) frames[key].Update();
                         foreach (string key in doors.Keys) doors[key].Update();
                         foreach (string key in exWalls.Keys) exWalls[key].Update();
                         foreach (string key in inWalls.Keys) inWalls[key].Update();
@@ -345,6 +346,13 @@ namespace AIGStandardResidence
             wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.GlassWoolInsulation_24K), 0.05));
             wallLayers.Add("1F和室床", wl);
 
+            //サッシ//熱貫流率5.6W/m2K程度
+            wl = new WallLayers();
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Aluminum), 0.005));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial("調整層", 36, 0), 0.005));
+            wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Aluminum), 0.005));
+            wallLayers.Add("サッシ", wl);
+
             //地面
             wl = new WallLayers();
             wl.AddLayer(new WallLayers.Layer(new WallMaterial(WallMaterial.PredefinedMaterials.Soil), 1, 4));
@@ -356,152 +364,307 @@ namespace AIGStandardResidence
         #region 窓作成処理
 
         private static void makeWindows(
-            Dictionary<string, Zone> zones,Dictionary<string, Incline> inclines, Outdoor outdoor, out Dictionary<string, Window> windows)
+            Dictionary<string, Zone> zones,Dictionary<string, Incline> inclines, Outdoor outdoor, Dictionary<string, WallLayers> wallLayers,
+            out Dictionary<string, Window> windows, out Dictionary<string, Wall> frames)
         {
-            //Create an instance of the GlassPanes class:Low-emissivity coating single glass
-            GlassPanes gPanes = new GlassPanes(new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatReflectingGlass06mm));
+            bool makeWindowFrame = true;
+
+            const double WIN1720 = 2.89;//1.7 * 2.0;   //
+            const double WIN1712 = 1.64;//1.7 * 1.2;   // 
+            const double WIN0512 = 0.42;//0.5 * 1.2;   // 
+            const double WIN1745 = 0.45;//1.7 * 0.45;  // 
+
+            //外側Low-e 6mm, 内側フロート 6mm
+            GlassPanes.Pane[] panes = new GlassPanes.Pane[2];
+            panes[0] = new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.TransparentGlass06mm);
+            panes[1] = new GlassPanes.Pane(GlassPanes.Pane.PredifinedGlassPane.HeatReflectingGlass06mm);
+            GlassPanes gPanes = new GlassPanes(panes);
+            gPanes.SetHeatTransferCoefficientsOfGaps(0, 5.9);
 
             windows = new Dictionary<string, Window>();
             Window win;
+            frames = new Dictionary<string, Wall>();
+            Wall frm;
 
             win = new Window(gPanes, "WI1-1");
-            win.SurfaceArea = 1.7 * 2.0;
+            win.SurfaceArea = WIN1720;
             win.OutSideIncline = inclines["S"];
             zones["1F居間"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
+
+            frm = new Wall(wallLayers["サッシ"], "SS1-1");
+            frm.SurfaceArea = Math.Max(1.7 * 2.0 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F居間"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
 
             win = new Window(gPanes, "WI1-2");
-            win.SurfaceArea = 1.7 * 2.0;
+            win.SurfaceArea = WIN1720;
             win.OutSideIncline = inclines["S"];
             zones["1F居間"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-2");
+            frm.SurfaceArea = Math.Max(1.7 * 2.0 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F居間"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-3");
-            win.SurfaceArea = 1.7 * 2.0;
+            win.SurfaceArea = WIN1720;
             win.OutSideIncline = inclines["S"];
             zones["1F和室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-3");
+            frm.SurfaceArea = Math.Max(1.7 * 2.0 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F和室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-4");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["E"];
             zones["1F浴室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-4");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["E"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F浴室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-5");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["N"];
             zones["1F洗面所"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-5");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F洗面所"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-6");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["N"];
             zones["1FWC"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-6");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1FWC"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-7");
-            win.SurfaceArea = 1.7 * 0.45;
+            win.SurfaceArea = WIN1745;
             win.OutSideIncline = inclines["W"];
             zones["1F台所"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-7");
+            frm.SurfaceArea = Math.Max(1.7 * 0.45 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["W"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F台所"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI1-8");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["W"];
             zones["1F居間"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
+
+            frm = new Wall(wallLayers["サッシ"], "SS1-8");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["W"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F居間"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
 
             win = new Window(gPanes, "WI1-9");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["W"];
             zones["1F居間"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS1-9");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["W"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["1F居間"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-1");
-            win.SurfaceArea = 1.7 * 1.2;
+            win.SurfaceArea = WIN1712;
             win.OutSideIncline = inclines["S"];
             zones["2F主寝室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
+
+            frm = new Wall(wallLayers["サッシ"], "SS2-1");
+            frm.SurfaceArea = Math.Max(1.7 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F主寝室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
 
             win = new Window(gPanes, "WI2-2");
-            win.SurfaceArea = 1.7 * 1.2;
+            win.SurfaceArea = WIN1712;
             win.OutSideIncline = inclines["S"];
             zones["2F主寝室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-2");
+            frm.SurfaceArea = Math.Max(1.7 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F主寝室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-3");
-            win.SurfaceArea = 1.7 * 1.2;
+            win.SurfaceArea = WIN1712;
             win.OutSideIncline = inclines["S"];
             zones["2F子供室1"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-3");
+            frm.SurfaceArea = Math.Max(1.7 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["S"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F子供室1"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-4");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["E"];
             zones["2F子供室1"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-4");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["E"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F子供室1"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-5");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["E"];
             zones["2F子供室2"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-5");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["E"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F子供室2"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-6");
-            win.SurfaceArea = 1.7 * 1.2;
+            win.SurfaceArea = WIN1712;
             win.OutSideIncline = inclines["N"];
             zones["2F子供室2"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-6");
+            frm.SurfaceArea = Math.Max(1.7 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F子供室2"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-7");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["N"];
             zones["階段室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-7");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["階段室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-8");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["N"];
             zones["2FWC"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-8");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2FWC"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-9");
-            win.SurfaceArea = 1.7 * 1.2;
+            win.SurfaceArea = WIN1712;
             win.OutSideIncline = inclines["N"];
             zones["2F予備室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
 
+            frm = new Wall(wallLayers["サッシ"], "SS2-9");
+            frm.SurfaceArea = Math.Max(1.7 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["N"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F予備室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
+
             win = new Window(gPanes, "WI2-10");
-            win.SurfaceArea = 0.5 * 1.2;
+            win.SurfaceArea = WIN0512;
             win.OutSideIncline = inclines["E"];
             zones["2F主寝室"].AddWindow(win);
             outdoor.AddWindow(win);
             windows.Add(win.Name, win);
+
+            frm = new Wall(wallLayers["サッシ"], "SS2-10");
+            frm.SurfaceArea = Math.Max(0.5 * 1.2 - win.SurfaceArea, 0.0001);
+            frm.SetIncline(inclines["E"], true);
+            outdoor.AddWallSurface(frm.GetSurface(true));
+            zones["2F主寝室"].AddSurface(frm.GetSurface(false));
+            frames.Add(frm.Name, frm);
 
             //総合熱伝達率設定
             foreach (string key in windows.Keys)
             {
                 windows[key].GetSurface(true).FilmCoefficient = AO;
                 windows[key].GetSurface(false).FilmCoefficient = AI;
+            }
+            //総合熱伝達率設定
+            foreach (string key in frames.Keys)
+            {
+                frames[key].GetSurface(true).FilmCoefficient = AO;
+                frames[key].GetSurface(false).FilmCoefficient = AI;
+
+                if (! makeWindowFrame) frames[key].SurfaceArea = 0.000001;
             }
         }
 
@@ -638,21 +801,22 @@ namespace AIGStandardResidence
 
         private static void makeExWalls(
              Dictionary<string, Zone> zones, Dictionary<string, WallLayers> wallLayers,
-            Dictionary<string, Incline> inclines, Dictionary<string, Window> windows, Dictionary<string, Wall> doors,
-            Outdoor outdoor, out Dictionary<string, Wall> exWalls)
+            Dictionary<string, Incline> inclines, Dictionary<string, Window> windows, Dictionary<string, Wall> frames
+            , Dictionary<string, Wall> doors, Outdoor outdoor, out Dictionary<string, Wall> exWalls)
         {
             exWalls = new Dictionary<string, Wall>();
             Wall exWall;
 
             exWall = new Wall(wallLayers["外壁"], "EW1-1");
-            exWall.SurfaceArea = 5.005 * 2.7 - windows["WI1-1"].SurfaceArea - windows["WI1-2"].SurfaceArea;
+            exWall.SurfaceArea = 5.005 * 2.7 - windows["WI1-1"].SurfaceArea - windows["WI1-2"].SurfaceArea
+                 - frames["SS1-1"].SurfaceArea - frames["SS1-2"].SurfaceArea;
             exWall.SetIncline(inclines["S"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F居間"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-2");
-            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI1-3"].SurfaceArea;
+            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI1-3"].SurfaceArea - frames["SS1-3"].SurfaceArea;
             exWall.SetIncline(inclines["S"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F和室"].AddSurface(exWall.GetSurface(false));
@@ -673,7 +837,7 @@ namespace AIGStandardResidence
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-5");
-            exWall.SurfaceArea = 1.82 * 2.7 - windows["WI1-4"].SurfaceArea;
+            exWall.SurfaceArea = 1.82 * 2.7 - windows["WI1-4"].SurfaceArea - frames["SS1-4"].SurfaceArea;
             exWall.SetIncline(inclines["E"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F浴室"].AddSurface(exWall.GetSurface(false));
@@ -687,14 +851,14 @@ namespace AIGStandardResidence
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-7");
-            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI1-5"].SurfaceArea;
+            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI1-5"].SurfaceArea - frames["SS1-5"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F洗面所"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-8");
-            exWall.SurfaceArea = 0.91 * 2.7 - windows["WI1-6"].SurfaceArea;
+            exWall.SurfaceArea = 0.91 * 2.7 - windows["WI1-6"].SurfaceArea - frames["SS1-6"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1FWC"].AddSurface(exWall.GetSurface(false));
@@ -722,35 +886,37 @@ namespace AIGStandardResidence
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-12");
-            exWall.SurfaceArea = 3.185 * 2.7 - windows["WI1-7"].SurfaceArea;
+            exWall.SurfaceArea = 3.185 * 2.7 - windows["WI1-7"].SurfaceArea - frames["SS1-7"].SurfaceArea;
             exWall.SetIncline(inclines["W"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F台所"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW1-13");
-            exWall.SurfaceArea = 4.095 * 2.7 - windows["WI1-8"].SurfaceArea - windows["WI1-9"].SurfaceArea;
+            exWall.SurfaceArea = 4.095 * 2.7 - windows["WI1-8"].SurfaceArea - windows["WI1-9"].SurfaceArea
+                 - frames["SS1-8"].SurfaceArea - frames["SS1-9"].SurfaceArea;
             exWall.SetIncline(inclines["W"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["1F居間"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-1");
-            exWall.SurfaceArea = 5.005 * 2.7 - windows["WI2-1"].SurfaceArea - windows["WI2-2"].SurfaceArea;
+            exWall.SurfaceArea = 5.005 * 2.7 - windows["WI2-1"].SurfaceArea - windows["WI2-2"].SurfaceArea
+                 - frames["SS2-1"].SurfaceArea - frames["SS2-2"].SurfaceArea;
             exWall.SetIncline(inclines["S"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F主寝室"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-2");
-            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI2-3"].SurfaceArea;
+            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI2-3"].SurfaceArea - frames["SS2-3"].SurfaceArea;
             exWall.SetIncline(inclines["S"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F子供室1"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-3");
-            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI2-4"].SurfaceArea;
+            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI2-4"].SurfaceArea - frames["SS2-4"].SurfaceArea;
             exWall.SetIncline(inclines["E"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F子供室1"].AddSurface(exWall.GetSurface(false));
@@ -764,35 +930,35 @@ namespace AIGStandardResidence
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-5");
-            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI2-5"].SurfaceArea;
+            exWall.SurfaceArea = 3.64 * 2.7 - windows["WI2-5"].SurfaceArea - frames["SS2-5"].SurfaceArea;
             exWall.SetIncline(inclines["E"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F子供室2"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-6");
-            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI2-6"].SurfaceArea;
+            exWall.SurfaceArea = 2.73 * 2.7 - windows["WI2-6"].SurfaceArea - frames["SS2-6"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F子供室2"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-7");
-            exWall.SurfaceArea = 1.82 * 2.7 - windows["WI2-7"].SurfaceArea;
+            exWall.SurfaceArea = 1.82 * 2.7 - windows["WI2-7"].SurfaceArea - frames["SS2-7"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["階段室"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-8");
-            exWall.SurfaceArea = 0.91 * 2.7 - windows["WI2-8"].SurfaceArea;
+            exWall.SurfaceArea = 0.91 * 2.7 - windows["WI2-8"].SurfaceArea - frames["SS2-8"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2FWC"].AddSurface(exWall.GetSurface(false));
             exWalls.Add(exWall.Name, exWall);
 
             exWall = new Wall(wallLayers["外壁"], "EW2-9");
-            exWall.SurfaceArea = 3.185 * 2.7 - windows["WI2-9"].SurfaceArea;
+            exWall.SurfaceArea = 3.185 * 2.7 - windows["WI2-9"].SurfaceArea - frames["SS2-9"].SurfaceArea;
             exWall.SetIncline(inclines["N"], true);
             outdoor.AddWallSurface(exWall.GetSurface(true));
             zones["2F予備室"].AddSurface(exWall.GetSurface(false));
@@ -1033,7 +1199,7 @@ namespace AIGStandardResidence
 
         #endregion
 
-        #region 床を作成
+        #region 床作成処理
 
         private static void makeFloors(Dictionary<string, Zone> zones,
             Dictionary<string, WallLayers> wallLayers, out Dictionary<string, Wall> floors)
@@ -1247,12 +1413,11 @@ namespace AIGStandardResidence
                 floors[key].GetSurface(false).FilmCoefficient = (4.6 + 1.5) / 2 + 4.7;
                 floors[key].GetSurface(false).ConvectiveRate = (4.6 + 1.5) / 2 / floors[key].GetSurface(false).FilmCoefficient;
 
-                //DEBUG
-                floors[key].GetSurface(true).FilmCoefficient = 4.6 + 4.7;
+                //上下別の設定
+                /*floors[key].GetSurface(true).FilmCoefficient = 4.6 + 4.7;
                 floors[key].GetSurface(true).ConvectiveRate = 4.6 / (4.6 + 4.7);
                 floors[key].GetSurface(false).FilmCoefficient = 1.5 + 4.7;
-                floors[key].GetSurface(false).ConvectiveRate = 1.5 / (1.5 + 4.7);
-                //DEBUG
+                floors[key].GetSurface(false).ConvectiveRate = 1.5 / (1.5 + 4.7);*/
 
                 floors[key].TimeStep = TIME_STEP;
             }
