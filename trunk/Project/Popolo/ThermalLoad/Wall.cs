@@ -72,6 +72,9 @@ namespace Popolo.ThermalLoad
         /// <summary>内部温度[C]ベクトル</summary>
         private Vector temperatures = new Vector(1);
 
+        /// <summary>内部温度[C]ベクトル（潜熱蓄熱判定用）</summary>
+        private Vector temperaturesLMAT = new Vector(1);
+
         /// <summary>FI,FO成分ベクトル</summary>
         private Matrix ux0mMatrix = new Matrix(1, 1);
 
@@ -803,6 +806,7 @@ namespace Popolo.ThermalLoad
                 uR = new double[mNumber];
                 ux0mMatrix = new Matrix(mNumber, 2);
                 temperatures = new Vector(mNumber);
+                temperaturesLMAT = new Vector(mNumber);
                 temperaturesFRZ = new Vector(mNumber);
                 fpt1 = new Vector(mNumber);
                 fpt2 = new Vector(mNumber);
@@ -946,17 +950,26 @@ namespace Popolo.ThermalLoad
                         needUXMUpdate = true;
 
                         //左端の場合//左端の潜熱蓄熱材の温度を設定
-                        if (index == 0) temperatures.SetValue(0, lMaterials[0].CurrentTemperature);
+                        if (index == 0) temperaturesLMAT.SetValue(0, lMaterials[0].CurrentTemperature);
                         //右端の場合//右端の潜熱蓄熱材の温度を設定
-                        else if (index == temperatures.Size - 2) temperatures.SetValue(temperatures.Size - 1, lMaterials[index].CurrentTemperature);
+                        else if (index == temperatures.Size - 2) temperaturesLMAT.SetValue(temperatures.Size - 1, lMaterials[index].CurrentTemperature);
                         //その他の場合//左右の材料の平均温度を設定
                         else
                         {
                             double leftRate = temperatures.GetValue(index) / (temperatures.GetValue(index) + temperatures.GetValue(index + 1)) * 2;
-                            temperatures.SetValue(index, getAverageTemperature(index, temperatures.GetValue(index), lMat.CurrentTemperature * leftRate));
-                            temperatures.SetValue(index + 1, getAverageTemperature(index + 1, lMat.CurrentTemperature * (2 - leftRate), temperatures.GetValue(index + 1)));
+                            temperaturesLMAT.SetValue(index, getAverageTemperature(index, temperatures.GetValue(index), lMat.CurrentTemperature * leftRate));
+                            temperaturesLMAT.SetValue(index + 1, getAverageTemperature(index + 1, lMat.CurrentTemperature * (2 - leftRate), temperatures.GetValue(index + 1)));
                         }
                     }
+                }
+
+                //温度更新
+                foreach (uint index in lMaterials.Keys)
+                {
+                    if (lMaterials[index].CurrentMaterialIndex != lMaterialIndex[index])
+                    {
+                        temperatures.SetValue(index, temperaturesLMAT.GetValue(index));
+                    }                    
                 }
 
                 //潜熱蓄熱材が状態変化した場合にはUXMatrixを更新

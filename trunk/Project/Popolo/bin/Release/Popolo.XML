@@ -8197,6 +8197,9 @@
         <member name="F:Popolo.ThermalLoad.Wall.temperatures">
             <summary>内部温度[C]ベクトル</summary>
         </member>
+        <member name="F:Popolo.ThermalLoad.Wall.temperaturesLMAT">
+            <summary>内部温度[C]ベクトル（潜熱蓄熱判定用）</summary>
+        </member>
         <member name="F:Popolo.ThermalLoad.Wall.ux0mMatrix">
             <summary>FI,FO成分ベクトル</summary>
         </member>
