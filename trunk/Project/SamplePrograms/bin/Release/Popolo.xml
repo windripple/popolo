@@ -3045,7 +3045,7 @@
         <member name="F:Popolo.ThermalLoad.WallLayers.layers">
             <summary>壁層リスト</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.WallLayers.overallHeatTransferCoefficient">
+        <member name="F:Popolo.ThermalLoad.WallLayers.thermalTransmission">
             <summary>熱貫流率[W/(m2-K)]</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.WallLayers.heatCapacityPerUnitArea">
@@ -3100,7 +3100,7 @@
             <summary>単位面積当たりの熱容量[kJ/(m^2-K)]を計算する</summary>
             <returns></returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.WallLayers.updateOverallHeatTransferCoefficient">
+        <member name="M:Popolo.ThermalLoad.WallLayers.updateThermalTransmission">
             <summary>熱貫流率[W/(m2-K)]を更新する</summary>
         </member>
         <member name="M:Popolo.ThermalLoad.WallLayers.updateHeatCapacityPerUnitArea">
@@ -3235,11 +3235,11 @@
         <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorSideAverageTemperature">
             <summary></summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.AirFlowWindow.interiorOverallHeatTransferCoefficient">
-            <summary>Interior side overall heat transfer coefficient [W/(m2K)]</summary>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.interiorFilmCoefficient">
+            <summary>Interior side film coefficient [W/(m2K)]</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorOverallHeatTransferCoefficient">
-            <summary>Exterior side overall heat transfer coefficient [W/(m2K)]</summary>
+        <member name="F:Popolo.ThermalLoad.AirFlowWindow.exteriorFilmCoefficient">
+            <summary>Exterior side film coefficient [W/(m2K)]</summary>
         </member>
         <member name="F:Popolo.ThermalLoad.AirFlowWindow.solarAbsorptionRateAtExteriorGlass">
             <summary>Solar absorption [-] at exterior glass</summary>
@@ -3301,6 +3301,10 @@
             <param name="windowWidth">width [m] of the air flow window</param>
             <param name="windowHeight">height [m] of the air flow window</param>
             <param name="outsideIncline"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.AirFlowWindow.SetNocturnalRadiation(System.Double)">
+            <summary>Set nocturnal radiation[W/m2] at window surface</summary>
+            <param name="nocturnalRadiation">nocturnal radiation[W/m2] at window surface</param>
         </member>
         <member name="M:Popolo.ThermalLoad.AirFlowWindow.SetInletAirTemperature(System.Double)">
             <summary>Set inlet air temperature of air flow window.</summary>
@@ -3411,11 +3415,11 @@
         <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideAirVelocity">
             <summary>Gets the air flow volume [m/s] at exterior side.</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorSideOverallHeatTransferCoefficient">
-            <summary>Sets and Gets interior side overall heat transfer coefficient [W/(m2K)].</summary>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.InteriorSideFilmCoefficient">
+            <summary>Sets and Gets interior side film coefficient [W/(m2K)].</summary>
         </member>
-        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideOverallHeatTransferCoefficient">
-            <summary>Sets and Gets exterior side overall heat transfer coefficient [W/(m2K)].</summary>
+        <member name="P:Popolo.ThermalLoad.AirFlowWindow.ExteriorSideFilmCoefficient">
+            <summary>Sets and Gets exterior side film coefficient [W/(m2K)].</summary>
         </member>
         <member name="P:Popolo.ThermalLoad.AirFlowWindow.Sun">
             <summary>Sets or Gets sun.</summary>
@@ -3864,10 +3868,10 @@
         <member name="F:Popolo.ThermalLoad.GlassPanes.heatTransferCoefficientsOfAirGaps">
             <summary>空隙の総合熱伝達率[W/(m2-K)]</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.GlassPanes.outsideOverallHeatTransferCoefficient">
+        <member name="F:Popolo.ThermalLoad.GlassPanes.outsideFilmCoefficient">
             <summary>外表面総合熱伝達率[W/m2-K]</summary>
         </member>
-        <member name="F:Popolo.ThermalLoad.GlassPanes.insideOverallHeatTransferCoefficient">
+        <member name="F:Popolo.ThermalLoad.GlassPanes.insideFilmCoefficient">
             <summary>内表面総合熱伝達率[W/m2-K]</summary>
         </member>
         <member name="M:Popolo.ThermalLoad.GlassPanes.#ctor(System.Double,System.Double,System.Double)">
@@ -3892,11 +3896,11 @@
         </member>
         <member name="M:Popolo.ThermalLoad.GlassPanes.SetOutsideFilmCoefficient(System.Double)">
             <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
-            <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
+            <param name="outsideFilmCoefficient">外表面総合熱伝達率[W/m2-K]</param>
         </member>
         <member name="M:Popolo.ThermalLoad.GlassPanes.SetInsideFilmCoefficient(System.Double)">
             <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
-            <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
+            <param name="insideFilmCoefficient">内表面総合熱伝達率[W/m2-K]</param>
         </member>
         <member name="M:Popolo.ThermalLoad.GlassPanes.SetHeatTransferCoefficientsOfGaps(System.Int32,System.Double)">
             <summary>ガラス間の気体の総合熱伝達率[W/(m2-K)]を設定する</summary>
@@ -5663,13 +5667,13 @@
             <param name="cosineIncidentAngle">入射角の余弦（cosθ）</param>
             <returns>ガラスの標準入射角特性[-]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Window.setOutsideOverallHeatTransferCoefficient(System.Double)">
+        <member name="M:Popolo.ThermalLoad.Window.setOutsideFilmCoefficient(System.Double)">
             <summary>外表面総合熱伝達率[W/m2-K]を設定する</summary>
-            <param name="outsideOverallHeatTransferCoefficient">外表面総合熱伝達率[W/m2-K]</param>
+            <param name="outsideFilmCoefficient">外表面総合熱伝達率[W/m2-K]</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.Window.setInsideOverallHeatTransferCoefficient(System.Double)">
+        <member name="M:Popolo.ThermalLoad.Window.setInsideFilmCoefficient(System.Double)">
             <summary>内表面総合熱伝達率[W/m2-K]を設定する</summary>
-            <param name="insideOverallHeatTransferCoefficient">内表面総合熱伝達率[W/m2-K]</param>
+            <param name="insideFilmCoefficient">内表面総合熱伝達率[W/m2-K]</param>
         </member>
         <member name="M:Popolo.ThermalLoad.Window.GetSolAirTemperature(System.Boolean)">
             <summary>放射[W/m2]を考慮した相当温度[C]を計算する</summary>
@@ -6019,14 +6023,9 @@
             <param name="shadingRate">日影率[-]</param>
             <returns>斜面に入射する放射量[W/m2]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Outdoor.SetConvectiveRate(System.Double)">
-            <summary>登録された壁表面に対流熱伝達の割合を設定する</summary>
-            <param name="convectiveRate">対流熱伝達の割合</param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.Outdoor.SetOverallHeatTransferCoefficient(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.Outdoor.SetFilmCoefficient(System.Double)">
             <summary>表面の総合熱伝達率[W/(m^2-K)]を設定する</summary>
-            <param name="overallHeatTransferCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
-            <param name="convectiveRate">対流熱伝達の割合(0.0～1.0)[-]</param>
+            <param name="filmCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
         </member>
         <member name="P:Popolo.ThermalLoad.Outdoor.AirState">
             <summary>外気条件を設定・取得する</summary>
@@ -8193,6 +8192,9 @@
         <member name="F:Popolo.ThermalLoad.Wall.temperatures">
             <summary>内部温度[C]ベクトル</summary>
         </member>
+        <member name="F:Popolo.ThermalLoad.Wall.temperaturesLMAT">
+            <summary>内部温度[C]ベクトル（潜熱蓄熱判定用）</summary>
+        </member>
         <member name="F:Popolo.ThermalLoad.Wall.ux0mMatrix">
             <summary>FI,FO成分ベクトル</summary>
         </member>
@@ -8229,7 +8231,7 @@
             <summary>コンストラクタ</summary>
             <param name="wallLayers">壁構成</param>
         </member>
-        <member name="M:Popolo.ThermalLoad.Wall.wallSurface_OverallHeatTransferCoefficientChangeEvent(System.Object,System.EventArgs)">
+        <member name="M:Popolo.ThermalLoad.Wall.wallSurface_FilmCoefficientChangeEvent(System.Object,System.EventArgs)">
             <summary>壁表面の総合熱伝達率変更イベント発生時の処理</summary>
             <param name="sender"></param>
             <param name="e"></param>

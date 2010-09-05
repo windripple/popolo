@@ -265,7 +265,7 @@ namespace Popolo.ThermalLoad
             return dsRate + dfRad + alRad;
         }
 
-        /// <summary>登録された壁表面に対流熱伝達の割合を設定する</summary>
+        /*/// <summary>登録された壁表面に対流熱伝達の割合を設定する</summary>
         /// <param name="convectiveRate">対流熱伝達の割合</param>
         public void SetConvectiveRate(double convectiveRate)
         {
@@ -273,21 +273,19 @@ namespace Popolo.ThermalLoad
             {
                 ws.ConvectiveRate = convectiveRate;
             }
-        }
+        }*/
 
         /// <summary>表面の総合熱伝達率[W/(m^2-K)]を設定する</summary>
         /// <param name="filmCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
-        /// <param name="convectiveRate">対流熱伝達の割合(0.0～1.0)[-]</param>
-        public void SetFilmCoefficient(double filmCoefficient, double convectiveRate)
+        public void SetFilmCoefficient(double filmCoefficient)
         {
             foreach (WallSurface ws in wallSurfaces)
             {
                 ws.FilmCoefficient = filmCoefficient;
-                ws.ConvectiveRate = convectiveRate;
             }
         }
 
-        //外部風速の関数として実装すること!
+        //外部風速の関数として実装すること!（放射対流成分比率関係なし???）
         //public void SetOverallHeatTransferCoefficientFromWindVelocity() { }
 
         #endregion

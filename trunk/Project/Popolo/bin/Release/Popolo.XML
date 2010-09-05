@@ -6023,14 +6023,9 @@
             <param name="shadingRate">日影率[-]</param>
             <returns>斜面に入射する放射量[W/m2]</returns>
         </member>
-        <member name="M:Popolo.ThermalLoad.Outdoor.SetConvectiveRate(System.Double)">
-            <summary>登録された壁表面に対流熱伝達の割合を設定する</summary>
-            <param name="convectiveRate">対流熱伝達の割合</param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.Outdoor.SetFilmCoefficient(System.Double,System.Double)">
+        <member name="M:Popolo.ThermalLoad.Outdoor.SetFilmCoefficient(System.Double)">
             <summary>表面の総合熱伝達率[W/(m^2-K)]を設定する</summary>
             <param name="filmCoefficient">表面の総合熱伝達率[W/(m^2-K)]</param>
-            <param name="convectiveRate">対流熱伝達の割合(0.0～1.0)[-]</param>
         </member>
         <member name="P:Popolo.ThermalLoad.Outdoor.AirState">
             <summary>外気条件を設定・取得する</summary>
