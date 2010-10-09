@@ -8618,5 +8618,11 @@
         <member name="P:Popolo.BuildingInformationModeling.NetWork.TSC21.TSCObject.Child">
             <summary>子要素を設定・取得する</summary>
         </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.getMatrixProduct(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:]@)">
+            <summary>行列の積を計算する</summary>
+            <param name="matA"></param>
+            <param name="matB"></param>
+            <param name="matC"></param>
+        </member>
     </members>
 </doc>

@@ -76,6 +76,9 @@ namespace Popolo.Utility
 
             //人体モデルテスト
             //humanBodyTest();
+
+            //応答係数テスト
+            rFactorSample();
         }
 
         #region 室モデルテスト
@@ -1786,7 +1789,6 @@ namespace Popolo.Utility
 
             //外界条件設定***********************************************************
             outDoor.AirState = new MoistAir(30, 0.020);
-            outDoor.SetConvectiveRate(1);
             outDoor.SetWallSurfaceBoundaryState();
 
             //天井に冷水配管を設置
@@ -2019,6 +2021,54 @@ namespace Popolo.Utility
             }
 
             Console.Read();
+        }
+
+        #endregion
+
+        #region 応答係数テスト
+
+        private static void rFactorSample()
+        {
+            WallLayers wallLayers = new WallLayers();
+            wallLayers.AddLayer(new WallLayers.Layer(new WallMaterial("コンクリート", 1.4, 1934), 0.15));
+            wallLayers.AddLayer(new WallLayers.Layer(new WallMaterial("ロックウール", 0.042, 84), 0.05));
+            wallLayers.AddLayer(new WallLayers.Layer(new WallMaterial("中空層", 11.6, 0), 0.02));
+            wallLayers.AddLayer(new WallLayers.Layer(new WallMaterial("アルミ化粧板", 210, 2373), 0.002));
+
+            double[] rfx = new double[8];
+            double[] rfy = new double[8];
+            double[] rfz = new double[8];
+            double commonRatio = 0;
+            ResponseFactor.GetResponseFactor(3600, 9.3, 23.0, wallLayers, 8, ref rfx, ref rfy, ref rfz, out commonRatio);
+
+            Console.WriteLine(wallLayers.GetThermalTransmission(9.3, 23));
+
+            double[] temperatures = new double[] { 27.4, 27.1, 26.8, 26.5, 26.9, 27.7, 28.8, 29.8, 30.8, 31.5, 32.1, 32.6, 32.9, 33.2, 33.5, 33.1, 32.4, 31.5, 30.6, 29.8, 29.1, 28.5, 28.1, 27.7 };
+            for (int i = 0; i < temperatures.Length; i++) temperatures[i] -= 26.0d;
+            double[] qloads = new double[24];
+            int hour = 0;
+            double kValue = wallLayers.GetThermalTransmission(9.3,23.0);
+            while (true)
+            {
+                Console.Write(hour.ToString() + "時：　");
+
+                double lastQ;
+                if (hour == 0) lastQ = qloads[23];
+                else lastQ = qloads[hour - 1];
+
+                double ql = ResponseFactor.GetHeatLoad(temperatures, rfy, commonRatio, lastQ);
+                Console.WriteLine(temperatures[0].ToString("F1") + " C  " + ql.ToString("F1") + " W/m2  " + (ql / kValue).ToString("F1") + " C");
+                if (Math.Abs(ql - qloads[hour]) < 0.0001) break;
+                else qloads[hour] = ql;
+
+                //温度をずらす
+                double tmp = temperatures[0];
+                for (int j = 1; j < temperatures.Length; j++) temperatures[j - 1] = temperatures[j];
+                temperatures[temperatures.Length - 1] = tmp;
+
+                hour++;
+                if (hour == 24) hour = 0;
+            }
         }
 
         #endregion
