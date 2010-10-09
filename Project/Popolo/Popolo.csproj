@@ -65,6 +65,7 @@
     <Compile Include="ThermalLoad\LatentHeatStorageMaterial.cs" />
     <Compile Include="ThermalLoad\MultiRoom.cs" />
     <Compile Include="ThermalLoad\Outdoor.cs" />
+    <Compile Include="ThermalLoad\ResponseFactor.cs" />
     <Compile Include="ThermalLoad\Room.cs" />
     <Compile Include="ThermalLoad\SunShade.cs" />
     <Compile Include="ThermalLoad\Tube.cs" />
