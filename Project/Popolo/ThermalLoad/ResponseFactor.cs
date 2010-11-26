@@ -55,9 +55,9 @@ namespace Popolo.ThermalLoad
         /// <param name="filmCoefficient2">2側総合熱伝達率[W/m2K]</param>
         /// <param name="wallLayers">壁層</param>
         /// <param name="rfNumber">応答係数の数</param>
-        /// <param name="rFactorX">1側貫流応答係数リスト</param>
-        /// <param name="rFactorY">吸熱応答係数</param>
-        /// <param name="rFactorZ">2側貫流応答係数</param>
+        /// <param name="rFactorX">1側吸熱応答係数</param>
+        /// <param name="rFactorY">貫流応答係数</param>
+        /// <param name="rFactorZ">2側吸熱応答係数</param>
         /// <param name="commonRatio">共通比</param>
         public static void GetResponseFactor(double timeStep, double filmCoefficient1, double filmCoefficient2, WallLayers wallLayers, uint rfNumber,
             ref double[] rFactorX, ref double[] rFactorY, ref double[] rFactorZ, out double commonRatio)
@@ -206,19 +206,27 @@ namespace Popolo.ThermalLoad
         }
 
         /// <summary>熱流[W/m2]を計算する</summary>
-        /// <param name="tempSeries">過去の温度差履歴</param>
-        /// <param name="rFactors">応答係数</param>
+        /// <param name="tempSeries1">1側の過去の温度差履歴</param>
+        /// <param name="tempSeries2">2側の過去の温度差履歴</param>
+        /// <param name="rFactorX">1側吸熱応答係数</param>
+        /// <param name="rFactorY">貫流応答係数</param>
+        /// <param name="rFactorZ">2側吸熱応答係数</param>
         /// <param name="commonRatio">共通比</param>
-        /// <param name="lastHeatLoad">前タイムステップの熱流[W/m2]</param>
-        /// <returns>熱流[W/m2]</returns>
-        public static double GetHeatLoad(double[] tempSeries, double[] rFactors, double commonRatio, double lastHeatLoad)
+        /// <param name="lastHeatFlow1">前タイムステップの1側の熱流[W/m2]</param>
+        /// <param name="lastHeatFlow2">前タイムステップの2側の熱流[W/m2]</param>
+        /// <param name="heatFlow1">1側の熱流</param>
+        /// <param name="heatFlow2">2側の</param>
+        public static void GetHeatFlow(double[] tempSeries1, double[] tempSeries2, double[] rFactorX, double[] rFactorY, double[] rFactorZ,
+            double commonRatio, double lastHeatFlow1, double lastHeatFlow2, out double heatFlow1, out double heatFlow2)
         {
-            double qload = 0;
-            for (int i = 0; i < rFactors.Length; i++)
+            heatFlow1 = heatFlow2 = 0;
+            for (int i = 0; i < rFactorX.Length; i++)
             {
-                qload += tempSeries[i] * rFactors[i];
+                heatFlow1 += tempSeries1[i] * rFactorX[i] - tempSeries2[i] * rFactorY[i];
+                heatFlow2 += tempSeries1[i] * rFactorY[i] - tempSeries2[i] * rFactorZ[i];
             }
-            return qload + commonRatio * lastHeatLoad;
+            heatFlow1 += commonRatio * lastHeatFlow1;
+            heatFlow2 += commonRatio * lastHeatFlow2;
         }
 
         #endregion

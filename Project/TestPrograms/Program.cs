@@ -2043,28 +2043,27 @@ namespace Popolo.Utility
 
             Console.WriteLine(wallLayers.GetThermalTransmission(9.3, 23));
 
-            double[] temperatures = new double[] { 27.4, 27.1, 26.8, 26.5, 26.9, 27.7, 28.8, 29.8, 30.8, 31.5, 32.1, 32.6, 32.9, 33.2, 33.5, 33.1, 32.4, 31.5, 30.6, 29.8, 29.1, 28.5, 28.1, 27.7 };
-            for (int i = 0; i < temperatures.Length; i++) temperatures[i] -= 26.0d;
+            double[] temperatures1 = new double[] { 27.4, 27.1, 26.8, 26.5, 26.9, 27.7, 28.8, 29.8, 30.8, 31.5, 32.1, 32.6, 32.9, 33.2, 33.5, 33.1, 32.4, 31.5, 30.6, 29.8, 29.1, 28.5, 28.1, 27.7 };
+            double[] temperatures2 = new double[24];
+            for (int i = 0; i < temperatures2.Length; i++) temperatures2[i] = 26.0d;
             double[] qloads = new double[24];
             int hour = 0;
             double kValue = wallLayers.GetThermalTransmission(9.3,23.0);
+            double q1 = 0;
+            double q2 = 0;
             while (true)
             {
                 Console.Write(hour.ToString() + "時：　");
 
-                double lastQ;
-                if (hour == 0) lastQ = qloads[23];
-                else lastQ = qloads[hour - 1];
-
-                double ql = ResponseFactor.GetHeatLoad(temperatures, rfy, commonRatio, lastQ);
-                Console.WriteLine(temperatures[0].ToString("F1") + " C  " + ql.ToString("F1") + " W/m2  " + (ql / kValue).ToString("F1") + " C");
-                if (Math.Abs(ql - qloads[hour]) < 0.0001) break;
-                else qloads[hour] = ql;
+                ResponseFactor.GetHeatFlow(temperatures1, temperatures2, rfx, rfy, rfz, commonRatio, q1, q2, out q1, out q2);
+                Console.WriteLine(temperatures1[0].ToString("F1") + " C  " + q2.ToString("F1") + " W/m2  " + (q2 / kValue).ToString("F1") + " C");
+                if (Math.Abs(q2 - qloads[hour]) < 0.0001) break;
+                else qloads[hour] = q2;
 
                 //温度をずらす
-                double tmp = temperatures[0];
-                for (int j = 1; j < temperatures.Length; j++) temperatures[j - 1] = temperatures[j];
-                temperatures[temperatures.Length - 1] = tmp;
+                double tmp = temperatures1[0];
+                for (int j = 1; j < temperatures1.Length; j++) temperatures1[j - 1] = temperatures1[j];
+                temperatures1[temperatures1.Length - 1] = tmp;
 
                 hour++;
                 if (hour == 24) hour = 0;

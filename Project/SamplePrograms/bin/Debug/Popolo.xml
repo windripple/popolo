@@ -2595,6 +2595,59 @@
         <member name="F:Popolo.Weather.WeatherRecord.RecordType.NocturnalRadiation">
             <summary>夜間放射量[W/m2]</summary>
         </member>
+        <member name="T:Popolo.ThermalLoad.ResponseFactor">
+            <summary>応答係数計算クラス</summary>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.#cctor">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.GetResponseFactor(System.Double,System.Double,System.Double,Popolo.ThermalLoad.WallLayers,System.UInt32,System.Double[]@,System.Double[]@,System.Double[]@,System.Double@)">
+            <summary>共通比Cを用いた応答係数を計算する</summary>
+            <param name="timeStep">タイムステップ[sec]</param>
+            <param name="filmCoefficient1">1側総合熱伝達率[W/m2K]</param>
+            <param name="filmCoefficient2">2側総合熱伝達率[W/m2K]</param>
+            <param name="wallLayers">壁層</param>
+            <param name="rfNumber">応答係数の数</param>
+            <param name="rFactorX">1側吸熱応答係数</param>
+            <param name="rFactorY">貫流応答係数</param>
+            <param name="rFactorZ">2側吸熱応答係数</param>
+            <param name="commonRatio">共通比</param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.GetHeatFlow(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[],System.Double,System.Double,System.Double,System.Double@,System.Double@)">
+            <summary>熱流[W/m2]を計算する</summary>
+            <param name="tempSeries1">1側の過去の温度差履歴</param>
+            <param name="tempSeries2">2側の過去の温度差履歴</param>
+            <param name="rFactorX">1側吸熱応答係数</param>
+            <param name="rFactorY">貫流応答係数</param>
+            <param name="rFactorZ">2側吸熱応答係数</param>
+            <param name="commonRatio">共通比</param>
+            <param name="lastHeatFlow1">前タイムステップの1側の熱流[W/m2]</param>
+            <param name="lastHeatFlow2">前タイムステップの2側の熱流[W/m2]</param>
+            <param name="heatFlow1">1側の熱流</param>
+            <param name="heatFlow2">2側の</param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.multiplicateMatrix(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:]@)">
+            <summary>行列積を計算する</summary>
+            <param name="matA"></param>
+            <param name="matB"></param>
+            <param name="matC"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.addMatrix(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:]@)">
+            <summary>行列和を計算する</summary>
+            <param name="matA"></param>
+            <param name="matB"></param>
+            <param name="matC"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.initMatrix(System.Double[0:,0:],System.Double)">
+            <summary>行列要素をinitialValueで初期化する</summary>
+            <param name="matrix"></param>
+            <param name="initialValue"></param>
+        </member>
+        <member name="M:Popolo.ThermalLoad.ResponseFactor.copyMatrix(System.Double[0:,0:],System.Double[0:,0:])">
+            <summary>行列Aを行列Bにコピーする</summary>
+            <param name="matA"></param>
+            <param name="matB"></param>
+        </member>
         <member name="T:Popolo.Schedule.Scheduler`1">
             <summary>季節や時間帯などの期間のスケジュールを管理するクラス</summary>
             <typeparam name="SCHEDULE">スケジュール設定する状態値</typeparam>
@@ -8617,54 +8670,6 @@
         </member>
         <member name="P:Popolo.BuildingInformationModeling.NetWork.TSC21.TSCObject.Child">
             <summary>子要素を設定・取得する</summary>
-        </member>
-        <member name="T:Popolo.ThermalLoad.ResponseFactor">
-            <summary>応答係数計算クラス</summary>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.#cctor">
-            <summary>コンストラクタ</summary>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.GetResponseFactor(System.Double,System.Double,System.Double,Popolo.ThermalLoad.WallLayers,System.UInt32,System.Double[]@,System.Double[]@,System.Double[]@,System.Double@)">
-            <summary>共通比Cを用いた応答係数を計算する</summary>
-            <param name="timeStep">タイムステップ[sec]</param>
-            <param name="filmCoefficient1">1側総合熱伝達率[W/m2K]</param>
-            <param name="filmCoefficient2">2側総合熱伝達率[W/m2K]</param>
-            <param name="wallLayers">壁層</param>
-            <param name="rfNumber">応答係数の数</param>
-            <param name="rFactorX">1側貫流応答係数リスト</param>
-            <param name="rFactorY">吸熱応答係数</param>
-            <param name="rFactorZ">2側貫流応答係数</param>
-            <param name="commonRatio">共通比</param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.GetHeatLoad(System.Double[],System.Double[],System.Double,System.Double)">
-            <summary>熱流[W/m2]を計算する</summary>
-            <param name="tempSeries">過去の温度差履歴</param>
-            <param name="rFactors">応答係数</param>
-            <param name="commonRatio">共通比</param>
-            <param name="lastHeatLoad">前タイムステップの熱流[W/m2]</param>
-            <returns>熱流[W/m2]</returns>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.multiplicateMatrix(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:]@)">
-            <summary>行列積を計算する</summary>
-            <param name="matA"></param>
-            <param name="matB"></param>
-            <param name="matC"></param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.addMatrix(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:]@)">
-            <summary>行列和を計算する</summary>
-            <param name="matA"></param>
-            <param name="matB"></param>
-            <param name="matC"></param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.initMatrix(System.Double[0:,0:],System.Double)">
-            <summary>行列要素をinitialValueで初期化する</summary>
-            <param name="matrix"></param>
-            <param name="initialValue"></param>
-        </member>
-        <member name="M:Popolo.ThermalLoad.ResponseFactor.copyMatrix(System.Double[0:,0:],System.Double[0:,0:])">
-            <summary>行列Aを行列Bにコピーする</summary>
-            <param name="matA"></param>
-            <param name="matB"></param>
         </member>
     </members>
 </doc>
