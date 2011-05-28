@@ -221,6 +221,28 @@ namespace Popolo.ThermalLoad
                     double xr = Panes[i].OuterSideTransmissivity / (1d - Panes[i].InnerSideReflectivity * overallReflectance);
                     for (int j = 0; j < i; j++) absorptance[j] *= xr;
                     absorptance[i] = Panes[i].OuterSideAbsorptivity + Panes[i].InnerSideAbsorptivity * overallReflectance * xr;
+                    overallReflectance = Panes[i].OuterSideReflectivity + Panes[i].InnerSideTransmissivity * overallReflectance * xr;
+                    OverallTransmissivity *= xr;
+                }
+
+                //総合吸収率[-]を計算
+                OverallAbsorptivity = 0;
+                double rSum = 1d / insideFilmCoefficient + 1d / Panes[0].HeatTransferCoefficient;
+                for (int i = 0; i < Panes.Length; i++)
+                {
+                    OverallAbsorptivity += (1d - ThermalTransmittance * rSum) * absorptance[i];
+                    if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i] + 1d / Panes[i + 1].HeatTransferCoefficient;
+                }
+
+                /*//総合透過率[-]を計算
+                OverallTransmissivity = Panes[0].OuterSideTransmissivity;
+                double overallReflectance = Panes[0].OuterSideReflectivity;
+                absorptance[0] = Panes[0].OuterSideAbsorptivity;
+                for (int i = 1; i < Panes.Length; i++)
+                {
+                    double xr = Panes[i].OuterSideTransmissivity / (1d - Panes[i].InnerSideReflectivity * overallReflectance);
+                    for (int j = 0; j < i; j++) absorptance[j] *= xr;
+                    absorptance[i] = Panes[i].OuterSideAbsorptivity + Panes[i].InnerSideAbsorptivity * overallReflectance * xr;
                     overallReflectance = Panes[i].OuterSideReflectivity + Panes[i].InnerSideTransmissivity* overallReflectance * xr;
                     OverallTransmissivity *= xr;
                 }
@@ -232,7 +254,7 @@ namespace Popolo.ThermalLoad
                 {
                     OverallAbsorptivity += (1d - ThermalTransmittance * rSum) * absorptance[i];
                     if (i != Panes.Length - 1) rSum += 1d / heatTransferCoefficientsOfAirGaps[i] + 1d / Panes[i].HeatTransferCoefficient;
-                }
+                }*/
             }
             //簡易の場合
             else
