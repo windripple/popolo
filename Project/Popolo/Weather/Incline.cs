@@ -292,7 +292,7 @@ namespace Popolo.Weather
         /// <returns>傾斜面の法線に対する太陽光線入射角の余弦cosθ[-]</returns>
         public double GetDirectSolarRadiationRate(ImmutableSun sun)
         {
-            return GetDirectSolarRadiationRateToIncline(sun, this);
+            return Math.Max(0, GetDirectSolarRadiationRateToIncline(sun, this));
         }
 
         #endregion

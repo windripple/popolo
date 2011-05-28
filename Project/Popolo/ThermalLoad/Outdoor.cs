@@ -254,7 +254,6 @@ namespace Popolo.ThermalLoad
         {
             //直達成分
             double dsRate = incline.GetDirectSolarRadiationRate(sun);
-            if (dsRate <= 0) dsRate = 0;
             //日影部分に関しては直達日射は0
             dsRate *= sun.DirectNormalRadiation * (1d - shadingRate);
             //拡散成分
