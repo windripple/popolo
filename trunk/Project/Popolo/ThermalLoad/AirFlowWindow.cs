@@ -538,8 +538,7 @@ namespace Popolo.ThermalLoad
 
             //Calculate coefficients for glass
             double cosineDN = OutSideIncline.GetDirectSolarRadiationRate(sun);
-            if (cosineDN < 0) cosineDN = 0;
-            else if (cosineDN < 0.01) cosineDN = 0.01;
+            if (cosineDN < 0.01) cosineDN = 0.01;
             double idn = cosineDN * sun.DirectNormalRadiation;
             double id = OutSideIncline.ConfigurationFactorToSky * sun.DiffuseHorizontalRadiation +
                 (1 - OutSideIncline.ConfigurationFactorToSky) * albedo * sun.GlobalHorizontalRadiation;

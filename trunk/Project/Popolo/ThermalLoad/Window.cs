@@ -486,8 +486,7 @@ namespace Popolo.ThermalLoad
 
             //係数を計算
             double cosineDN = incline.GetDirectSolarRadiationRate(sun);
-            if (cosineDN < 0) cosineDN = 0;
-            else if (cosineDN < 0.01) cosineDN = 0.01;
+            if (cosineDN < 0.01) cosineDN = 0.01;
             double idn = cosineDN * sun.DirectNormalRadiation;
             double id = incline.ConfigurationFactorToSky * sun.DiffuseHorizontalRadiation +
                 (1 - incline.ConfigurationFactorToSky) * outsideSurface.Albedo * sun.GlobalHorizontalRadiation;
