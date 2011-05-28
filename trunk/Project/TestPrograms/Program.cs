@@ -22,6 +22,12 @@ namespace Popolo.Utility
         static void Main(string[] args)
         {
 
+            GlassPanes.Pane pane = new GlassPanes.Pane(0.74, 0.13, 7.8);//複層
+            GlassPanes.Pane blind = new GlassPanes.Pane(0.05, 0.55, 9999);
+            GlassPanes gpanes = new GlassPanes(new GlassPanes.Pane[] { pane, blind });
+            gpanes.SetHeatTransferCoefficientsOfGaps(0, 20);
+            int x = 0;
+
             //TSC21テスト
             //tscTest();
 
@@ -78,7 +84,7 @@ namespace Popolo.Utility
             //humanBodyTest();
 
             //応答係数テスト
-            rFactorSample();
+            //rFactorSample();
         }
 
         #region 室モデルテスト
