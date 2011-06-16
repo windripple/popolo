@@ -508,7 +508,7 @@ namespace Popolo.ThermalLoad
             double outsideSAT = GetSolAirTemperature(true);
             transferHeatGain = surfaceArea * glassPanes.ThermalTransmittance * (outsideSAT - insideSAT);
 
-            //対流・放射成分に分ける
+            //対流・放射成分に分ける//吸収日射熱取得が二重にかかってないか？要確認2011.06.16
             double at = absorbedHeatGain + transferHeatGain;
             convectiveHeatGain = at * insideSurface.ConvectiveRate;// glassPanes.ConvectiveRate;
             radiativeHeatGain = at * insideSurface.RadiativeRate;// glassPanes.RadiativeRate;
