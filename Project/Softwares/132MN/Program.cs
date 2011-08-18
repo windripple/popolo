@@ -24,38 +24,38 @@ namespace Popolo.ThermalComfort
                 return;
             }
 
-            //出力ファイルを作成
+            //Make output file
             string oFilePath = filePath.Remove(filePath.LastIndexOf('.')) + "_Result.csv";
 
-            //入力ファイルを読み込む
+            //Read input file
             using (StreamReader sReader = new StreamReader(filePath))
             using(StreamWriter sWriter = new StreamWriter(oFilePath, false, Encoding.GetEncoding("Shift_JIS")))
             {
-                //体重
+                //Read "weight"
                 double weight = double.Parse(sReader.ReadLine().Split(',')[1]);
-                //身長
+                //Read "height"
                 double height = double.Parse(sReader.ReadLine().Split(',')[1]);
-                //年齢
+                //Read "age"
                 double age = double.Parse(sReader.ReadLine().Split(',')[1]);
-                //性別
+                //Read "sex"
                 bool isMale = bool.Parse(sReader.ReadLine().Split(',')[1]);
-                //心係数
+                //Read "cardiac index at rest"
                 double ci = double.Parse(sReader.ReadLine().Split(',')[1]);
-                //体脂肪率
+                //Read "fat percentage"
                 double fat = double.Parse(sReader.ReadLine().Split(',')[1]);
-                //書出間隔
+                //Read "output time span"
                 double oSpan = double.Parse(sReader.ReadLine().Split(',')[1]);
 
-                //人体モデルを作成
+                //Make an instance of HumanBody class
                 HumanBody body = new HumanBody(weight, height, age, isMale, ci, fat);
-                //書き出し処理
+                //Output informations
                 outputData(sWriter, body, 0, true);
                 outputData(sWriter, body, 0, false);
 
                 sReader.ReadLine();
                 sReader.ReadLine();
 
-                //繰り返し計算開始
+                //Start iteration
                 double cTime = 0;
                 double time =0;
                 double nextTime = 0;
@@ -72,7 +72,7 @@ namespace Popolo.ThermalComfort
                 Dictionary<HumanBody.Nodes, double> matTempNext = new Dictionary<HumanBody.Nodes, double>();//物体温度
                 Dictionary<HumanBody.Nodes, double> conRateNext = new Dictionary<HumanBody.Nodes, double>();//接触割合
 
-                //0秒時点のデータを読み込み
+                //Read boundary data at time 0
                 readData(sReader.ReadLine(), ref time, ref dbTemp, ref mrTemp, ref vels, ref rHumid, ref matTemp, ref conRate);
                 readData(sReader.ReadLine(), ref nextTime, ref dbTempNext, ref mrTempNext, ref velsNext, ref rHumidNext, ref matTempNext, ref conRateNext);
 
@@ -95,7 +95,7 @@ namespace Popolo.ThermalComfort
                     }
                     else
                     {
-                        //境界条件を設定
+                        //Set boundary conditions
                         foreach (HumanBody.Nodes key in dbTemp.Keys)
                         {
                             body.SetDrybulbTemperature(key, interpolate(time, nextTime, dbTemp[key], dbTempNext[key], cTime));
@@ -106,16 +106,16 @@ namespace Popolo.ThermalComfort
                             body.SetContactPortionRate(key, interpolate(time, nextTime, conRate[key], conRateNext[key], cTime));
                         }
                         
-                        //人体モデル更新
+                        //Update Human body
                         body.Update(oSpan);
 
-                        //計算時刻を更新
+                        //Update current time
                         cTime += oSpan;
 
-                        //書き出し処理
+                        //Output informations to file
                         outputData(sWriter, body, cTime, false);
 
-                        //コンソール書き出し
+                        //Output informations to console
                         Console.WriteLine(cTime + " sec");
                     }
                 }
