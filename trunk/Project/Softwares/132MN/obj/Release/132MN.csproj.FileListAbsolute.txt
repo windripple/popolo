@@ -1,0 +1,11 @@
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\132MN.exe
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\132MN.pdb
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\Popolo.dll
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\GSLNET.dll
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\GSLNET.pdb
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\GSLNET.xml
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\Popolo.pdb
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\release\Popolo.xml
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\obj\Release\ResolveAssemblyReference.cache
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\obj\Release\132MN.exe
+C:\Users\et\Desktop\GoogleCode\popolo\Project\Softwares\132MN\obj\Release\132MN.pdb
