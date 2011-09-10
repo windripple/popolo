@@ -65,16 +65,18 @@ namespace Popolo.ThermalComfort
                 Dictionary<HumanBody.Nodes, double> rHumid = new Dictionary<HumanBody.Nodes, double>(); //相対湿度
                 Dictionary<HumanBody.Nodes, double> matTemp = new Dictionary<HumanBody.Nodes, double>();//物体温度
                 Dictionary<HumanBody.Nodes, double> conRate = new Dictionary<HumanBody.Nodes, double>();//接触割合
+                Dictionary<HumanBody.Nodes, double> conduct = new Dictionary<HumanBody.Nodes, double>();//接触部の熱コンダクタンス
                 Dictionary<HumanBody.Nodes, double> dbTempNext = new Dictionary<HumanBody.Nodes, double>();  //乾球温度
                 Dictionary<HumanBody.Nodes, double> mrTempNext = new Dictionary<HumanBody.Nodes, double>(); //平均放射温度
                 Dictionary<HumanBody.Nodes, double> velsNext = new Dictionary<HumanBody.Nodes, double>();   //気流速度
                 Dictionary<HumanBody.Nodes, double> rHumidNext = new Dictionary<HumanBody.Nodes, double>(); //相対湿度
                 Dictionary<HumanBody.Nodes, double> matTempNext = new Dictionary<HumanBody.Nodes, double>();//物体温度
                 Dictionary<HumanBody.Nodes, double> conRateNext = new Dictionary<HumanBody.Nodes, double>();//接触割合
+                Dictionary<HumanBody.Nodes, double> conductNext = new Dictionary<HumanBody.Nodes, double>();//接触部の熱コンダクタンス
 
                 //Read boundary data at time 0
-                readData(sReader.ReadLine(), ref time, ref dbTemp, ref mrTemp, ref vels, ref rHumid, ref matTemp, ref conRate);
-                readData(sReader.ReadLine(), ref nextTime, ref dbTempNext, ref mrTempNext, ref velsNext, ref rHumidNext, ref matTempNext, ref conRateNext);
+                readData(sReader.ReadLine(), ref time, ref dbTemp, ref mrTemp, ref vels, ref rHumid, ref matTemp, ref conRate, ref conduct);
+                readData(sReader.ReadLine(), ref nextTime, ref dbTempNext, ref mrTempNext, ref velsNext, ref rHumidNext, ref matTempNext, ref conRateNext, ref conductNext);
 
                 while (true)
                 {
@@ -91,7 +93,8 @@ namespace Popolo.ThermalComfort
                         buff = vels; vels = velsNext; velsNext = buff;
                         buff = matTemp; matTemp = matTempNext; matTempNext = buff;
                         buff = conRate; conRate = conRateNext; conRateNext = buff;
-                        readData(line, ref nextTime, ref dbTempNext, ref mrTempNext, ref velsNext, ref rHumidNext, ref matTempNext, ref conRateNext);
+                        buff = conduct; conduct = conductNext; conductNext = buff;
+                        readData(line, ref nextTime, ref dbTempNext, ref mrTempNext, ref velsNext, ref rHumidNext, ref matTempNext, ref conRateNext, ref conductNext);
                     }
                     else
                     {
@@ -102,8 +105,9 @@ namespace Popolo.ThermalComfort
                             body.SetMeanRadiantTemperature(key, interpolate(time, nextTime, mrTemp[key], mrTempNext[key], cTime));
                             body.SetVelocity(key, interpolate(time, nextTime, vels[key], velsNext[key], cTime));
                             body.SetRelativeHumidity(key, interpolate(time, nextTime, rHumid[key], rHumidNext[key], cTime));
-                            body.SetMaterialTemperature(key, interpolate(time, nextTime, matTemp[key], matTempNext[key], cTime));
+                            body.SetMaterialTemperature(key, interpolate(time, nextTime, matTemp[key], matTempNext[key], cTime));                            
                             body.SetContactPortionRate(key, interpolate(time, nextTime, conRate[key], conRateNext[key], cTime));
+                            body.SetHeatConductanceToMaterial(key, interpolate(time, nextTime, conduct[key], conductNext[key], cTime));
                         }
                         
                         //Update Human body
@@ -130,12 +134,13 @@ namespace Popolo.ThermalComfort
             ref Dictionary<HumanBody.Nodes, double> vels,
             ref Dictionary<HumanBody.Nodes, double> rHumid,
             ref Dictionary<HumanBody.Nodes, double> matTemp,
-            ref Dictionary<HumanBody.Nodes, double> conRate)
+            ref Dictionary<HumanBody.Nodes, double> conRate,
+            ref Dictionary<HumanBody.Nodes, double> conduct)
         {
             string[] st = line.Split(',');
             time = double.Parse(st[0]);
 
-            Dictionary<HumanBody.Nodes, double>[] db = new Dictionary<HumanBody.Nodes, double>[] { dbTemp, mrTemp, vels, rHumid, matTemp, conRate };
+            Dictionary<HumanBody.Nodes, double>[] db = new Dictionary<HumanBody.Nodes, double>[] { dbTemp, mrTemp, vels, rHumid, matTemp, conRate, conduct};
             for (int i = 0; i < db.Length; i++)
             {
                 int index = i * 17 + 1;
