@@ -1,6 +1,0 @@
-C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.dll
-C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.pdb
-C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.XML
-C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Release\ResolveAssemblyReference.cache
-C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Release\Popolo.dll
-C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Release\Popolo.pdb
