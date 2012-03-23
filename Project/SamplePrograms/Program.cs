@@ -19,27 +19,6 @@ namespace SamplePrograms
         static void Main(string[] args)
         {
 
-            /*OrdinaryDifferentialEquations ode = new OrdinaryDifferentialEquations(OrdinaryDifferentialEquations.SolverType.RungeKutta4, 3);
-            double x = 0;
-            double[] y = new double[3];
-            double[] dydx = new double[3];
-            double[] yout = new double[3];
-            y[0] = 1; y[1] = 1; y[2] = 1;
-            eFnc(x, y, ref dydx);
-            for (int i = 0; i < 1000; i++)
-            {
-                ode.rungeKutta4(eFnc, y, dydx, 0.01, x, ref yout);
-                y[0] = yout[0];
-                y[1] = yout[1];
-                y[2] = yout[2];
-                if((i % 10) == 0) Console.WriteLine(y[0] + " , " + y[1] + " , " + y[2]);
-            }
-            for (int i = 0; i < 500; i++)
-            {
-                ode.Solve(eFnc, y, i * 0.2, (i + 1) * 0.2, 0.001, 0.01, 0);
-                Console.WriteLine(y[0] + " , " + y[1] + " , " + y[2]);
-            }*/
-
             #region Chapter 1
 
             //sample1();
@@ -60,12 +39,13 @@ namespace SamplePrograms
 
             //circuitTest2();
 
-            circuitTest3();
+            //circuitTest3();
 
             #endregion
 
             #region Chapter 4
 
+            thermalComfortTest();
             //humanBodyTest();
 
             #endregion
@@ -98,17 +78,6 @@ namespace SamplePrograms
 
             #endregion
 
-        }
-
-        private static void eFnc(double x, double[] y, ref double[] dydx)
-        {
-            dydx[0] = 10 * (y[1] - y[0]);
-            dydx[1] = 28 * y[0] - y[1] - y[0] * y[2];
-            dydx[2] = -(8.0 / 3.0) * y[2] + y[0] * y[1];
- // dx/dt=10(y-x)
- // dy/dt=28x-y-xz
- // dz/dt=-(8/3)z+xy
- //x=y0, y=y1, z=y2
         }
 
         #region Chapter 1
@@ -282,6 +251,22 @@ namespace SamplePrograms
         #endregion
 
         #region Chapter 4
+
+        /// <summary>Sample program calculating thermal comfort</summary>
+        private static void thermalComfortTest()
+        {
+            double et, setStar, pmv;
+            double dryBulbTemperature=40;
+            double meanRadiantTemperature=40;
+            double relativeHumidity = 20;
+            double velocity = 0.1;
+            double clothing = 0.6;
+            double metabolicRate = 1.0;
+
+            PMVCalculator.TryCalculatePMV(dryBulbTemperature, meanRadiantTemperature, relativeHumidity, velocity, clothing, metabolicRate, 0, out pmv);
+            SETStarCalculator.TryCalculateSET(dryBulbTemperature, meanRadiantTemperature, relativeHumidity,
+                velocity, clothing, metabolicRate * 58.2, 0, 101.325, 70, 1.8, out et, out setStar);
+        }
 
         /// <summary>Sample program calculating human body</summary>
         private static void humanBodyTest()

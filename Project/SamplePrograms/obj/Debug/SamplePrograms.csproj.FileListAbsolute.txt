@@ -10,9 +10,6 @@ C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\obj\Debug\ResolveAs
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\SamplePrograms.exe
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\SamplePrograms.pdb
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\Popolo.dll
-C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\GSLNET.dll
-C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\GSLNET.pdb
-C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\GSLNET.xml
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\Popolo.pdb
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\bin\Debug\Popolo.xml
 C:\Users\et\Desktop\GoogleCode\popolo\Project\SamplePrograms\obj\Debug\SamplePrograms.exe

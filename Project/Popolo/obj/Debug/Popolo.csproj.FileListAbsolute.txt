@@ -12,7 +12,6 @@ C:\Users\et\Desktop\popolo\Project\Popolo\obj\Debug\Popolo.dll
 C:\Users\et\Desktop\popolo\Project\Popolo\obj\Debug\Popolo.pdb
 C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.dll
 C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.pdb
-C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.XML
 C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Debug\Popolo.dll
 C:\Users\et\Desktop\GoogleCode\popolo\Project\Popolo\obj\Debug\Popolo.pdb
@@ -22,3 +21,4 @@ C:\Users\et\Dropbox\popolo\Project\dll\Popolo.XML
 C:\Users\et\Dropbox\popolo\Project\Popolo\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\et\Dropbox\popolo\Project\Popolo\obj\Debug\Popolo.dll
 C:\Users\et\Dropbox\popolo\Project\Popolo\obj\Debug\Popolo.pdb
+C:\Users\et\Desktop\GoogleCode\popolo\Project\dll\Popolo.XML
