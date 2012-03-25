@@ -152,10 +152,8 @@ namespace Popolo.ThermalComfort
                 double scr = m - hfcs - eres - cres - externalWork;               //コア熱平衡式
                 double ssk = hfcs - dry - esk;                          //皮膚熱平衡式
 
-                //double tcsk = 0.97 * alfa * externalWork;                         //皮膚熱容量
-                double tcsk = 58.2 * alfa * 70;
-                //double tccr = 0.97 * (1 - alfa) * externalWork;                   //コア熱容量
-                double tccr = 58.2 * (1 - alfa) * 70;
+                double tcsk = 0.97 * alfa * weight;                         //皮膚熱容量
+                double tccr = 0.97 * (1 - alfa) * weight;                   //コア熱容量
 
                 double dtsk = ((ssk * bodySurface) / tcsk) / 60;                 //皮膚の1分間の温度変化幅
                 double dtcr = ((scr * bodySurface) / tccr) / 60;                 //コアの1分間の温度変化幅
@@ -168,14 +166,14 @@ namespace Popolo.ThermalComfort
                 double warms, colds, warmc, coldc, warmb, coldb;
                 warms = colds = warmc = coldc = warmb = coldb = 0;
                 double sksig = tsk - tskn;
-                if (sksig < 0) colds = -sksig * (-1);
-                else warms = sksig * (-1);
+                if (sksig < 0) colds = -sksig;
+                else warms = sksig;
                 double crsig = tcr - tcrn;
-                if (crsig < 0) coldc = -crsig * (-1);
-                else warmc = crsig * (-1);
+                if (crsig < 0) coldc = -crsig;
+                else warmc = crsig;
                 double bdsig = tb - tbn;
-                if (bdsig < 0) coldb = -bdsig * (-1);
-                else warmb = bdsig * (-1);
+                if (bdsig < 0) coldb = -bdsig;
+                else warmb = bdsig;
 
                 //制御系の計算
 
