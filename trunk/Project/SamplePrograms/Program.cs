@@ -256,12 +256,12 @@ namespace SamplePrograms
         private static void thermalComfortTest()
         {
             double et, setStar, pmv;
-            double dryBulbTemperature=40;
-            double meanRadiantTemperature=40;
-            double relativeHumidity = 20;
-            double velocity = 0.1;
-            double clothing = 0.6;
-            double metabolicRate = 1.0;
+            double dryBulbTemperature=29;
+            double meanRadiantTemperature=28.8;
+            double relativeHumidity = 66;
+            double velocity = 0.05;
+            double clothing = 0.67;
+            double metabolicRate = 116.4 / 58.2;
 
             PMVCalculator.TryCalculatePMV(dryBulbTemperature, meanRadiantTemperature, relativeHumidity, velocity, clothing, metabolicRate, 0, out pmv);
             SETStarCalculator.TryCalculateSET(dryBulbTemperature, meanRadiantTemperature, relativeHumidity,
