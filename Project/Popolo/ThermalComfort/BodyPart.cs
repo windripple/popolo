@@ -1679,7 +1679,7 @@ namespace Popolo.ThermalComfort
                 }
             }
             //姿勢が座位の場合
-            else if (Body.Posture == HumanBody.BodyPosture.Standing)
+            else if (Body.Posture == HumanBody.BodyPosture.Sitting)
             {
                 switch (Position)
                 {
