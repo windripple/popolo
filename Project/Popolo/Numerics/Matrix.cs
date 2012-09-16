@@ -227,6 +227,27 @@ namespace Popolo.Numerics
             }
         }
 
+        /// <summary>行列と行列の積と和を計算する（y = α op(A) x + βy）</summary>
+        /// <param name="matrixX">行列X</param>
+        /// <param name="matrixY">行列Y（解が上書きされる）</param>
+        /// <param name="alpha">第一項の係数</param>
+        /// <param name="beta">第二項の係数</param>
+        internal void MatrixProduct(Matrix matrixX, ref Matrix matrixY, double alpha, double beta)
+        {
+            for (uint i = 0; i < this.Columns; i++)
+            {
+                for (uint j = 0; j < matrixX.Rows; j++)
+                {
+                    double sum = 0;
+                    for (uint k = 0; k < this.Rows; k++)
+                    {
+                        sum += this.GetValue(i, k) * matrixX.GetValue(k, j);
+                    }
+                    matrixY.SetValue(i, j, alpha * sum + beta * matrixY.GetValue(i, j));
+                }
+            }
+        }
+
         /// <summary></summary>
         /// <remarks>Transrated from "numerical recipies in C"</remarks>
         internal void LUDecomposition()
